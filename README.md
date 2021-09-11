@@ -10,4 +10,12 @@ Spanish title: T&eacute;cnicas Escalables en Aprendizaje Autom&aacute;tico
 
 [Technical University of Valencia](https://www.upv.es)
 
-*** UNDER CONSTRUCTION ***
+***UNDER CONSTRUCTION***
+
+
+## Environment
+
+Configuration for this subject in the private cluster of virtual machines of [DSIC](https://www.dsic.upv.es)
+- [portal-ng](porta.dsic)
+
+## Lab practices
