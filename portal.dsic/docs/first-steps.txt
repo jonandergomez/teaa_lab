@@ -1,0 +1,66 @@
+
+- getting software, update the scripts when new versions are available:
+
+	scripts/get-anaconda.sh
+	scripts/get-hadoop.sh
+	scripts/get-spark.sh
+
+- see examples of how to extract the packages
+
+	scripts/extract-software.sh
+
+	- but run the commands manually
+
+
+- see ${HOME}/.bashrc for required environment variables
+
+
+- see HADOOP configuration files in ${HADOOP_CONF_DIR}:
+
+	-rw-r--r-- 1 ubuntu ubuntu  1121 Sep  3 12:23 core-site.xml
+	-rw-r--r-- 1 ubuntu ubuntu  2643 Sep  3 12:25 hdfs-site.xml
+	-rw-r--r-- 1 ubuntu ubuntu  2164 Sep  3 12:49 mapred-site.xml
+	-rw-r--r-- 1 ubuntu ubuntu  8439 Sep  3 12:50 yarn-site.xml
+	-rw-r--r-- 1 ubuntu ubuntu    26 Sep  3 13:17 workers
+	-rw-r--r-- 1 ubuntu ubuntu 16861 Sep  3 13:44 hadoop-env.sh
+
+
+- see SPARK configuration files in ${SPARK_HOME}/conf
+
+	-rw-r--r-- 1 ubuntu ubuntu  893 Sep  3 12:52 workers
+	-rwxr-xr-x 1 ubuntu ubuntu 4682 Sep  3 12:55 spark-env.sh
+	-rw-r--r-- 1 ubuntu ubuntu 2371 Sep  3 12:56 log4j.properties
+	-rw-r--r-- 1 ubuntu ubuntu 1429 Sep  3 12:57 spark-defaults.conf
+
+
+- distribute the configuration of the master to worker nodes whenever changes have been done in the master
+
+	scripts/deploy-configuration.sh
+
+- create initial directories in the master and the worker nodes whenever required
+
+	scripts/create_dot_ssh.sh
+	
+
+- create/format the HDFS (Hadoop Distributed File System)
+
+	hdfs namenode -format
+
+- start the cluster
+	
+	bin/start-my-cluster.sh
+
+
+- create user HDFS directory if it doesn't exist yet
+
+	hdfs dfs -mkdir /user
+	hdfs dfs -mkdir /user/ubuntu
+
+	- see examples of how to copy files to/from HDFS
+
+
+- see the cluster via the web
+
+	bin/see-cluster.sh
+
+

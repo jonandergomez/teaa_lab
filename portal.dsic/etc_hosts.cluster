@@ -1,0 +1,31 @@
+127.0.0.1	localhost
+127.0.1.1	evirl-ubuntumate-2020
+
+172.23.180.95 teaa-master-cluster ds-teaa-023 ds-teaa-023.dsicv.upv.es teaa-master-cluster.dsicv.upv.es
+172.23.180.15 teaa-worker01-cluster ds-teaa-002 ds-teaa-002.dsicv.upv.es teaa-worker01-cluster.dsicv.upv.es
+172.23.180.16 teaa-worker02-cluster ds-teaa-004 ds-teaa-004.dsicv.upv.es teaa-worker02-cluster.dsicv.upv.es
+172.23.180.17 teaa-worker03-cluster ds-teaa-005 ds-teaa-005.dsicv.upv.es teaa-worker03-cluster.dsicv.upv.es
+172.23.180.78 teaa-worker04-cluster ds-teaa-006 ds-teaa-006.dsicv.upv.es teaa-worker04-cluster.dsicv.upv.es
+172.23.180.79 teaa-worker05-cluster ds-teaa-007 ds-teaa-007.dsicv.upv.es teaa-worker05-cluster.dsicv.upv.es
+172.23.180.80 teaa-worker06-cluster ds-teaa-008 ds-teaa-008.dsicv.upv.es teaa-worker06-cluster.dsicv.upv.es
+172.23.180.81 teaa-worker07-cluster ds-teaa-009 ds-teaa-009.dsicv.upv.es teaa-worker07-cluster.dsicv.upv.es
+172.23.180.82 teaa-worker08-cluster ds-teaa-010 ds-teaa-010.dsicv.upv.es teaa-worker08-cluster.dsicv.upv.es
+172.23.180.83 teaa-worker09-cluster ds-teaa-011 ds-teaa-011.dsicv.upv.es teaa-worker09-cluster.dsicv.upv.es
+172.23.180.84 teaa-worker10-cluster ds-teaa-012 ds-teaa-012.dsicv.upv.es teaa-worker10-cluster.dsicv.upv.es
+172.23.180.85 teaa-worker11-cluster ds-teaa-013 ds-teaa-013.dsicv.upv.es teaa-worker11-cluster.dsicv.upv.es
+172.23.180.86 teaa-worker12-cluster ds-teaa-014 ds-teaa-014.dsicv.upv.es teaa-worker12-cluster.dsicv.upv.es
+172.23.180.87 teaa-worker13-cluster ds-teaa-015 ds-teaa-015.dsicv.upv.es teaa-worker13-cluster.dsicv.upv.es
+172.23.180.88 teaa-worker14-cluster ds-teaa-016 ds-teaa-016.dsicv.upv.es teaa-worker14-cluster.dsicv.upv.es
+172.23.180.89 teaa-worker15-cluster ds-teaa-017 ds-teaa-017.dsicv.upv.es teaa-worker15-cluster.dsicv.upv.es
+172.23.180.90 teaa-worker16-cluster ds-teaa-018 ds-teaa-018.dsicv.upv.es teaa-worker16-cluster.dsicv.upv.es
+172.23.180.91 teaa-worker17-cluster ds-teaa-019 ds-teaa-019.dsicv.upv.es teaa-worker17-cluster.dsicv.upv.es
+172.23.180.92 teaa-worker18-cluster ds-teaa-020 ds-teaa-020.dsicv.upv.es teaa-worker18-cluster.dsicv.upv.es
+172.23.180.93 teaa-worker19-cluster ds-teaa-021 ds-teaa-021.dsicv.upv.es teaa-worker19-cluster.dsicv.upv.es
+172.23.180.94 teaa-worker20-cluster ds-teaa-022 ds-teaa-022.dsicv.upv.es teaa-worker20-cluster.dsicv.upv.es
+
+# The following lines are desirable for IPv6 capable hosts
+::1     ip6-localhost ip6-loopback
+fe00::0 ip6-localnet
+ff00::0 ip6-mcastprefix
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
