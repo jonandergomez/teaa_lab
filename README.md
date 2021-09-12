@@ -15,7 +15,8 @@ Spanish title: T&eacute;cnicas Escalables en Aprendizaje Autom&aacute;tico
 
 ## Environment
 
-Configuration for this subject in the private cluster of virtual machines of [DSIC](https://www.dsic.upv.es)
+Configuration for this subject in the private cluster of virtual machines
+of the Department of Computer Science [DSIC](https://www.dsic.upv.es)
 - [portal-ng](portal.dsic)
 
 ## Lab practices
