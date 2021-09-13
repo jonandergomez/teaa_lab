@@ -58,4 +58,9 @@
 		<value>/home/ubuntu/teaa/disk/hdfs/datanode</value>
 	</property>
 
+	<property>
+		<name>dfs.permissions.supergroup</name>
+		<value>teaa</value>
+	</property>
+
 </configuration>
