@@ -199,7 +199,7 @@ if it is possible, before 30 minutes of the seizure.
 2. Compute the confusion matrix between target classes and a given number of clusters so
    that we can construct a naive classifier by using
 
-<img src="docs/formulas_kmeans.png" alt="Formulation" align="center" style="width:70%" />
+<img src="docs/formulas_kmeans.png" alt="Formulation" align="center" style="width:60%" />
 
    Use the Python code [kmeans_uc13_classifier.py](../../portal.dsic/examples/python/kmeans_uc13_classifier.py)
 
@@ -207,26 +207,26 @@ if it is possible, before 30 minutes of the seizure.
    algorithm and measure times`
 
 3. Carry out several tests to evaluate the performance (KPI accuracy) of the naive classifier
-   according to the number of clusters, and compare with both
-   [***Calinski-Harabasz***](https://scikit-learn.org/stable/modules/clustering.html#calinski-harabasz-index)
-   and
-   [***Davies-Bouldin***](https://scikit-learn.org/stable/modules/clustering.html#davies-bouldin-index)
-   criteria to determine the (sub-)optimal number of clusters for a given data set.
+according to the number of clusters, and compare with both
+[***Calinski-Harabasz***](https://scikit-learn.org/stable/modules/clustering.html#calinski-harabasz-index)
+and
+[***Davies-Bouldin***](https://scikit-learn.org/stable/modules/clustering.html#davies-bouldin-index)
+criteria to determine the (sub-)optimal number of clusters for a given data set.
 
 4. Obtain several **Gaussian Mixture Models (GMM)** using the Python code
-   [gmm_uc13_v2.py](../../portal.dsic/examples/python/gmm_uc13_v2.py)
+[gmm_uc13_v2.py](../../portal.dsic/examples/python/gmm_uc13_v2.py)
 
 5. Compute a confusion matrix between target classes and the components of the GMM for different number
-   of components.
+of components.
 
-<img src="docs/formulas_gmm.png" alt="Formulation" align="center" style="width:70%" />
+<img src="docs/formulas_gmm.png" alt="Formulation" align="center" style="width:80%" />
 
 6. Carry out several tests to evaluate the performance (KPI accuracy) of the classifier 
-   based on GMMs according to the $J$, the number of Gaussian components in the GMM, and
-   compare with both
-   the [Akaike Information Criterion (AIC)](https://en.wikipedia.org/wiki/Akaike_information_criterion)
-   and 
-   the [Bayesian Information Criterion (BIC)](https://en.wikipedia.org/wiki/Bayesian_information_criterion)
-   criteria.
+based on GMMs according to the $J$, the number of Gaussian components in the GMM, and
+compare with both
+the [Akaike Information Criterion (AIC)](https://en.wikipedia.org/wiki/Akaike_information_criterion)
+and 
+the [Bayesian Information Criterion (BIC)](https://en.wikipedia.org/wiki/Bayesian_information_criterion)
+criteria.
 
 
