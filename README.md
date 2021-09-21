@@ -20,3 +20,11 @@ of the Department of Computer Science [DSIC](https://www.dsic.upv.es)
 - [portal-ng](portal.dsic)
 
 ## Lab practices
+
++ [Lab practice 1](lab_practices/pract_1)
+
++ Lab practice 2
+
++ Lab practice 3
+
++ Lab practice 4

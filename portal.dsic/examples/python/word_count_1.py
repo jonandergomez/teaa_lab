@@ -41,7 +41,9 @@ if __name__ == "__main__":
         .appName("PythonWordCount")\
         .getOrCreate()
 
-    lines = spark.read.text(sys.argv[1]).rdd.map(lambda r: r[0])
+    lines = spark.read.text(sys.argv[1])
+    lines = lines.rdd.map(lambda r: r[0])
+    #print(lines.take(10))
 
     def clean_strings(s):
         if s is None: return ''
@@ -55,6 +57,7 @@ if __name__ == "__main__":
     lines = lines.map(clean_strings)
 
     counts = lines.flatMap(lambda x: x.split(' ')) \
+                  .filter(lambda x: len(x) > 0) \
                   .map(lambda x: (x, 1)) \
                   .reduceByKey(add)
 

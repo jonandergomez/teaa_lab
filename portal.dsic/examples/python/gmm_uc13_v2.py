@@ -1,11 +1,11 @@
 """
     Author: Jon Ander Gomez Adrian (jon@dsic.upv.es, http://personales.upv.es/jon)
-    Version: 2.0
-    Date: June 2016
+    Version: 1.0
+    Date: September 2021
     Universitat Politecnica de Valencia
     Technical University of Valencia TU.VLC
 
-    Testing Maximum Likelihood Estimation
+    Using E-M algorithm for Unsupervised Maximum Likelihood Estimation
 
 """
 
@@ -61,6 +61,7 @@ if __name__ == "__main__":
     spark_context = None
     slices = 8
     batch_size = 100
+    gmm_filename = None
                                                    
     for i in range(len(sys.argv)):
         if sys.argv[i] == "--covar":
@@ -79,6 +80,8 @@ if __name__ == "__main__":
             slices = int(sys.argv[i + 1])
         elif sys.argv[i] == "--batch-size":
             batch_size = int(sys.argv[i + 1])
+        elif sys.argv[i] == "--model":
+            gmm_filename = sys.argv[i + 1]
 
     if not standalone :
         spark_context = SparkContext(appName = "GMM-MLE-dataset-Rodrigo")
@@ -172,6 +175,8 @@ if __name__ == "__main__":
         dim_x = samples.first().shape[1]
 
         mle = machine_learning.MLE(covar_type = covar_type, dim = dim_x, log_dir = base_dir + '/log', models_dir = base_dir + '/models')
+        if gmm_filename is not None:
+            mle.gmm.load_from_text(gmm_filename)
 
         mle.fit_with_spark(spark_context = spark_context, samples = samples, max_components = max_components)
 

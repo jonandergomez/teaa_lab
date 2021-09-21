@@ -38,9 +38,7 @@ mkdir -p examples spark hadoop bin docs scripts
 for dir in bin docs scripts
 do
     echo ""
-    echo "###################"
-    echo "## ${dir}"
-    echo "###################"
+    echo "######################################### ${dir}"
     if [ ${sense} = "from-master" ]
     then
         rsync -avHC${no_force} ${additional_options} ubuntu@${server}:teaa/${dir} .
@@ -58,9 +56,7 @@ pushd examples
 for dir in python scripts
 do
     echo ""
-    echo "###################"
-    echo "## ${dir}"
-    echo "###################"
+    echo "######################################### ${dir}"
     if [ ${sense} = "from-master" ]
     then
         rsync -avHC${no_force} ${additional_options} ubuntu@${server}:teaa/examples/${dir} .
@@ -81,9 +77,7 @@ pushd spark
 for dir in conf
 do
     echo ""
-    echo "###################"
-    echo "## ${dir}"
-    echo "###################"
+    echo "######################################### ${dir}"
     if [ ${sense} = "from-master" ]
     then
         rsync -avHC${no_force} ${additional_options} ubuntu@${server}:teaa/cluster/spark/${dir} .
@@ -103,9 +97,7 @@ pushd hadoop
 for dir in etc
 do
     echo ""
-    echo "###################"
-    echo "## ${dir}"
-    echo "###################"
+    echo "######################################### ${dir}"
     if [ ${sense} = "from-master" ]
     then
         rsync -avHC${no_force} ${additional_options} ubuntu@${server}:teaa/cluster/hadoop/${dir} .

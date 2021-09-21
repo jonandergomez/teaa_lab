@@ -1,0 +1,12 @@
+# number of samples per class, index, class:
+      1130974    0 inter-ictal
+         5805    1 ictal
+       172044    2 pre-ictal 1h
+        98422    3 pre-ictal 2h
+        72885    4 pre-ictal 3h
+        64960    5 pre-ictal 4h
+        52901    6 post-ictal 10m
+        42856    7 post-ictal 20m
+        36907    8 post-ictal 30m
+        90818    9 post-ictal 1h
+      1768572      total

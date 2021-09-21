@@ -102,14 +102,14 @@ if __name__ == "__main__":
     #review_lines = review_lines.map(lambda x: x.replace('(', ''))
     #review_lines = review_lines.map(lambda x: x.replace(')', ''))
     #review_lines = review_lines.map(lambda x: x.replace('?', ''))
-    review_lines = review_lines.map(lambda x: x.lower())
+    #review_lines = review_lines.map(lambda x: x.lower())
     review_lines = review_lines.map(clean_strings)
     review_lines = review_lines.flatMap(lambda x: x.split(' '))
     review_lines = review_lines.filter(lambda x: x is not None and len(x.strip()) > 0)
     # transformation, returns an RDD of the same data type
     review_lines = review_lines.map(lambda x: (x, 1))
     # transformation, accumulate by key and returns a new RDD with tuples (key, counter)
-    counts = review_lines.reduceByKey(add)
+    counts = review_lines.reduceByKey(lambda x, y: x + y) #(add)
     counts = counts.filter(lambda x: x[1] >= 10) # comment this line to get all the words
 
     measure_time('couting word occurences')
