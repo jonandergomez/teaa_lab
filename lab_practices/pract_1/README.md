@@ -199,11 +199,7 @@ if it is possible, before 30 minutes of the seizure.
 2. Compute the confusion matrix between target classes and a given number of clusters so
    that we can construct a naive classifier by using
 
-<object data="docs/formulas_kmeans.pdf" type="application/pdf" width="700px" height="700px">
-<embed src="docs/formulas_kmeans.pdf">
-<p>This browser does not support PDFs. Please download the PDF to view it: <a href="docs/formulas_kmeans.pdf">Download PDF</a>.</p>
-</embed>
-</object>
+![Here](docs/formulas_kmeans.png)
 
    Use the Python code [kmeans_uc13_classifier.py](../../portal.dsic/examples/python/kmeans_uc13_classifier.py)
 
@@ -223,12 +219,7 @@ if it is possible, before 30 minutes of the seizure.
 5. Compute a confusion matrix between target classes and the components of the GMM for different number
    of components.
 
-<object data="docs/formulas_gmm.pdf" type="application/pdf" width="700px" height="700px">
-<embed src="docs/formulas_gmm.pdf">
-<p>This browser does not support PDFs. Please download the PDF to view it: <a href="docs/formulas_gmm.pdf">Download PDF</a>.</p>
-</embed>
-</object>
-
+![Here](docs/formulas_gmm.png)
 
 6. Carry out several tests to evaluate the performance (KPI accuracy) of the classifier 
    based on GMMs according to the $J$, the number of Gaussian components in the GMM, and
