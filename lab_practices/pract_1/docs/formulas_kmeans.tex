@@ -1,0 +1,24 @@
+
+
+
+\documentclass[a5paper,12pt]{article}
+
+\usepackage{amsmath}
+
+\begin{document}
+
+\pagestyle{empty}
+
+$P(\mathcal{C}_k \mid cluster_{j})$
+as a naive approach to
+$P(\mathcal{C}_k \mid x)$,
+the \emph{a posteriori} probability that
+the current period corresponds to target class $\mathcal{C}_k$
+when $x$ has been observed.
+
+\[
+P(\mathcal{C}_k \mid cluster_{j}) = \frac{count(\mathcal{C}_k,cluster_{j})}{\sum_{i=1}^{J} count(\mathcal{C}_k,cluster_{i})}
+\]
+where $J$ is the number of clusters, i.e., the number of mean vectors in the codebook.
+
+\end{document}
