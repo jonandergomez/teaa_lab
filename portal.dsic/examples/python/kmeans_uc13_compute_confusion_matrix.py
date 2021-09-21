@@ -5,10 +5,10 @@
     Universitat Politecnica de Valencia
     Technical University of Valencia TU.VLC
 
-    Example of how to run the original K-Means from a CSV file stored in the HDFS
+    Simple classifier by associating clusters from K-Means to real classes
 
     run with this command:
-        hdfs dfs -cat  data/uc13.csv | python python/kmeans_uc13_original.py
+        hdfs dfs -cat  data/uc13.csv | python python/kmeans_uc13_compute_confusion_matrix.py
 """
 
 import os
@@ -24,10 +24,21 @@ num_clusters = 1000
 
 t0 = time.time()
 
+with open('models/kmeans_model-uc13-%03d.pkl' % num_clusters, 'rb') as f:
+    centers = pickle.load(f)
+    f.close()
 
-kmeans = KMeans(n_clusters = num_clusters, modality = 'original-k-Means', verbosity = 1)
+kmeans = KMeans()
+kmeans.n_clusters = len(centers)
+kmeans.cluster_centers_ = numpy.array(centers)
 
-not_initialized = True
+#print(kmeans.n_clusters, kmeans.cluster_centers_.shape)
+#sys.exit(0)
+
+counters = list()
+for l in range(num_target_classes):
+    counters.append([0] * num_clusters)
+
 labels = list()
 samples = list()
 i = 0
@@ -40,22 +51,23 @@ for line in sys.stdin:
     if i % 5000 == 0:
         samples = numpy.array(samples)
         labels  = numpy.array(labels, dtype = int)
-        if not_initialized:
-            kmeans.original_k_means_init(samples)
-        else:
-            kmeans.original_k_means_iteration(samples)
-
+        k = kmeans.predict(samples)
+        for j in range(len(k)):
+            counters[labels[j]][k[j]] += 1
         print('execution time at sample', i, 'is', time.time() - t0, 'seconds')
-        samples = list()
         labels = list()
+        samples = list()
 
 if len(samples) > 0:
     samples = numpy.array(samples)
     labels  = numpy.array(labels, dtype = int)
-    kmeans.original_k_means_iteration(samples)
+    k = kmeans.predict(samples)
+    for j in range(len(k)):
+        counters[labels[j]][k[j]] += 1
 
 print('execution time:', time.time() - t0, 'seconds')
 
-with open('models/kmeans_model-uc13-%03d.pkl' % num_clusters, 'wb') as f:
-    pickle.dump(kmeans.cluster_centers_, f)
-    f.close()
+f = open(f'models/cluster-distribution-{num_clusters}.csv', 'wt')
+for l in range(len(counters)):
+    print(";".join("{:d}".format(v) for v in counters[l]), file = f)
+f.close()

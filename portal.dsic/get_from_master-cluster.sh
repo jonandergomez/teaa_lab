@@ -53,7 +53,7 @@ done
 
 pushd examples
 
-for dir in python scripts
+for dir in python scripts models
 do
     echo ""
     echo "######################################### ${dir}"
