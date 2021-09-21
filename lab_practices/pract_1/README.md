@@ -201,7 +201,10 @@ if it is possible, before 30 minutes of the seizure.
 
 <img src="docs/formulas_kmeans.png" alt="Formulation" align="center" style="width:60%" />
 
-   Use the Python code [kmeans_uc13_classifier.py](../../portal.dsic/examples/python/kmeans_uc13_classifier.py)
+Use the Python code
+[kmeans_uc13_compute_confusion_matrix.py](../../portal.dsic/examples/python/kmeans_uc13_compute_confusion_matrix.py)
+or
+[kmeans_uc13_compute_confusion_matrix_v2.py](../../portal.dsic/examples/python/kmeans_uc13_compute_confusion_matrix_v2.py)
 
    `K-Means models are provided, do not compute a K-Means codebook for different sizes, just test the
    algorithm and measure times`
