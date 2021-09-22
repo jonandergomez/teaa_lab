@@ -206,9 +206,9 @@ if it is possible, before 30 minutes of the seizure.
 
 
 
-    `K-Means models are provided [here](../../portal.dsic/examples/models),
-    do not compute a K-Means codebook for different sizes, just test the
-    algorithm and measure times`
+    **K-Means models are provided** [here](../../portal.dsic/examples/models),
+    **do not compute a K-Means codebook for different sizes, just test the
+    algorithm and measure times**
 
 3. Carry out several tests to evaluate the performance (KPI accuracy) of the naive classifier
    according to the number of clusters, and compare with both
