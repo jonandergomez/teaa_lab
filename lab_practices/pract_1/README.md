@@ -212,16 +212,16 @@ if it is possible, before 30 minutes of the seizure.
 
 3. Carry out several tests to evaluate the performance (KPI accuracy) of the naive classifier
    according to the number of clusters, and compare with both
-   [***Calinski-Harabasz***](https://scikit-learn.org/stable/modules/clustering.html#calinski-harabasz-index)
+   [Calinski-Harabasz](https://scikit-learn.org/stable/modules/clustering.html#calinski-harabasz-index)
    and
-   [***Davies-Bouldin***](https://scikit-learn.org/stable/modules/clustering.html#davies-bouldin-index)
-    criteria to determine the (sub-)optimal number of clusters for a given data set.
+   [Davies-Bouldin](https://scikit-learn.org/stable/modules/clustering.html#davies-bouldin-index)
+   criteria to determine the (sub-)optimal number of clusters for a given data set.
 
     Use the Python code [kmeans_uc13_classifier.py](../../portal.dsic/examples/python/kmeans_uc13_classifier.py)
     to obtain the results of the classifier.
 
 4. Obtain several **Gaussian Mixture Models (GMM)** using the Python code
-[gmm_uc13_v2.py](../../portal.dsic/examples/python/gmm_uc13_v2.py)
+   [gmm_uc13_v2.py](../../portal.dsic/examples/python/gmm_uc13_v2.py)
 
 5. Compute a confusion matrix between target classes and the components of the GMM for different number
 of components.
@@ -229,7 +229,7 @@ of components.
 <img src="docs/formulas_gmm.png" alt="Formulation" align="center" style="width:80%" />
 
 6. Carry out several tests to evaluate the performance (KPI accuracy) of the classifier 
-based on GMMs according to the $J$, the number of Gaussian components in the GMM, and
+based on GMMs according to the J, the number of Gaussian components in the GMM, and
 compare with both
 the [Akaike Information Criterion (AIC)](https://en.wikipedia.org/wiki/Akaike_information_criterion)
 and 
