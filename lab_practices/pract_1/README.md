@@ -202,12 +202,13 @@ if it is possible, before 30 minutes of the seizure.
 <img src="docs/formulas_kmeans.png" alt="Formulation" align="center" style="width:60%" />
 
 Use the Python code
-[kmeans_uc13_compute_confusion_matrix.py](../../portal.dsic/examples/python/kmeans_uc13_compute_confusion_matrix.py)
-or
-[kmeans_uc13_compute_confusion_matrix_v2.py](../../portal.dsic/examples/python/kmeans_uc13_compute_confusion_matrix_v2.py)
+[kmeans_uc13_compute_confusion_matrix_spark.py](../../portal.dsic/examples/python/kmeans_uc13_compute_confusion_matrix_spark.py)
 
-   `K-Means models are provided, do not compute a K-Means codebook for different sizes, just test the
-   algorithm and measure times`
+
+
+`K-Means models are provided [here](../../portal.dsic/examples/models),
+do not compute a K-Means codebook for different sizes, just test the
+algorithm and measure times`
 
 3. Carry out several tests to evaluate the performance (KPI accuracy) of the naive classifier
 according to the number of clusters, and compare with both
@@ -215,6 +216,9 @@ according to the number of clusters, and compare with both
 and
 [***Davies-Bouldin***](https://scikit-learn.org/stable/modules/clustering.html#davies-bouldin-index)
 criteria to determine the (sub-)optimal number of clusters for a given data set.
+
+Use the Python code [kmeans_uc13_classifier.py](../../portal.dsic/examples/python/kmeans_uc13_classifier.py)
+to obtain the results of the classifier.
 
 4. Obtain several **Gaussian Mixture Models (GMM)** using the Python code
 [gmm_uc13_v2.py](../../portal.dsic/examples/python/gmm_uc13_v2.py)
