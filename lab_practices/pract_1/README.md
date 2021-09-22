@@ -178,7 +178,6 @@ distributed between ***pre-ictal*** and ***post-ictal*** periods.
 |                    42856  | 7         | post-ictal 20m   |
 |                    36907  | 8         | post-ictal 30m   |
 |                    90818  | 9         | post-ictal 1h    |
----------------------------|-----------|-----------------
 |                  1768572  |           | total           |
 
 
@@ -192,7 +191,7 @@ The **goal** is to predict seizures within the previous 60 minutes,
 if it is possible, before 30 minutes of the seizure.
 
 
-## Work to do in this lab practice
+## Work to do in this lab practice
 
 1. Obtain several codebooks with the algorithm **Lloyd** of K-Means using the Spark cluster
    with the Python code [kmeans_uc13.py](../../portal.dsic/examples/python/kmeans_uc13.py)
