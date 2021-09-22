@@ -12,6 +12,7 @@
 import os
 import sys
 import numpy
+import pickle
 
 from machine_learning import KMeans
 
@@ -31,7 +32,7 @@ if __name__ == "__main__":
 
     verbose = 0
     dataset_filename = 'data/uc13.csv'
-    codebook_filename = 'models/kmeans_model-uc13-1000.pkl'
+    codebook_filename = 'models/kmeans_model-uc13-200.pkl'
     spark_context = None
     slices = 8
     batch_size = 100
@@ -58,6 +59,7 @@ if __name__ == "__main__":
     kmeans = KMeans()
     kmeans.n_clusters = len(centers)
     kmeans.cluster_centers_ = numpy.array(centers)
+    print(f'loaded the codebook of {kmeans.n_clusters} clusters')
 
 
     # Load and parse the data
@@ -65,8 +67,9 @@ if __name__ == "__main__":
     print("file(s) loaded ")
     csv_lines.persist()
     num_samples = csv_lines.count()
+    print("loaded %d samples distributed in %d partitions" % (num_samples, csv_lines.getNumPartitions()))
     csv_lines.unpersist()
-    print("loaded %d samples " % num_samples)
+
 
     def csv_line_to_label_and_sample(line):
         parts = line.split(';')
@@ -74,10 +77,21 @@ if __name__ == "__main__":
 
     data = csv_lines.map(csv_line_to_label_and_sample)
 
+    ####################################################################
+    # do standard scaling
+    x_mean = data.map(lambda x: x[1]).reduce(lambda x1, x2: x1 + x2)
+    x_mean /= num_samples
+    print(x_mean.shape)
+    x_std = data.map(lambda x: x[1]).map(lambda x: (x - x_mean) ** 2).reduce(lambda x1, x2: x1 + x2)
+    x_std = numpy.sqrt(x_std / num_samples)
+    print(x_std.shape)
+    data = data.map(lambda x: (x[0], (x[1] - x_mean) / x_std))
+    ####################################################################
+
     def assign_sample_to_cluster(t):
         k = kmeans.predict([t[1]])
-        x = numpy.zeros(k, kmeans_n_clusters)
-        x[k] = 1
+        x = numpy.zeros(kmeans.n_clusters)
+        x[k[0]] = 1
         return (t[0], x)
         
     data = data.map(assign_sample_to_cluster)
@@ -92,7 +106,7 @@ if __name__ == "__main__":
         x = row[1]
         counters[l] += x
 
-    f = open(f'models/cluster-distribution-{num_clusters}.csv2', 'wt')
+    f = open(f'models/cluster-distribution-{kmeans.n_clusters}.csv', 'wt')
     for l in range(len(counters)):
-        print(";".join("{:d}".format(v) for v in counters[l]), file = f)
+        print(";".join("{:f}".format(v) for v in counters[l]), file = f)
     f.close()
