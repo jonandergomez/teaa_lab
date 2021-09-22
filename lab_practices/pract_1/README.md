@@ -148,7 +148,8 @@ explains how to compute these statistics.
 
 ******
 
-Finally, the output of the ***short-term analysis*** is that each channel is converted to a sequence of vectors $$x_t \in \mathbb{R}^{14}$$.
+Finally, the output of the ***short-term analysis*** is that each channel is converted to a sequence of vectors in
+the 14-dimensional real space.
 
 - Eight components are extracted from the frequency domain, in lineally spaced pass band filters, and
 
