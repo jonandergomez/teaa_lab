@@ -23,6 +23,7 @@
 #   Technical University of Valencia (http://www.upv.es)
 #
 #
+import os
 import sys
 import time
 import pickle
@@ -37,9 +38,13 @@ if __name__ == "__main__":
 
     debug = 0
     filename = 'data/uc13.csv'
-    min_num_clusters = 200 # 51 # 2
-    max_num_clusters = 500 # 150 # 50
-    delta_num_clusters = 50
+
+    list_of_num_clusters = list()
+    for k in range(   2,  150,  1): list_of_num_clusters.append(k) # comment this line to skip these clustering sizes
+    for k in range( 150,  501, 50): list_of_num_clusters.append(k) # comment this line to skip these clustering sizes
+    #list_of_num_clusters.append(1000)
+
+
     num_partitions = 80
 
     for i in range(1, len(sys.argv)):
@@ -60,7 +65,7 @@ if __name__ == "__main__":
 
     print(f'loaded {num_samples} {dim}-dimensional samples into {data.getNumPartitions()} partitions')
 
-    data.repartition(num_partitions)
+    data = data.repartition(num_partitions)
 
     if debug > 1: print(type(x), x[0].shape)
 
@@ -86,21 +91,38 @@ if __name__ == "__main__":
         q = kmeans_model.predict(x)
         c_q = kmeans_model.centers[q]
         d = x - c_q
-        sd = sum(d ** 2)
-        return q, sd, math.sqrt(sd), numpy.outer(d, d)
+        d2 = d ** 2
+        sd = sum(d2)
+        return q, sd, math.sqrt(sd), d2 # numpy.diag(numpy.outer(d, d)) # use diag of outer product to save memory
     ####################################################################
     
-    for num_clusters in range(min_num_clusters, max_num_clusters + 1, delta_num_clusters):
+    for num_clusters in list_of_num_clusters:
 
-        # Build the model (cluster the data)
+        codebook_filename = 'models/kmeans_model-uc13-%03d.pkl' % num_clusters
+        
+        if os.path.exists(codebook_filename):
+            with open(codebook_filename, 'rb') as f:
+                cluster_centers = pickle.load(f)
+                f.close()
+            
+            kmeans_model = KMeansModel(cluster_centers)
+            print(f'loaded codebook for {num_clusters}')
+
+        else: # Build the model (cluster the data)
+            starting_time = time.time()
+            kmeans_model = KMeans.train(data, k = num_clusters, maxIterations = 100, initializationMode = "kmeans||", initializationSteps = 5, epsilon = 1.0e-4)
+            ending_time = time.time()
+            print('processing time lapse for', num_clusters, 'clusters', ending_time - starting_time, 'seconds')
+
+            if debug > 1: print(len(kmeans_model.centers), kmeans_model.centers[0].shape)
+
+            with open(codebook_filename, 'wb') as f:
+                pickle.dump(kmeans_model.centers, f)
+                f.close()
+
+
         starting_time = time.time()
-        kmeans_model = KMeans.train(data, k = num_clusters, maxIterations = 100, initializationMode = "kmeans||", initializationSteps = 5, epsilon = 1.0e-4)
-        ending_time = time.time()
-        print('processing time lapse for', num_clusters, 'clusters', ending_time - starting_time, 'seconds')
-
-
-        starting_time = time.time()
-        values_for_metrics = data.map(lambda x: compute_values_for_metrics(x))
+        values_for_metrics = data.map(compute_values_for_metrics)
         values_for_metrics.persist()
         WSSSE = values_for_metrics.map(lambda x: x[1]).reduce(lambda x, y: x + y)
         W_k   = values_for_metrics.map(lambda x: x[3]).reduce(lambda x, y: x + y)
@@ -117,22 +139,24 @@ if __name__ == "__main__":
         # Calinski-Harabasz index
         if debug > 1: print(n_q)
         B_k = sum([n_q[q] * numpy.outer(kmeans_model.centers[q] - c_E, (kmeans_model.centers[q] - c_E)) for q in range(num_clusters)])
-        calinski_harabasz_index = (sum(numpy.diag(B_k)) / sum(numpy.diag(W_k))) * ((num_samples - num_clusters) / (num_clusters - 1))
+        #calinski_harabasz_index = (sum(numpy.diag(B_k)) / sum(numpy.diag(W_k))) * ((num_samples - num_clusters) / (num_clusters - 1))
+        calinski_harabasz_index = (sum(numpy.diag(B_k)) / sum(W_k)) * ((num_samples - num_clusters) / (num_clusters - 1))
         print(f'Calinski Harabasz index for {num_clusters} clusters is {calinski_harabasz_index}  and normalized per sample is {calinski_harabasz_index / num_samples}')
 
-        #S = data.map(lambda x : compute_davies_bouldin_s_i(x)).reduceByKey(lambda c1, c2: c1 + c2).collect()
-        S.sort(key = lambda x : x[0])
+        # Davies-Bouldin index
+        S.sort(key = lambda x : x[0]) # sort to ensure S[i] corresponds to cluster i
         if debug > 2: print(S)
-        S = [s[1] for s in S]
+        S = [s[1] for s in S] # use only the accumulated 'cluster radius' and drop the cluster index
         if debug > 2: print(S)
         for q in range(num_clusters):
-            S[q] /= n_q[q]
+            S[q] /= n_q[q] # compute the mean to get the 'cluster radius'
         if debug > 2: print(S)
-        R = numpy.zeros([num_clusters, num_clusters])
+        R = numpy.zeros([num_clusters, num_clusters]) # prepare the matrix R
         davies_bouldin_index = 0
         for i in range(num_clusters):
             for j in range(i + 1, num_clusters):
-                R[i, j] = R[j, i] = (S[i] + S[j]) / max(1.0e-3, math.sqrt(sum((kmeans_model.centers[i] - kmeans_model.centers[j]) ** 2))) # set lower bound to 1.0e-3 to avoid zero divisions
+                d_i_j = math.sqrt(sum((kmeans_model.centers[i] - kmeans_model.centers[j]) ** 2)) # distance between cluster centers
+                R[i, j] = R[j, i] = (S[i] + S[j]) / max(1.0e-3, d_i_j) # set lower bound to 1.0e-3 to avoid zero divisions
 
             j_max = numpy.argmax(R[i, :])
             assert j_max != i
@@ -140,10 +164,9 @@ if __name__ == "__main__":
         davies_bouldin_index /= num_clusters
         print(f'Davies Bouldin index for {num_clusters} clusters is {davies_bouldin_index}')
 
-        if debug > 1: print(len(kmeans_model.centers), kmeans_model.centers[0].shape)
-
-        with open('data/kmeans_model-uc13-%03d.pkl' % num_clusters, 'wb') as f:
-            pickle.dump(kmeans_model.centers, f)
+        # save KPIs to measure the quality of the clusterings
+        with open('log/kmeans-kpis.txt', 'at') as f:
+            print(f'{num_clusters}  {WSSSE / num_samples}  {calinski_harabasz_index}  {davies_bouldin_index}', file = f)
             f.close()
 
     ####################################################################

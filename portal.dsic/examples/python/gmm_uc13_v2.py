@@ -59,7 +59,7 @@ if __name__ == "__main__":
     base_dir = '.'
     standalone = False
     spark_context = None
-    slices = 8
+    num_partitions = 8
     batch_size = 100
     gmm_filename = None
                                                    
@@ -76,8 +76,8 @@ if __name__ == "__main__":
             verbose = int(sys.argv[i + 1])
         elif sys.argv[i] == "--standalone":
             standalone = True
-        elif sys.argv[i] == "--num-slices":
-            slices = int(sys.argv[i + 1])
+        elif sys.argv[i] == "--num-partitions":
+            num_partitions = int(sys.argv[i + 1])
         elif sys.argv[i] == "--batch-size":
             batch_size = int(sys.argv[i + 1])
         elif sys.argv[i] == "--model":
@@ -129,7 +129,7 @@ if __name__ == "__main__":
 
 
         K = (num_samples + batch_size - 1) / batch_size 
-        K = ((K // slices) + 1) * slices
+        K = ((K // num_partitions) + 1) * num_partitions
         #samples = text_lines.map(lambda line: (numpy.random.randint(K), numpy.array([float(x) for x in line.split()])))
         samples = data.map(lambda x: (numpy.random.randint(K), x))
 
@@ -146,8 +146,8 @@ if __name__ == "__main__":
         samples = samples.reduceByKey(lambda x, y: numpy.vstack([x, y]))
 
         # Repartition if necessary
-        if samples.getNumPartitions() < slices:
-            samples = samples.repartition(slices)
+        if samples.getNumPartitions() < num_partitions:
+            samples = samples.repartition(num_partitions)
             print("rdd repartitioned to %d partitions" % samples.getNumPartitions())
 
         # Shows an example of each element in the temporary RDD of tuples [key, block of samples]

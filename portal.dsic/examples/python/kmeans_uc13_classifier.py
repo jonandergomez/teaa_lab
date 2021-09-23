@@ -14,12 +14,32 @@ import sys
 import numpy
 import pickle
 
+from sklearn.base import BaseEstimator
+from sklearn.metrics import confusion_matrix, classification_report, plot_confusion_matrix
+
 from machine_learning import KMeans
+
+from matplotlib import pyplot
 
 try:
     from pyspark import SparkContext
 except:
     pass
+
+class MyArgmaxForPredictedLabels(BaseEstimator):
+    def __init__(self, threshold = 0.5):
+        self.threshold = threshold
+        self._estimator_type = 'classifier'
+
+    def fit(self, X, y):
+        raise Exception('No fit implemented in this class')
+        return self
+
+    def predict(self, y_probs):
+        assert type(y_probs) == numpy.ndarray
+        assert len(y_probs.shape) == 1
+        return y_probs
+
 
 
 if __name__ == "__main__":
@@ -34,9 +54,9 @@ if __name__ == "__main__":
     verbose = 0
     dataset_filename = 'data/uc13.csv'
     codebook_filename = 'models/kmeans_model-uc13-200.pkl'
-    confusion_matrix_filename = 'models/cluster-distribution-200.csv'
+    counter_pairs_filename = 'models/cluster-distribution-200.csv'
     spark_context = None
-    slices = 8
+    num_partitions = 40
     batch_size = 100
                                                    
     for i in range(len(sys.argv)):
@@ -44,14 +64,14 @@ if __name__ == "__main__":
             dataset_filename = sys.argv[i + 1]
         elif sys.argv[i] == "--verbosity":
             verbose = int(sys.argv[i + 1])
-        elif sys.argv[i] == "--num-slices":
-            slices = int(sys.argv[i + 1])
+        elif sys.argv[i] == "--num-partitions":
+            num_partitions = int(sys.argv[i + 1])
         elif sys.argv[i] == "--batch-size":
             batch_size = int(sys.argv[i + 1])
         elif sys.argv[i] == "--codebook":
             codebook_filename = sys.argv[i + 1]
-        elif sys.argv[i] == "--confusion-matrix":
-            confusion_matrix_filename = sys.argv[i + 1]
+        elif sys.argv[i] == "--counter-pairs":
+            counter_pairs_filename = sys.argv[i + 1]
 
     spark_context = SparkContext(appName = "K-Means-based naive classifier")
 
@@ -67,30 +87,31 @@ if __name__ == "__main__":
     print(f'loaded the codebook of {kmeans.n_clusters} clusters')
 
     # Load the confusion matrix
-    confusion_matrix = None
-    with open(confusion_matrix_filename, 'rt') as f:
-        confusion_matrix = list()
+    counter_pairs = None
+    with open(counter_pairs_filename, 'rt') as f:
+        counter_pairs = list()
         for line in f:
-            confusion_matrix.append([float(x) for x in line.split(';')])
+            counter_pairs.append([float(x) for x in line.split(';')])
         f.close()
-        confusion_matrix = numpy.array(confusion_matrix)
+        counter_pairs = numpy.array(counter_pairs)
 
     # Compute the conditional probabilities
-    conditional_probabilities = confusion_matrix.copy()
-    # normalize per row to compensate the unbalance of target classes
-    for i in range(confusion_matrix.shape[0]):
-        conditional_probabilities[i, :] = confusion_matrix[i, :] / sum(confusion_matrix[i, :])
-    # normalize per column to use this K-Means-based naive classifier
-    for j in range(conditional_probabilities.shape[1]):
-        conditional_probabilities[:, j] = conditional_probabilities[:, j] / sum(conditional_probabilities[:, j])
+    conditional_probabilities = counter_pairs.copy()
+    for i in range(counter_pairs.shape[0]):
+        conditional_probabilities[i, :] = counter_pairs[i, :] / sum(counter_pairs[i, :])
+    
+    # Compute the a priori probabilities of target classes
+    target_class_a_priori_probabilities = counter_pairs.sum(axis = 1) / counter_pairs.sum()
 
     # Load and parse the data
     csv_lines = spark_context.textFile(dataset_filename)
     print("file(s) loaded ")
-    csv_lines.persist()
+    if csv_lines.getNumPartitions() < num_partitions:
+        csv_lines = csv_lines.repartition(num_partitions)
+    #csv_lines.persist()
     num_samples = csv_lines.count()
     print("loaded %d samples distributed in %d partitions" % (num_samples, csv_lines.getNumPartitions()))
-    csv_lines.unpersist()
+    #csv_lines.unpersist()
 
 
     def csv_line_to_label_and_sample(line):
@@ -112,29 +133,40 @@ if __name__ == "__main__":
 
     def classify_sample(t):
         k = kmeans.predict([t[1]])
-        k = conditional_probabilities[:, k[0]].argmax()
+        probs = conditional_probabilities[:, k[0]] # * target_class_a_priori_probabilities
+        k = probs.argmax()
         return (t[0], k)
         
     data = data.map(classify_sample)
 
-    def compute_assigments(t):
-        x = numpy.zeros(10, dtype = int) # 10 must be parametrized
-        x[t[1]] = 1
-        return (t[0], x)
+    y_true_and_pred = data.collect()
+    y_true = numpy.array([x[0] for x in y_true_and_pred])
+    y_pred = numpy.array([x[1] for x in y_true_and_pred])
 
-    data = data.map(compute_assigments)
+    f_results = open(f'results/classification-results-{kmeans.n_clusters}.txt', 'wt')
+    _cm_ = confusion_matrix(y_true, y_pred)
+    for i in range(_cm_.shape[0]):
+        for j in range(_cm_.shape[1]):
+            f_results.write(' %10d' % _cm_[i, j])
+        f_results.write('\n')
+    f_results.write('\n')
+    print(classification_report(y_true, y_pred), file = f_results)
+    f_results.close()
+    #
+    fig, axes = pyplot.subplots(nrows = 1, ncols = 2, figsize = (16, 7))
+    #fig.suptitle(title)
+    #
+    plot_confusion_matrix(estimator = MyArgmaxForPredictedLabels(),
+                          X = y_pred, y_true = y_true,
+                          normalize = 'true', ax = axes[0], cmap = 'Blues', colorbar = False)
+    #
+    plot_confusion_matrix(estimator = MyArgmaxForPredictedLabels(),
+                          X = y_pred, y_true = y_true,
+                          normalize = 'pred', ax = axes[1], cmap = 'Oranges', colorbar = False)
+    #
+    pyplot.tight_layout()
+    pyplot.savefig(f'results/confusion_matrix-{kmeans.n_clusters}.svg', format = 'svg')
+    pyplot.savefig(f'results/confusion_matrix-{kmeans.n_clusters}.png', format = 'png')
+    del fig
 
-    accum_matrix = data.reduceByKey(lambda x, y: x + y).collect()
-    
     spark_context.stop()
-
-    matrix = numpy.zeros([len(accum_matrix), len(accum_matrix)], dtype = int)
-    for row in accum_matrix:
-        l = row[0]
-        x = row[1]
-        matrix[l, :] = x
-
-    f = open(f'results/classification-results-{kmeans.n_clusters}.txt', 'wt')
-    for l in range(len(matrix)):
-        print(" ".join("{:20d}".format(v) for v in matrix[l]), file = f)
-    f.close()

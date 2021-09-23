@@ -34,7 +34,7 @@ if __name__ == "__main__":
     dataset_filename = 'data/uc13.csv'
     codebook_filename = 'models/kmeans_model-uc13-200.pkl'
     spark_context = None
-    slices = 8
+    num_partitions = 40
     batch_size = 100
                                                    
     for i in range(len(sys.argv)):
@@ -42,8 +42,8 @@ if __name__ == "__main__":
             dataset_filename = sys.argv[i + 1]
         elif sys.argv[i] == "--verbosity":
             verbose = int(sys.argv[i + 1])
-        elif sys.argv[i] == "--num-slices":
-            slices = int(sys.argv[i + 1])
+        elif sys.argv[i] == "--num-partitions":
+            num_partitions = int(sys.argv[i + 1])
         elif sys.argv[i] == "--batch-size":
             batch_size = int(sys.argv[i + 1])
         elif sys.argv[i] == "--codebook":
@@ -64,6 +64,8 @@ if __name__ == "__main__":
 
     # Load and parse the data
     csv_lines = spark_context.textFile(dataset_filename)
+    #csv_lines = csv_lines.coalesce(20)
+    csv_lines = csv_lines.repartition(num_partitions)
     print("file(s) loaded ")
     csv_lines.persist()
     num_samples = csv_lines.count()
@@ -106,7 +108,7 @@ if __name__ == "__main__":
         x = row[1]
         counters[l] += x
 
-    f = open(f'models/cluster-distribution-{kmeans.n_clusters}.csv', 'wt')
+    f = open('models/cluster-distribution-%03d.csv' % kmeans.n_clusters, 'wt')
     for l in range(len(counters)):
         print(";".join("{:f}".format(v) for v in counters[l]), file = f)
     f.close()
