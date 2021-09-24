@@ -197,9 +197,7 @@ if it is possible, before 30 minutes of the seizure.
    with the Python code [kmeans_uc13.py](../../portal.dsic/examples/python/kmeans_uc13.py)
 
 2. Compute the confusion matrix between target classes and a given number of clusters so
-   that we can construct a naive classifier based on
-
-   <img src="docs/formulas_kmeans.png" alt="Formulation" align="center" style="width:80%" />
+   that we can construct a naive classifier based on [this formulation](docs/formulas_kmeans.pdf)
 
    Use the Python code
    [kmeans_uc13_compute_confusion_matrix_spark.py](../../portal.dsic/examples/python/kmeans_uc13_compute_confusion_matrix_spark.py)
