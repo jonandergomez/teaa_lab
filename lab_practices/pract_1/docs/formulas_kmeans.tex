@@ -1,7 +1,4 @@
-
-
-
-\documentclass[a5paper,12pt]{article}
+\documentclass[a4paper,12pt]{article}
 
 \usepackage{amsmath}
 
@@ -9,16 +6,59 @@
 
 \pagestyle{empty}
 
-$P(\mathcal{C}_k \mid cluster_{j})$
-as a naive approach to
-$P(\mathcal{C}_k \mid x)$,
-the \emph{a posteriori} probability that
-the current period corresponds to target class $\mathcal{C}_k$
-when $x$ has been observed.
-
 \[
-P(\mathcal{C}_k \mid cluster_{j}) = \frac{count(\mathcal{C}_k,cluster_{j})}{\sum_{i=1}^{J} count(\mathcal{C}_k,cluster_{i})}
+    P(\mathcal{C}_{k} \mid x_{t}) = 
+    \frac{p(\mathcal{C}_{k}, x_{t})}{\underset{i=0}{\overset{K}{\sum}} p(\mathcal{C}_{i}, x_{t})} =
+    \frac{\underset{l=0}{\overset{L}{\sum}} p(\mathcal{C}_{k}, x_{t}^{l})}{\underset{i=0}{\overset{K}{\sum}} \; \underset{l=0}{\overset{L}{\sum}} p(\mathcal{C}_{i}, x_{t}^{l})} =
+    \frac{\underset{l=0}{\overset{L}{\sum}} \; \underset{j=0}{\overset{J}{\sum}} p(\mathcal{C}_{k}, w_{j}, x_{t}^{l})}{\underset{i=0}{\overset{K}{\sum}} \; \underset{l=0}{\overset{L}{\sum}} \; \underset{j=0}{\overset{J}{\sum}} p(\mathcal{C}_{i}, w_{j}, x_{t}^{l})}
 \]
-where $J$ is the number of clusters, i.e., the number of mean vectors in the codebook.
+where
+\begin{center}
+\begin{tabular}{rp{110mm}}
+$K$ & is the number of target classes \\
+$J$ & is the number of clusters in the clustering, i.e., the number of mean vectors in the codebook \\
+$L$ & is the number of channels recorded in the EEG \\
+$x_{t}$ & is the sample at time $t$ including all the channels in the EGG \\
+$x_{t}^{l}$ & is the sample at time $t$ corresponding to the $l$-th channel of the EGG \\
+$p(\mathcal{C}_{k}, x_{t})$ & is the joint probability of target class $\mathcal{C}_{k}$ and sample $x_{t}$ \\
+$p(\mathcal{C}_{k}, x_{t}^{l})$ & is the joint probability of target class $\mathcal{C}_{k}$ and sample $x_{t}^{l}$ \\
+$p(\mathcal{C}_{k}, w_{j}, x_{t}^{l})$ & is the joint probability of target class $\mathcal{C}_{k}$, cluster $w_{j}$ and sample $x_{t}^{l}$ \\
+\end{tabular}
+\end{center}
 
+\newpage
+
+In more detail
+\[
+p(\mathcal{C}_{k}, w_{j}, x_{t}^{l}) =
+p(x_{t}^{l} \mid w_{j}, \mathcal{C}_{k}) \cdot P(w_{j} \mid \mathcal{C}_{k}) \cdot P(\mathcal{C}_{k})
+\]
+where
+\begin{center}
+\begin{tabular}{rp{110mm}}
+$p(x_{t}^{l} \mid w_{j}, \mathcal{C}_{k})$ & is the conditional probability density of observing sample
+                                             $x_{t}^{l}$ when the patient is in the state corresponding
+                                             to target class $\mathcal{C}_{k}$ and AAA,
+                                             this will be approached by $p(x_{t}^{l} \mid w_{j})$, \\
+$p(x_{t}^{l} \mid w_{j})$ & is the conditional probability density that observing sample $x_{t}^{l}$
+                            belongs to cluster $w_{j}$, that is computed simply by
+                            $$p(x_{t}^{l} \mid w_{j}) = \Bigl\{ \begin{array}{l} 1 \; \texttt{if} \; x_{t}^{l} \; \texttt{falls in cluster} \; w_{j} \\ 0 \; \texttt{otherwise} \\ \end{array}$$ \\
+
+$P(w_{j} \mid \mathcal{C}_{k})$ & is the conditional probability of observing samples falling in cluster $w_{j}$ when
+                                  the patient is in the state corresponding to target class $\mathcal{C}_{k}$, computed
+                                  as $$P(w_{j} \mid \mathcal{C}_{k}) = \frac{count(w_{j}, \mathcal{C}_{k})}{\sum_{h=1}^{J} count(w_{h}, \mathcal{C}_{k})}$$ \\
+
+$P(\mathcal{C}_{k})$ & is the \emph{a priori} probablity of target class $\mathcal{C}_{k}$, computed as 
+                                  as $$P(\mathcal{C}_{k}) = \frac{count(\mathcal{C}_{k})}{\sum_{i=1}^{K} count(\mathcal{C}_{k})}$$ \\
+\end{tabular}
+\end{center}
+
+Finally,
+\[
+P(\mathcal{C}_{k} \mid x_{t}) \approx
+    \frac{\underset{l=0}{\overset{L}{\sum}} \; \underset{j=0}{\overset{J}{\sum}}
+        p(x_{t}^{l} \mid w_{j}) \cdot P(w_{j} \mid \mathcal{C}_{k}) \cdot P(\mathcal{C}_{k})}%
+        {\underset{i=0}{\overset{K}{\sum}} \; \underset{l=0}{\overset{L}{\sum}} \; \underset{j=0}{\overset{J}{\sum}}
+            p(x_{t}^{l} \mid w_{j}) \cdot P(w_{j} \mid \mathcal{C}_{i}) \cdot P(\mathcal{C}_{i})}
+\]
 \end{document}
