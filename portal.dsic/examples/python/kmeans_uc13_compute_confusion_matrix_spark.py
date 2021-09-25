@@ -31,11 +31,12 @@ if __name__ == "__main__":
     """
 
     verbose = 0
-    dataset_filename = 'data/uc13.csv'
+    dataset_filename = 'data/uc13-train.csv'
     codebook_filename = 'models/kmeans_model-uc13-200.pkl'
     spark_context = None
     num_partitions = 40
     batch_size = 100
+    num_channels = 21
                                                    
     for i in range(len(sys.argv)):
         if sys.argv[i] == "--dataset":
@@ -73,30 +74,50 @@ if __name__ == "__main__":
     csv_lines.unpersist()
 
 
-    def csv_line_to_label_and_sample(line):
+    def csv_line_to_patient_label_and_sample(line):
         parts = line.split(';')
-        return (int(parts[0]), numpy.array([float(x) for x in parts[1:]]))
+        return (parts[0], int(parts[1]), numpy.array([float(x) for x in parts[2:]]).reshape(num_channels, 14))
 
-    data = csv_lines.map(csv_line_to_label_and_sample)
+    data = csv_lines.map(csv_line_to_patient_label_and_sample)
 
     ####################################################################
-    # do standard scaling
-    x_mean = data.map(lambda x: x[1]).reduce(lambda x1, x2: x1 + x2)
-    x_mean /= num_samples
-    print(x_mean.shape)
-    x_std = data.map(lambda x: x[1]).map(lambda x: (x - x_mean) ** 2).reduce(lambda x1, x2: x1 + x2)
-    x_std = numpy.sqrt(x_std / num_samples)
-    print(x_std.shape)
-    data = data.map(lambda x: (x[0], (x[1] - x_mean) / x_std))
+    # begin: do standard scaling 
+    ####################################################################
+    statistics_filename = 'models/mean_and_std.pkl'
+    if os.path.exists(statistics_filename):
+        with open(statistics_filename, 'rb') as f:
+            stats = pickle.load(f)
+            f.close()
+        x_mean, x_std = stats
+    else:
+        x_mean = data.map(lambda x: x[2]).reduce(lambda x1, x2: x1 + x2)
+        x_mean = x_mean.sum(axis = 0) # merging all the channels altogether, i.e. sum(axis = 0)
+        x_mean /= (num_samples * num_channels)
+        print(x_mean.shape) # should be (14,)
+        x_std = data.map(lambda x: x[2]).map(lambda x: (x - x_mean) ** 2).reduce(lambda x1, x2: x1 + x2)
+        x_std = x_std.sum(axis = 0) # merging all the channels altogether, i.e. sum(axis = 0)
+        x_std = numpy.sqrt(x_std / (num_samples * num_channels))
+        print(x_std.shape) # should be (14,)
+        with open(statistics_filename, 'wb') as f:
+            pickle.dump([x_mean, x_std], f)
+            f.close()
+    #
+    data = data.map(lambda x: (x[0], x[1], (x[2] - x_mean) / x_std))
+    ####################################################################
+    # end: do standard scaling 
     ####################################################################
 
     def assign_sample_to_cluster(t):
-        k = kmeans.predict([t[1]])
-        x = numpy.zeros(kmeans.n_clusters)
-        x[k[0]] = 1
-        return (t[0], x)
+        patient, label, sample = t 
+        output = list()
+        cluster_assignments = kmeans.predict(sample)
+        for j in cluster_assignments:
+            x = numpy.zeros(kmeans.n_clusters)
+            x[j] = 1
+            output.append((label, x)) # for this purpose patient is dropped
+        return output
         
-    data = data.map(assign_sample_to_cluster)
+    data = data.flatMap(assign_sample_to_cluster)
 
     matrix = data.reduceByKey(lambda x, y: x + y).collect()
     
@@ -110,5 +131,5 @@ if __name__ == "__main__":
 
     f = open('models/cluster-distribution-%03d.csv' % kmeans.n_clusters, 'wt')
     for l in range(len(counters)):
-        print(";".join("{:f}".format(v) for v in counters[l]), file = f)
+        print(";".join("{:.0f}".format(v) for v in counters[l]), file = f)
     f.close()

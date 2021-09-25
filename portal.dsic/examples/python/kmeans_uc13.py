@@ -37,13 +37,14 @@ if __name__ == "__main__":
     sc = SparkContext(appName = "kmeans-uc13")  # SparkContext
 
     debug = 0
-    filename = 'data/uc13.csv'
+    filename = 'data/uc13-train.csv'
+    num_channels = 21
 
     list_of_num_clusters = list()
-    for k in range(   2,  150,  1): list_of_num_clusters.append(k) # comment this line to skip these clustering sizes
-    for k in range( 150,  501, 50): list_of_num_clusters.append(k) # comment this line to skip these clustering sizes
+    #for k in range(   2,  150,   1): list_of_num_clusters.append(k) # comment this line to skip these clustering sizes
+    #for k in range( 150,  500,  50): list_of_num_clusters.append(k) # comment this line to skip these clustering sizes
+    #for k in range( 500, 1000, 100): list_of_num_clusters.append(k) # comment this line to skip these clustering sizes
     #list_of_num_clusters.append(1000)
-
 
     num_partitions = 80
 
@@ -56,29 +57,47 @@ if __name__ == "__main__":
             num_partitions = int(sys.argv[i + 1])
 
     # Load and parse the data
-    lines = sc.textFile(filename)
-    data = lines.map(lambda line: numpy.array([float(x) for x in line.split(';')]))
-    data = data.map(lambda x: x[1:]) # removes the first column corresponding to the label
-    x = data.take(1)
-    num_samples = data.count()
-    dim = x[0].shape[0]
+    csv_lines = sc.textFile(filename)
+    csv_lines = csv_lines.repartition(num_partitions)
 
-    print(f'loaded {num_samples} {dim}-dimensional samples into {data.getNumPartitions()} partitions')
 
-    data = data.repartition(num_partitions)
+    def csv_line_to_patient_label_and_sample(line):
+        parts = line.split(';')
+        return (parts[0], int(parts[1]), numpy.array([float(x) for x in parts[2:]]).reshape(num_channels, 14))
 
-    if debug > 1: print(type(x), x[0].shape)
+    data = csv_lines.map(csv_line_to_patient_label_and_sample)
 
-    print(f'distributed {num_samples} {dim}-dimensional samples into {data.getNumPartitions()} partitions')
+    print(f'loaded {num_samples} samples into {data.getNumPartitions()} partitions')
 
     ####################################################################
-    # do standard scaling
-    x_mean = data.reduce(lambda x1, x2: x1 + x2) / num_samples
-    if debug > 0: print('mean:', x_mean)
-    x_std = numpy.sqrt(data.map(lambda x: (x - x_mean) ** 2).reduce(lambda x1, x2: x1 + x2) / num_samples)
-    if debug > 0: print('std:', x_std)
-    data = data.map(lambda x: (x - x_mean) / x_std)
+    # begin: do standard scaling 
     ####################################################################
+    statistics_filename = 'models/mean_and_std.pkl'
+    if os.path.exists(statistics_filename):
+        with open(statistics_filename, 'rb') as f:
+            stats = pickle.load(f)
+            f.close()
+        x_mean, x_std = stats
+    else:
+        x_mean = data.map(lambda x: x[2]).reduce(lambda x1, x2: x1 + x2)
+        x_mean = x_mean.sum(axis = 0) # merging all the channels altogether, i.e. sum(axis = 0)
+        x_mean /= (num_samples * num_channels)
+        print(x_mean.shape) # should be (14,)
+        x_std = data.map(lambda x: x[2]).map(lambda x: (x - x_mean) ** 2).reduce(lambda x1, x2: x1 + x2)
+        x_std = x_std.sum(axis = 0) # merging all the channels altogether, i.e. sum(axis = 0)
+        x_std = numpy.sqrt(x_std / (num_samples * num_channels))
+        print(x_std.shape) # should be (14,)
+        with open(statistics_filename, 'wb') as f:
+            pickle.dump([x_mean, x_std], f)
+            f.close()
+    #
+    data = data.map(lambda x: (x[0], x[1], (x[2] - x_mean) / x_std))
+    ####################################################################
+    # end: do standard scaling 
+    ####################################################################
+
+    # removes first and second columns corresponding to patient and label
+    data = data.flatMap(lambda x: [v[i] for i in range(x[2:].shape[0])])
 
     data.persist()
 
@@ -110,7 +129,8 @@ if __name__ == "__main__":
 
         else: # Build the model (cluster the data)
             starting_time = time.time()
-            kmeans_model = KMeans.train(data, k = num_clusters, maxIterations = 100, initializationMode = "kmeans||", initializationSteps = 5, epsilon = 1.0e-4)
+            #kmeans_model = KMeans.train(data, k = num_clusters, maxIterations = 100, initializationMode = "kmeans||", initializationSteps = 5, epsilon = 1.0e-4)
+            kmeans_model = KMeans.train(data, k = num_clusters, maxIterations = 2000, initializationMode = "kmeans||", initializationSteps = 5, epsilon = 1.0e-9)
             ending_time = time.time()
             print('processing time lapse for', num_clusters, 'clusters', ending_time - starting_time, 'seconds')
 

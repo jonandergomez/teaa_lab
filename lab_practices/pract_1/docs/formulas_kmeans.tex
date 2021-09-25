@@ -6,6 +6,19 @@
 
 \pagestyle{empty}
 
+Let $\mathcal{C}_{k}$ be one of the target classes of the task, in this use case
+one of the possible states the patient can be while he/she is monitored,
+and let $x_{t}$ be the observed sample at time instant $t$,
+then, for this use case, $P(\mathcal{C}_{k} \mid x_{t})$ represents the
+\emph{a posteriori} probability that the patient is in the state corresponding
+to target class $\mathcal{C}_{k}$ when the sample $x_{t}$ has been observed.
+
+\bigskip
+
+Applying the Bayes' rule, considering each channel $l$ as independent of the others (a Naive assumption)
+and expanding the joint probabilities to take into account the clustering, we get the following 
+expression:
+
 \[
     P(\mathcal{C}_{k} \mid x_{t}) = 
     \frac{p(\mathcal{C}_{k}, x_{t})}{\underset{i=0}{\overset{K}{\sum}} p(\mathcal{C}_{i}, x_{t})} =
@@ -14,15 +27,24 @@
 \]
 where
 \begin{center}
-\begin{tabular}{rp{110mm}}
+\begin{tabular}{|r|p{100mm}|}
+\hline
 $K$ & is the number of target classes \\
+\hline
 $J$ & is the number of clusters in the clustering, i.e., the number of mean vectors in the codebook \\
+\hline
 $L$ & is the number of channels recorded in the EEG \\
+\hline
 $x_{t}$ & is the sample at time $t$ including all the channels in the EGG \\
+\hline
 $x_{t}^{l}$ & is the sample at time $t$ corresponding to the $l$-th channel of the EGG \\
+\hline
 $p(\mathcal{C}_{k}, x_{t})$ & is the joint probability of target class $\mathcal{C}_{k}$ and sample $x_{t}$ \\
+\hline
 $p(\mathcal{C}_{k}, x_{t}^{l})$ & is the joint probability of target class $\mathcal{C}_{k}$ and sample $x_{t}^{l}$ \\
+\hline
 $p(\mathcal{C}_{k}, w_{j}, x_{t}^{l})$ & is the joint probability of target class $\mathcal{C}_{k}$, cluster $w_{j}$ and sample $x_{t}^{l}$ \\
+\hline
 \end{tabular}
 \end{center}
 
@@ -38,7 +60,8 @@ where
 \begin{tabular}{rp{110mm}}
 $p(x_{t}^{l} \mid w_{j}, \mathcal{C}_{k})$ & is the conditional probability density of observing sample
                                              $x_{t}^{l}$ when the patient is in the state corresponding
-                                             to target class $\mathcal{C}_{k}$ and AAA,
+                                             to target class $\mathcal{C}_{k}$ and the generated samples
+                                             in such state fall mainly in cluster $w_j$,
                                              this will be approached by $p(x_{t}^{l} \mid w_{j})$, \\
 $p(x_{t}^{l} \mid w_{j})$ & is the conditional probability density that observing sample $x_{t}^{l}$
                             belongs to cluster $w_{j}$, that is computed simply by

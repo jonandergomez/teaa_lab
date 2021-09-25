@@ -52,12 +52,13 @@ if __name__ == "__main__":
     """
 
     verbose = 0
-    dataset_filename = 'data/uc13.csv'
+    dataset_filename = 'data/uc13-train.csv'
     codebook_filename = 'models/kmeans_model-uc13-200.pkl'
     counter_pairs_filename = 'models/cluster-distribution-200.csv'
     spark_context = None
     num_partitions = 40
     batch_size = 100
+    num_channels = 21
                                                    
     for i in range(len(sys.argv)):
         if sys.argv[i] == "--dataset":
@@ -114,36 +115,65 @@ if __name__ == "__main__":
     #csv_lines.unpersist()
 
 
-    def csv_line_to_label_and_sample(line):
+    def csv_line_to_patient_label_and_sample(line):
         parts = line.split(';')
-        return (int(parts[0]), numpy.array([float(x) for x in parts[1:]]))
+        return (parts[0], int(parts[1]), numpy.array([float(x) for x in parts[2:]]).reshape(num_channels, 14))
 
-    data = csv_lines.map(csv_line_to_label_and_sample)
+    data = csv_lines.map(csv_line_to_patient_label_and_sample)
+
+    '''
+    x = data.first()
+    print(x[0])
+    print(x[1])
+    print(x[2].shape)
+    '''
 
     ####################################################################
-    # do standard scaling
-    x_mean = data.map(lambda x: x[1]).reduce(lambda x1, x2: x1 + x2)
-    x_mean /= num_samples
-    print(x_mean.shape)
-    x_std = data.map(lambda x: x[1]).map(lambda x: (x - x_mean) ** 2).reduce(lambda x1, x2: x1 + x2)
-    x_std = numpy.sqrt(x_std / num_samples)
-    print(x_std.shape)
-    data = data.map(lambda x: (x[0], (x[1] - x_mean) / x_std))
+    # begin: do standard scaling 
+    ####################################################################
+    statistics_filename = 'models/mean_and_std.pkl'
+    if os.path.exists(statistics_filename):
+        with open(statistics_filename, 'rb') as f:
+            stats = pickle.load(f)
+            f.close()
+        x_mean, x_std = stats
+    else:
+        x_mean = data.map(lambda x: x[2]).reduce(lambda x1, x2: x1 + x2)
+        x_mean = x_mean.sum(axis = 0) # merging all the channels altogether, i.e. sum(axis = 0)
+        x_mean /= (num_samples * num_channels)
+        print(x_mean.shape) # should be (14,)
+        x_std = data.map(lambda x: x[2]).map(lambda x: (x - x_mean) ** 2).reduce(lambda x1, x2: x1 + x2)
+        x_std = x_std.sum(axis = 0) # merging all the channels altogether, i.e. sum(axis = 0)
+        x_std = numpy.sqrt(x_std / (num_samples * num_channels))
+        print(x_std.shape) # should be (14,)
+        with open(statistics_filename, 'wb') as f:
+            pickle.dump([x_mean, x_std], f)
+            f.close()
+    #
+    data = data.map(lambda x: (x[0], x[1], (x[2] - x_mean) / x_std))
+    ####################################################################
+    # end: do standard scaling 
     ####################################################################
 
     def classify_sample(t):
-        k = kmeans.predict([t[1]])
-        probs = conditional_probabilities[:, k[0]] # * target_class_a_priori_probabilities
+        patient, label, sample = t
+        cluster_assignment = kmeans.predict(sample)
+        probs = numpy.zeros(conditional_probabilities.shape[0]) # one per target class
+        for j in cluster_assignment:
+            probs += conditional_probabilities[:, j] 
+        #probs *= target_class_a_priori_probabilities
         k = probs.argmax()
-        return (t[0], k)
+        return (patient, label, k)
         
     data = data.map(classify_sample)
 
     y_true_and_pred = data.collect()
-    y_true = numpy.array([x[0] for x in y_true_and_pred])
-    y_pred = numpy.array([x[1] for x in y_true_and_pred])
+    y_true = numpy.array([x[1] for x in y_true_and_pred])
+    y_pred = numpy.array([x[2] for x in y_true_and_pred])
 
-    f_results = open('results/classification-results-%03d.txt' % kmeans.n_clusters, 'wt')
+
+    os.makedirs('results2', exist_ok = True)
+    f_results = open('results2/classification-results-%03d.txt' % kmeans.n_clusters, 'wt')
     _cm_ = confusion_matrix(y_true, y_pred)
     for i in range(_cm_.shape[0]):
         for j in range(_cm_.shape[1]):
@@ -165,8 +195,8 @@ if __name__ == "__main__":
                           normalize = 'pred', ax = axes[1], cmap = 'Oranges', colorbar = False)
     #
     pyplot.tight_layout()
-    pyplot.savefig('results/classification-results-%03d.svg' % kmeans.n_clusters, format = 'svg')
-    pyplot.savefig('results/classification-results-%03d.png' % kmeans.n_clusters, format = 'png')
+    pyplot.savefig('results2/classification-results-%03d.svg' % kmeans.n_clusters, format = 'svg')
+    pyplot.savefig('results2/classification-results-%03d.png' % kmeans.n_clusters, format = 'png')
     del fig
 
     spark_context.stop()
