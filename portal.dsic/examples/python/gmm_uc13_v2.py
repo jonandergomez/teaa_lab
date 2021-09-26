@@ -84,7 +84,7 @@ if __name__ == "__main__":
             gmm_filename = sys.argv[i + 1]
 
     if not standalone :
-        spark_context = SparkContext(appName = "GMM-MLE-dataset-Rodrigo")
+        spark_context = SparkContext(appName = "GMM-MLE-dataset-UC13")
 
 
     os.makedirs(base_dir + '/log',    exist_ok = True)

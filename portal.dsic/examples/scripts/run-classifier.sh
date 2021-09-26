@@ -18,7 +18,7 @@ do
         counter_pairs=$(printf "models/cluster-distribution-${q}.csv")
         if [ -f ${counter_pairs} ]
         then
-            results_file=$(printf "results2/classification-results-${q}.txt")
+            results_file=$(printf "results3/classification-results-${q}.txt")
             if [ ! -f ${results_file} ]
             then
                 scripts/run-python.sh python/kmeans_uc13_classifier.py  \

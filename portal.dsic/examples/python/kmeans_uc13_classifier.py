@@ -59,6 +59,7 @@ if __name__ == "__main__":
     num_partitions = 40
     batch_size = 100
     num_channels = 21
+    results_dir = 'results3.train'
                                                    
     for i in range(len(sys.argv)):
         if sys.argv[i] == "--dataset":
@@ -73,6 +74,8 @@ if __name__ == "__main__":
             codebook_filename = sys.argv[i + 1]
         elif sys.argv[i] == "--counter-pairs":
             counter_pairs_filename = sys.argv[i + 1]
+        elif sys.argv[i] == "--results-dir":
+            results_dir = sys.argv[i + 1]
 
     spark_context = SparkContext(appName = "K-Means-based naive classifier")
 
@@ -172,8 +175,8 @@ if __name__ == "__main__":
     y_pred = numpy.array([x[2] for x in y_true_and_pred])
 
 
-    os.makedirs('results2', exist_ok = True)
-    f_results = open('results2/classification-results-%03d.txt' % kmeans.n_clusters, 'wt')
+    os.makedirs(results_dir, exist_ok = True)
+    f_results = open(f'{results_dir}/classification-results-%03d.txt' % kmeans.n_clusters, 'wt')
     _cm_ = confusion_matrix(y_true, y_pred)
     for i in range(_cm_.shape[0]):
         for j in range(_cm_.shape[1]):
@@ -195,8 +198,8 @@ if __name__ == "__main__":
                           normalize = 'pred', ax = axes[1], cmap = 'Oranges', colorbar = False)
     #
     pyplot.tight_layout()
-    pyplot.savefig('results2/classification-results-%03d.svg' % kmeans.n_clusters, format = 'svg')
-    pyplot.savefig('results2/classification-results-%03d.png' % kmeans.n_clusters, format = 'png')
+    pyplot.savefig(f'{results_dir}/classification-results-%03d.svg' % kmeans.n_clusters, format = 'svg')
+    pyplot.savefig(f'{results_dir}/classification-results-%03d.png' % kmeans.n_clusters, format = 'png')
     del fig
 
     spark_context.stop()

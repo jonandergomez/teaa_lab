@@ -45,6 +45,7 @@ if __name__ == "__main__":
     #for k in range( 150,  500,  50): list_of_num_clusters.append(k) # comment this line to skip these clustering sizes
     #for k in range( 500, 1000, 100): list_of_num_clusters.append(k) # comment this line to skip these clustering sizes
     #list_of_num_clusters.append(1000)
+    #list_of_num_clusters.append(60)
 
     num_partitions = 80
 
@@ -52,7 +53,8 @@ if __name__ == "__main__":
         if sys.argv[i] == '--filename':
             filename = sys.argv[i + 1]
         elif sys.argv[i] == '--n-clusters':
-            num_clusters = int(sys.argv[i + 1])
+            list_of_num_clusters.append(int(sys.argv[i + 1]))
+            print(list_of_num_clusters)
         elif sys.argv[i] == '--n-partitions':
             num_partitions = int(sys.argv[i + 1])
 
@@ -66,6 +68,7 @@ if __name__ == "__main__":
         return (parts[0], int(parts[1]), numpy.array([float(x) for x in parts[2:]]).reshape(num_channels, 14))
 
     data = csv_lines.map(csv_line_to_patient_label_and_sample)
+    num_samples = data.count()
 
     print(f'loaded {num_samples} samples into {data.getNumPartitions()} partitions')
 
@@ -97,7 +100,7 @@ if __name__ == "__main__":
     ####################################################################
 
     # removes first and second columns corresponding to patient and label
-    data = data.flatMap(lambda x: [v[i] for i in range(x[2:].shape[0])])
+    data = data.flatMap(lambda x: [x[2][i] for i in range(x[2].shape[0])])
 
     data.persist()
 
