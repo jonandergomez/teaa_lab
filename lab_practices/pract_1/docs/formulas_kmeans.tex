@@ -21,9 +21,9 @@ expression:
 
 \[
     P(\mathcal{C}_{k} \mid x_{t}) = 
-    \frac{p(\mathcal{C}_{k}, x_{t})}{\underset{i=0}{\overset{K}{\sum}} p(\mathcal{C}_{i}, x_{t})} =
-    \frac{\underset{l=0}{\overset{L}{\sum}} p(\mathcal{C}_{k}, x_{t}^{l})}{\underset{i=0}{\overset{K}{\sum}} \; \underset{l=0}{\overset{L}{\sum}} p(\mathcal{C}_{i}, x_{t}^{l})} =
-    \frac{\underset{l=0}{\overset{L}{\sum}} \; \underset{j=0}{\overset{J}{\sum}} p(\mathcal{C}_{k}, w_{j}, x_{t}^{l})}{\underset{i=0}{\overset{K}{\sum}} \; \underset{l=0}{\overset{L}{\sum}} \; \underset{j=0}{\overset{J}{\sum}} p(\mathcal{C}_{i}, w_{j}, x_{t}^{l})}
+    \frac{p(\mathcal{C}_{k}, x_{t})}{\underset{i=1}{\overset{K}{\sum}} p(\mathcal{C}_{i}, x_{t})} =
+    \frac{\underset{l=1}{\overset{L}{\sum}} p(\mathcal{C}_{k}, x_{t}^{l})}{\underset{i=1}{\overset{K}{\sum}} \; \underset{l=1}{\overset{L}{\sum}} p(\mathcal{C}_{i}, x_{t}^{l})} =
+    \frac{\underset{l=1}{\overset{L}{\sum}} \; \underset{j=1}{\overset{J}{\sum}} p(\mathcal{C}_{k}, w_{j}, x_{t}^{l})}{\underset{i=1}{\overset{K}{\sum}} \; \underset{l=1}{\overset{L}{\sum}} \; \underset{j=1}{\overset{J}{\sum}} p(\mathcal{C}_{i}, w_{j}, x_{t}^{l})}
 \]
 where
 \begin{center}
@@ -79,9 +79,9 @@ $P(\mathcal{C}_{k})$ & is the \emph{a priori} probablity of target class $\mathc
 Finally,
 \[
 P(\mathcal{C}_{k} \mid x_{t}) \approx
-    \frac{\underset{l=0}{\overset{L}{\sum}} \; \underset{j=0}{\overset{J}{\sum}}
+    \frac{\underset{l=1}{\overset{L}{\sum}} \; \underset{j=1}{\overset{J}{\sum}}
         p(x_{t}^{l} \mid w_{j}) \cdot P(w_{j} \mid \mathcal{C}_{k}) \cdot P(\mathcal{C}_{k})}%
-        {\underset{i=0}{\overset{K}{\sum}} \; \underset{l=0}{\overset{L}{\sum}} \; \underset{j=0}{\overset{J}{\sum}}
+        {\underset{i=1}{\overset{K}{\sum}} \; \underset{l=1}{\overset{L}{\sum}} \; \underset{j=1}{\overset{J}{\sum}}
             p(x_{t}^{l} \mid w_{j}) \cdot P(w_{j} \mid \mathcal{C}_{i}) \cdot P(\mathcal{C}_{i})}
 \]
 \end{document}

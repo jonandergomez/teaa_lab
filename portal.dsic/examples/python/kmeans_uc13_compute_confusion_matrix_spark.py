@@ -30,6 +30,8 @@ if __name__ == "__main__":
                                                                 --codebook models/kmeans_model-uc13-1000.pkl  2>/dev/null
     """
 
+    label_mapping = [i for i in range(10)]
+
     verbose = 0
     dataset_filename = 'data/uc13-train.csv'
     codebook_filename = 'models/kmeans_model-uc13-200.pkl'
@@ -49,6 +51,13 @@ if __name__ == "__main__":
             batch_size = int(sys.argv[i + 1])
         elif sys.argv[i] == "--codebook":
             codebook_filename = sys.argv[i + 1]
+        elif sys.argv[i] == "--reduce-labels":
+            label_mapping[3] = 0
+            label_mapping[4] = 0
+            label_mapping[5] = 0
+            label_mapping[6] = 1
+            label_mapping[7] = 0
+            label_mapping[8] = 0
 
     spark_context = SparkContext(appName = "K-Means compute confusion matrix")
 
@@ -76,7 +85,7 @@ if __name__ == "__main__":
 
     def csv_line_to_patient_label_and_sample(line):
         parts = line.split(';')
-        return (parts[0], int(parts[1]), numpy.array([float(x) for x in parts[2:]]).reshape(num_channels, 14))
+        return (parts[0], label_mapping[int(parts[1])], numpy.array([float(x) for x in parts[2:]]).reshape(num_channels, 14))
 
     data = csv_lines.map(csv_line_to_patient_label_and_sample)
 

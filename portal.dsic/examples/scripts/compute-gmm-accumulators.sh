@@ -1,6 +1,6 @@
 #!/bin/bash
 
-for q in $(ls models/gmm-*.txt | cut -f2 -d'-' | cut -f1 -d'.')
+for q in $(ls models/gmm-*.txt | grep -v "0001" | cut -f2 -d'-' | cut -f1 -d'.')
 do
     gmm_filename=$(printf "models/gmm-${q}.txt")
     if [ -f ${gmm_filename} ]
@@ -13,7 +13,8 @@ do
             scripts/run-python.sh python/gmm_uc13.py  \
                                     --num-partitions 80 \
                                     --model ${gmm_filename} \
-                                    --compute-confusion-matrix
+                                    --compute-confusion-matrix \
+                                    --reduce-labels
         fi
     fi
 done

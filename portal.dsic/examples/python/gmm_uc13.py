@@ -70,6 +70,8 @@ if __name__ == "__main__":
            spark-submit --master local[4]  python/gmm_uc13_v2.py  --base-dir .   --dataset data/uc13.csv  --covar diagonal  --max-components 300  2>/dev/null
     """
 
+    label_mapping = [i for i in range(10)]
+
     verbose = 0
     covar_type = 'diagonal'
     max_components = 300
@@ -110,6 +112,14 @@ if __name__ == "__main__":
             do_classification = True
         elif sys.argv[i] == "--results-dir":
             results_dir = sys.argv[i + 1]
+        elif sys.argv[i] == "--reduce-labels":
+            label_mapping[3] = 0
+            label_mapping[4] = 0
+            label_mapping[5] = 0
+            label_mapping[6] = 1
+            label_mapping[7] = 0
+            label_mapping[8] = 0
+            label_mapping[9] = 0
 
     if not standalone :
         spark_context = SparkContext(appName = "GMM-MLE-dataset-UC13")
@@ -147,7 +157,7 @@ if __name__ == "__main__":
 
         def csv_line_to_patient_label_and_sample(line):
             parts = line.split(';')
-            return (parts[0], int(parts[1]), numpy.array([float(x) for x in parts[2:]]).reshape(num_channels, 14))
+            return (parts[0], label_mapping[int(parts[1])], numpy.array([float(x) for x in parts[2:]]).reshape(num_channels, 14))
 
         data = csv_lines.map(csv_line_to_patient_label_and_sample)
         num_samples = data.count()

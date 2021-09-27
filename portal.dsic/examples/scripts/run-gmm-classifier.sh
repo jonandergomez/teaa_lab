@@ -9,7 +9,7 @@ case $(hostname) in
         ;;
 esac
 
-for q in $(ls models/gmm-*.txt | cut -f2 -d'-' | cut -f1 -d'.')
+for q in $(ls models/gmm-*.txt | grep -v "0001" | cut -f2 -d'-' | cut -f1 -d'.')
 do
     gmm_filename=$(printf "models/gmm-${q}.txt")
     if [ -f ${gmm_filename} ]
@@ -17,6 +17,8 @@ do
         counter_pairs=$(printf "models/gmm-distribution-${q}.csv")
         if [ -f ${counter_pairs} ]
         then
+            echo ${gmm_filename} ${counter_pairs}
+
             for subset in "train" "test"
             do
                 results_dir="results3.${subset}"
@@ -28,6 +30,7 @@ do
                                         --model ${gmm_filename} \
                                         --classify \
                                         --results-dir ${results_dir} \
+                                        --reduce-labels \
                                         --dataset data/uc13-${subset}.csv
                 fi
             done

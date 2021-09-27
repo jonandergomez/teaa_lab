@@ -5,7 +5,7 @@
     Universitat Politecnica de Valencia
     Technical University of Valencia TU.VLC
 
-    K-Means-based naive classifier 
+    K-Means-based sequence-based predictor
 
 """
 
@@ -21,10 +21,6 @@ from machine_learning import KMeans
 
 from matplotlib import pyplot
 
-try:
-    from pyspark import SparkContext
-except:
-    pass
 
 class MyArgmaxForPredictedLabels(BaseEstimator):
     def __init__(self, threshold = 0.5):
@@ -45,15 +41,15 @@ class MyArgmaxForPredictedLabels(BaseEstimator):
 if __name__ == "__main__":
 
     """
-    Usage: spark-submit --master local[4]  python/kmeans_uc13_classifier.py  \
-                                                                --dataset data/uc13.csv \
+    run with this command:
+
+        hdfs dfs -cat  data/uc13-train.csv | python python/kmeans_uc13_predict.py \
                                                                 --codebook models/kmeans_model-uc13-1000.pkl \
-                                                                --confusion-matrix models/cluster-distribution-1000.csv 2>/dev/null
+                                                                --counter-pairs models/cluster-distribution-1000.csv 2>/dev/null
     """
     label_mapping = [i for i in range(10)]
 
     verbose = 0
-    dataset_filename = 'data/uc13-train.csv'
     codebook_filename = 'models/kmeans_model-uc13-200.pkl'
     counter_pairs_filename = 'models/cluster-distribution-200.csv'
     spark_context = None
@@ -63,14 +59,8 @@ if __name__ == "__main__":
     results_dir = 'results3.train'
                                                    
     for i in range(len(sys.argv)):
-        if sys.argv[i] == "--dataset":
-            dataset_filename = sys.argv[i + 1]
-        elif sys.argv[i] == "--verbosity":
+        if sys.argv[i] == "--verbosity":
             verbose = int(sys.argv[i + 1])
-        elif sys.argv[i] == "--num-partitions":
-            num_partitions = int(sys.argv[i + 1])
-        elif sys.argv[i] == "--batch-size":
-            batch_size = int(sys.argv[i + 1])
         elif sys.argv[i] == "--codebook":
             codebook_filename = sys.argv[i + 1]
         elif sys.argv[i] == "--counter-pairs":
@@ -84,8 +74,6 @@ if __name__ == "__main__":
             label_mapping[6] = 1
             label_mapping[7] = 0
             label_mapping[8] = 0
-
-    spark_context = SparkContext(appName = "K-Means-based naive classifier")
 
 
     # Load the codebook
@@ -115,32 +103,13 @@ if __name__ == "__main__":
     # Compute the a priori probabilities of target classes
     target_class_a_priori_probabilities = counter_pairs.sum(axis = 1) / counter_pairs.sum()
 
-    # Load and parse the data
-    csv_lines = spark_context.textFile(dataset_filename)
-    print("file(s) loaded ")
-    if csv_lines.getNumPartitions() < num_partitions:
-        csv_lines = csv_lines.repartition(num_partitions)
-    #csv_lines.persist()
-    num_samples = csv_lines.count()
-    print("loaded %d samples distributed in %d partitions" % (num_samples, csv_lines.getNumPartitions()))
-    #csv_lines.unpersist()
-
 
     def csv_line_to_patient_label_and_sample(line):
         parts = line.split(';')
         return (parts[0], label_mapping[int(parts[1])], numpy.array([float(x) for x in parts[2:]]).reshape(num_channels, 14))
 
-    data = csv_lines.map(csv_line_to_patient_label_and_sample)
-
-    '''
-    x = data.first()
-    print(x[0])
-    print(x[1])
-    print(x[2].shape)
-    '''
-
     ####################################################################
-    # begin: do standard scaling 
+    # begin: load standard scaling 
     ####################################################################
     statistics_filename = 'models/mean_and_std.pkl'
     if os.path.exists(statistics_filename):
@@ -149,25 +118,16 @@ if __name__ == "__main__":
             f.close()
         x_mean, x_std = stats
     else:
-        x_mean = data.map(lambda x: x[2]).reduce(lambda x1, x2: x1 + x2)
-        x_mean = x_mean.sum(axis = 0) # merging all the channels altogether, i.e. sum(axis = 0)
-        x_mean /= (num_samples * num_channels)
-        print(x_mean.shape) # should be (14,)
-        x_std = data.map(lambda x: x[2]).map(lambda x: (x - x_mean) ** 2).reduce(lambda x1, x2: x1 + x2)
-        x_std = x_std.sum(axis = 0) # merging all the channels altogether, i.e. sum(axis = 0)
-        x_std = numpy.sqrt(x_std / (num_samples * num_channels))
-        print(x_std.shape) # should be (14,)
-        with open(statistics_filename, 'wb') as f:
-            pickle.dump([x_mean, x_std], f)
-            f.close()
+        x_mean = numpy.zeros(14)
+        x_std = numpy.ones(14)
     #
-    data = data.map(lambda x: (x[0], x[1], (x[2] - x_mean) / x_std))
     ####################################################################
-    # end: do standard scaling 
+    # end: load standard scaling 
     ####################################################################
 
     def classify_sample(t):
         patient, label, sample = t
+        sample = (sample - x_mean) / x_std
         cluster_assignment = kmeans.predict(sample)
         probs = numpy.zeros(conditional_probabilities.shape[0]) # one per target class
         for j in cluster_assignment:
@@ -176,15 +136,84 @@ if __name__ == "__main__":
         k = probs.argmax()
         return (patient, label, k)
         
-    data = data.map(classify_sample)
 
-    y_true_and_pred = data.collect()
-    y_true = numpy.array([x[1] for x in y_true_and_pred])
-    y_pred = numpy.array([x[2] for x in y_true_and_pred])
+    y_true_and_pred = list()
+    #
+    sliding_window_length = 30 * 60 # 1800 seconds -> 30 minutes
+    sliding_window_step = 60 * 5 # 300 seconds -> 5 minute
+    lower_threshold_for_target_class_2 = 0.10
+    lower_threshold_for_target_class_1 = 0.05
+    upper_threshold_for_target_class_1 = 0.95
+    #
+    target_class_counters = [0] * 10
+    list_of_predictions = list()
+    list_of_alarms = list()
+    current_time = 0
+    state = 'inter-ictal'
+    
+    old_patient = "non-existent-yet"
+    for line in sys.stdin:
+        patient, label, predicted_label = classify_sample(csv_line_to_patient_label_and_sample(line))
+        #
+        if patient != old_patient:
+            # reset variables
+            # 
+            old_patient = patient
+            target_class_counters = [0] * 10
+            list_of_predictions = list()
+            list_of_alarms = list()
+            current_time = 0
+            state = 'inter-ictal'
+        #
+        list_of_predictions.append(predicted_label)
+        target_class_counters[predicted_label] += 1
+        if len(list_of_predictions) > sliding_window_length:
+            target_class_counters[list_of_predictions[0]] -= 1
+            del list_of_predictions[0]
+        # 
+        if label == 1: # an ictal period is reached
+            if state == 'inter-ictal':
+                print('ictal period starts, press enter ...')
+                for pred_label, pred_time in list_of_alarms:
+                    if current_time - pred_time <= 60 * 60: # 3600 seconds -> one hour
+                        y_true_and_pred.append((1, pred_label))
+                    else:
+                        y_true_and_pred.append((0, pred_label))
+                #
+                state = 'ictal'
+                list_of_alarms = list()
+            #
+        elif label in [0, 2, 3, 4, 5]: # exclude post-ictal periods
+            state = 'inter-ictal'
+            #
+            total = sum(target_class_counters)
+            target_class_probs = [x / total for x in target_class_counters]
+            if current_time > 0 and current_time % sliding_window_step == 0:
+                #if lower_threshold_for_target_class_2 <= target_class_probs[2] and \
+                #   lower_threshold_for_target_class_1 <= target_class_probs[1] <= upper_threshold_for_target_class_1:
+                if (target_class_probs[6] + target_class_probs[7] + target_class_probs[9]) > 0.40 or \
+                   target_class_probs[2] > 0.10 or target_class_probs[1] > 0.20:
+                    list_of_alarms.append((1, current_time))
+                else:
+                    list_of_alarms.append((0, current_time))
+                
+                print(" ".join("{:8.2f}".format(100 * x / total) for x in target_class_counters))
+            # 
+        current_time += 2 # add 2 seconds because each sample comes 2 seconds after the previous one
+    #        
+    #
+    for pred_label, pred_time in list_of_alarms:
+        y_true_and_pred.append((0, pred_label))
+    #
+    y_true = numpy.array([x[0] for x in y_true_and_pred])
+    y_pred = numpy.array([x[1] for x in y_true_and_pred])
 
 
+    #####################################################################
+    ### presentation of results
+    #####################################################################
     os.makedirs(results_dir, exist_ok = True)
-    f_results = open(f'{results_dir}/classification-results-%03d.txt' % kmeans.n_clusters, 'wt')
+    f_results = open(f'{results_dir}/prediction-results-%03d.txt' % kmeans.n_clusters, 'wt')
     _cm_ = confusion_matrix(y_true, y_pred)
     for i in range(_cm_.shape[0]):
         for j in range(_cm_.shape[1]):
@@ -206,8 +235,6 @@ if __name__ == "__main__":
                           normalize = 'pred', ax = axes[1], cmap = 'Oranges', colorbar = False)
     #
     pyplot.tight_layout()
-    pyplot.savefig(f'{results_dir}/classification-results-%03d.svg' % kmeans.n_clusters, format = 'svg')
-    pyplot.savefig(f'{results_dir}/classification-results-%03d.png' % kmeans.n_clusters, format = 'png')
+    pyplot.savefig(f'{results_dir}/prediction-results-%03d.svg' % kmeans.n_clusters, format = 'svg')
+    pyplot.savefig(f'{results_dir}/prediction-results-%03d.png' % kmeans.n_clusters, format = 'png')
     del fig
-
-    spark_context.stop()
