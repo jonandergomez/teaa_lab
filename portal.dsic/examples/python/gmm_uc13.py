@@ -66,8 +66,8 @@ def load_samples(index_filename):
 if __name__ == "__main__":
 
     """
-    Usage: spark-submit --master local[4]  python/gmm_uc13_v2.py  --base-dir .   --dataset data/uc13.csv  --covar full      --max-components  50  2>/dev/null
-           spark-submit --master local[4]  python/gmm_uc13_v2.py  --base-dir .   --dataset data/uc13.csv  --covar diagonal  --max-components 300  2>/dev/null
+    Usage: spark-submit --master local[4]  python/gmm_uc13.py  --base-dir .   --dataset data/uc13-train.csv  --covar full      --max-components  50  2>/dev/null
+           spark-submit --master local[4]  python/gmm_uc13.py  --base-dir .   --dataset data/uc13-train.csv  --covar diagonal  --max-components 300  2>/dev/null
     """
 
     label_mapping = [i for i in range(10)]
@@ -85,6 +85,7 @@ if __name__ == "__main__":
     batch_size = 24 * num_channels
     do_compute_confusion_matrix = False
     do_classification = False
+    do_prediction = False
     results_dir = 'results3.train'
                                                    
     for i in range(len(sys.argv)):
@@ -110,6 +111,8 @@ if __name__ == "__main__":
             do_compute_confusion_matrix = True
         elif sys.argv[i] == "--classify":
             do_classification = True
+        elif sys.argv[i] == "--predict":
+            do_prediction = True
         elif sys.argv[i] == "--results-dir":
             results_dir = sys.argv[i + 1]
         elif sys.argv[i] == "--reduce-labels":
@@ -121,7 +124,7 @@ if __name__ == "__main__":
             label_mapping[8] = 0
             label_mapping[9] = 0
 
-    if not standalone :
+    if not standalone and not do_prediction:
         spark_context = SparkContext(appName = "GMM-MLE-dataset-UC13")
 
 
@@ -201,14 +204,15 @@ if __name__ == "__main__":
             conditional_probabilities = accumulators.copy()
             for i in range(conditional_probabilities.shape[0]):
                 conditional_probabilities[i, :] /= conditional_probabilities[i, :].sum()
-            #log_conditional_probabilities = numpy.log(conditional_probabilities)
+
+            target_classes_a_priori_probabilities = accumulators.sum(axis = 1) / accumulators.sum()
 
             def classify_sample(t):
                 patient, label, x = t
                 _log_densities = gmm.log_densities_batch(x.T) # J x N
                 _densities = numpy.exp(_log_densities - _log_densities.max(axis = 0)) # J x N
                 _probs = numpy.dot(conditional_probabilities, _densities).T # N x K
-                _probs = _probs.sum(axis = 0)
+                _probs = _probs.sum(axis = 0) # * target_classes_a_priori_probabilities
 
                 return (patient, label, _probs.argmax())
 
@@ -308,17 +312,131 @@ if __name__ == "__main__":
             samples.unpersist()
         #
         spark_context.stop()
-    '''
-    else:
-        X_train, Y_train = load_samples(dataset_filename)
-        dim_x = 0
-        if type(X_train) == list:
-            dim_x = X_train[0].shape[1]
-        elif type(X_train) == numpy.ndarray:
-            dim_x = X_train.shape[1]
-        else:
-            raise Exception('Non accepted data structure! :: %s' % (type(X_train)))
 
-        mle = machine_learning.MLE(covar_type = covar_type, dim = dim_x, log_dir = base_dir + '/log', models_dir = base_dir + '/models')
-        mle.fit_standalone(samples = X_train, max_components = max_components, batch_size = 500)
-    '''
+    elif do_prediction:
+        assert gmm_filename is not None
+        gmm = machine_learning.GMM()
+        gmm.load_from_text(gmm_filename)
+
+        filename = 'models/gmm-distribution-%04d.csv' % gmm.n_components
+        accumulators = numpy.genfromtxt(filename, delimiter = ';')
+        conditional_probabilities = accumulators.copy()
+        for i in range(conditional_probabilities.shape[0]):
+            conditional_probabilities[i, :] /= conditional_probabilities[i, :].sum()
+
+        target_classes_a_priori_probabilities = accumulators.sum(axis = 1) / accumulators.sum()
+
+        def csv_line_to_patient_label_and_sample(line):
+            parts = line.split(';')
+            return (parts[0], label_mapping[int(parts[1])], numpy.array([float(x) for x in parts[2:]]).reshape(num_channels, 14))
+
+        def classify_sample(t):
+            patient, label, x = t
+            _log_densities = gmm.log_densities_batch(x.T) # J x N
+            _densities = numpy.exp(_log_densities - _log_densities.max(axis = 0)) # J x N
+            _probs = numpy.dot(conditional_probabilities, _densities).T # N x K
+            _probs = _probs.sum(axis = 0) #* target_classes_a_priori_probabilities
+
+            return (patient, label, _probs.argmax())
+
+        y_true_and_pred = list()
+        #
+        sliding_window_length = 30 * 60 # 1800 seconds -> 30 minutes
+        sliding_window_step = 60 * 5 # 300 seconds -> 5 minute
+        lower_threshold_for_target_class_2 = 0.10
+        lower_threshold_for_target_class_1 = 0.05
+        upper_threshold_for_target_class_1 = 0.95
+        #
+        target_class_counters = [0] * 10
+        list_of_predictions = list()
+        list_of_alarms = list()
+        current_time = 0
+        state = 'inter-ictal'
+        
+        old_patient = "non-existent-yet"
+        for line in sys.stdin:
+            patient, label, predicted_label = classify_sample(csv_line_to_patient_label_and_sample(line))
+            #
+            if patient != old_patient:
+                # reset variables
+                # 
+                old_patient = patient
+                target_class_counters = [0] * 10
+                list_of_predictions = list()
+                list_of_alarms = list()
+                current_time = 0
+                state = 'inter-ictal'
+            #
+            list_of_predictions.append(predicted_label)
+            target_class_counters[predicted_label] += 1
+            if len(list_of_predictions) > sliding_window_length:
+                target_class_counters[list_of_predictions[0]] -= 1
+                del list_of_predictions[0]
+            # 
+            if label == 1: # an ictal period is reached
+                if state == 'inter-ictal':
+                    print('ictal period starts, press enter ...')
+                    for pred_label, pred_time in list_of_alarms:
+                        if current_time - pred_time <= 60 * 60: # 3600 seconds -> one hour
+                            y_true_and_pred.append((1, pred_label))
+                        else:
+                            y_true_and_pred.append((0, pred_label))
+                    #
+                    state = 'ictal'
+                    list_of_alarms = list()
+                #
+            elif label in [0, 2, 3, 4, 5]: # exclude post-ictal periods
+                state = 'inter-ictal'
+                #
+                total = sum(target_class_counters)
+                target_class_probs = [x / total for x in target_class_counters]
+                if current_time > 0 and current_time % sliding_window_step == 0:
+                    #if lower_threshold_for_target_class_2 <= target_class_probs[2] and \
+                    #   lower_threshold_for_target_class_1 <= target_class_probs[1] <= upper_threshold_for_target_class_1:
+                    if (target_class_probs[6] + target_class_probs[7] + target_class_probs[9]) > 0.40 or \
+                       target_class_probs[2] > 0.10 or target_class_probs[1] > 0.20:
+                        list_of_alarms.append((1, current_time))
+                    else:
+                        list_of_alarms.append((0, current_time))
+                    
+                    print(" ".join("{:8.2f}".format(100 * x / total) for x in target_class_counters))
+                # 
+            current_time += 2 # add 2 seconds because each sample comes 2 seconds after the previous one
+        #        
+        #
+        for pred_label, pred_time in list_of_alarms:
+            y_true_and_pred.append((0, pred_label))
+        #
+        y_true = numpy.array([x[0] for x in y_true_and_pred])
+        y_pred = numpy.array([x[1] for x in y_true_and_pred])
+
+
+        #####################################################################
+        ### presentation of results
+        #####################################################################
+        os.makedirs(results_dir, exist_ok = True)
+        f_results = open(f'{results_dir}/gmm-prediction-results-%03d.txt' % kmeans.n_clusters, 'wt')
+        _cm_ = confusion_matrix(y_true, y_pred)
+        for i in range(_cm_.shape[0]):
+            for j in range(_cm_.shape[1]):
+                f_results.write(' %10d' % _cm_[i, j])
+            f_results.write('\n')
+        f_results.write('\n')
+        print(classification_report(y_true, y_pred), file = f_results)
+        f_results.close()
+        #
+        fig, axes = pyplot.subplots(nrows = 1, ncols = 2, figsize = (16, 7))
+        #fig.suptitle(title)
+        #
+        plot_confusion_matrix(estimator = MyArgmaxForPredictedLabels(),
+                              X = y_pred, y_true = y_true,
+                              normalize = 'true', ax = axes[0], cmap = 'Blues', colorbar = False)
+        #
+        plot_confusion_matrix(estimator = MyArgmaxForPredictedLabels(),
+                              X = y_pred, y_true = y_true,
+                              normalize = 'pred', ax = axes[1], cmap = 'Oranges', colorbar = False)
+        #
+        pyplot.tight_layout()
+        pyplot.savefig(f'{results_dir}/gmm-prediction-results-%03d.svg' % kmeans.n_clusters, format = 'svg')
+        pyplot.savefig(f'{results_dir}/gmm-prediction-results-%03d.png' % kmeans.n_clusters, format = 'png')
+        del fig
