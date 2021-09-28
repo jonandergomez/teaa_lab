@@ -209,7 +209,7 @@ if __name__ == "__main__":
 
             def classify_sample(t):
                 patient, label, x = t
-                _log_densities = gmm.log_densities_batch(x.T) # J x N
+                _log_densities = gmm.log_densities_batch(x.T, with_a_priori_probs = False) # J x N
                 _densities = numpy.exp(_log_densities - _log_densities.max(axis = 0)) # J x N
                 _probs = numpy.dot(conditional_probabilities, _densities).T # N x K
                 _probs = _probs.sum(axis = 0) # * target_classes_a_priori_probabilities
@@ -332,12 +332,14 @@ if __name__ == "__main__":
 
         def classify_sample(t):
             patient, label, x = t
-            _log_densities = gmm.log_densities_batch(x.T) # J x N
+            _log_densities = gmm.log_densities_batch(x.T, with_a_priori_probs = False) # J x N
             _densities = numpy.exp(_log_densities - _log_densities.max(axis = 0)) # J x N
             _probs = numpy.dot(conditional_probabilities, _densities).T # N x K
             _probs = _probs.sum(axis = 0) #* target_classes_a_priori_probabilities
+            _probs /= _probs.sum()
 
-            return (patient, label, _probs.argmax())
+            #return (patient, label, _probs.argmax())
+            return (patient, label, _probs)
 
         y_true_and_pred = list()
         #
@@ -347,7 +349,7 @@ if __name__ == "__main__":
         lower_threshold_for_target_class_1 = 0.05
         upper_threshold_for_target_class_1 = 0.95
         #
-        target_class_counters = [0] * 10
+        target_class_accumulators = numpy.zeros(conditional_probabilities.shape[0])
         list_of_predictions = list()
         list_of_alarms = list()
         current_time = 0
@@ -355,24 +357,31 @@ if __name__ == "__main__":
         
         old_patient = "non-existent-yet"
         for line in sys.stdin:
-            patient, label, predicted_label = classify_sample(csv_line_to_patient_label_and_sample(line))
+            #patient, label, predicted_label = classify_sample(csv_line_to_patient_label_and_sample(line))
+            patient, label, label_probs = classify_sample(csv_line_to_patient_label_and_sample(line))
             #
             if patient != old_patient:
                 # reset variables
                 # 
                 old_patient = patient
-                target_class_counters = [0] * 10
+                target_class_accumulators = numpy.zeros(conditional_probabilities.shape[0])
                 list_of_predictions = list()
                 list_of_alarms = list()
                 current_time = 0
                 state = 'inter-ictal'
+                for pred_label, pred_time in list_of_alarms:
+                    y_true_and_pred.append((0, pred_label))
             #
-            list_of_predictions.append(predicted_label)
-            target_class_counters[predicted_label] += 1
+            list_of_predictions.append(label_probs)
+            target_class_accumulators += label_probs
             if len(list_of_predictions) > sliding_window_length:
-                target_class_counters[list_of_predictions[0]] -= 1
+                target_class_accumulators -= list_of_predictions[0]
                 del list_of_predictions[0]
             # 
+            target_class_probs = target_class_accumulators / sum(target_class_accumulators)
+            if current_time > 0 and current_time % sliding_window_step == 0:
+                print(patient, label, " ".join("{:8.2f}".format(100 * x) for x in target_class_probs))
+            #
             if label == 1: # an ictal period is reached
                 if state == 'inter-ictal':
                     print('ictal period starts, press enter ...')
@@ -388,18 +397,15 @@ if __name__ == "__main__":
             elif label in [0, 2, 3, 4, 5]: # exclude post-ictal periods
                 state = 'inter-ictal'
                 #
-                total = sum(target_class_counters)
-                target_class_probs = [x / total for x in target_class_counters]
                 if current_time > 0 and current_time % sliding_window_step == 0:
                     #if lower_threshold_for_target_class_2 <= target_class_probs[2] and \
                     #   lower_threshold_for_target_class_1 <= target_class_probs[1] <= upper_threshold_for_target_class_1:
-                    if (target_class_probs[6] + target_class_probs[7] + target_class_probs[9]) > 0.40 or \
-                       target_class_probs[2] > 0.10 or target_class_probs[1] > 0.20:
+                    if target_class_probs[6:].sum() > 0.40 or \
+                       target_class_probs[1:4].sum() > 0.30:
                         list_of_alarms.append((1, current_time))
                     else:
                         list_of_alarms.append((0, current_time))
-                    
-                    print(" ".join("{:8.2f}".format(100 * x / total) for x in target_class_counters))
+                    #
                 # 
             current_time += 2 # add 2 seconds because each sample comes 2 seconds after the previous one
         #        
@@ -415,7 +421,7 @@ if __name__ == "__main__":
         ### presentation of results
         #####################################################################
         os.makedirs(results_dir, exist_ok = True)
-        f_results = open(f'{results_dir}/gmm-prediction-results-%03d.txt' % kmeans.n_clusters, 'wt')
+        f_results = open(f'{results_dir}/gmm-prediction-results-%03d.txt' % gmm.n_components, 'wt')
         _cm_ = confusion_matrix(y_true, y_pred)
         for i in range(_cm_.shape[0]):
             for j in range(_cm_.shape[1]):
@@ -437,6 +443,6 @@ if __name__ == "__main__":
                               normalize = 'pred', ax = axes[1], cmap = 'Oranges', colorbar = False)
         #
         pyplot.tight_layout()
-        pyplot.savefig(f'{results_dir}/gmm-prediction-results-%03d.svg' % kmeans.n_clusters, format = 'svg')
-        pyplot.savefig(f'{results_dir}/gmm-prediction-results-%03d.png' % kmeans.n_clusters, format = 'png')
+        pyplot.savefig(f'{results_dir}/gmm-prediction-results-%03d.svg' % gmm.n_components, format = 'svg')
+        pyplot.savefig(f'{results_dir}/gmm-prediction-results-%03d.png' % gmm.n_components, format = 'png')
         del fig

@@ -19806,3 +19806,1481 @@ iteration    18  logL = -9.514973e+02  delta_logL = 3.531401e-04   8.892114e+07 
 iteration    19  logL = -9.511820e+02  delta_logL = 3.314407e-04   8.889168e+07  8.900502e+07
 iteration    20  logL = -9.508843e+02  delta_logL = 3.131192e-04   8.886386e+07  8.897720e+07
 iteration    21  logL = -9.506015e+02  delta_logL = 2.974159e-04   8.883744e+07  8.895078e+07
+iteration    22  logL = -9.503319e+02  delta_logL = 2.837392e-04   8.881225e+07  8.892559e+07
+iteration    23  logL = -9.500738e+02  delta_logL = 2.716374e-04   8.878814e+07  8.890148e+07
+iteration    24  logL = -9.498261e+02  delta_logL = 2.607652e-04   8.876499e+07  8.887833e+07
+iteration    25  logL = -9.495879e+02  delta_logL = 2.508429e-04   8.874274e+07  8.885608e+07
+iteration    26  logL = -9.493585e+02  delta_logL = 2.416387e-04   8.872130e+07  8.883464e+07
+iteration    27  logL = -9.491374e+02  delta_logL = 2.329432e-04   8.870064e+07  8.881398e+07
+iteration    28  logL = -9.489244e+02  delta_logL = 2.245351e-04   8.868073e+07  8.879407e+07
+iteration    29  logL = -9.487193e+02  delta_logL = 2.161981e-04   8.866157e+07  8.877491e+07
+iteration    30  logL = -9.485222e+02  delta_logL = 2.077452e-04   8.864316e+07  8.875650e+07
+iteration    31  logL = -9.483335e+02  delta_logL = 1.990310e-04   8.862552e+07  8.873886e+07
+iteration    32  logL = -9.481533e+02  delta_logL = 1.900320e-04   8.860868e+07  8.872203e+07
+iteration    33  logL = -9.479818e+02  delta_logL = 1.808970e-04   8.859266e+07  8.870600e+07
+iteration    34  logL = -9.478189e+02  delta_logL = 1.718965e-04   8.857744e+07  8.869078e+07
+iteration    35  logL = -9.476641e+02  delta_logL = 1.633549e-04   8.856297e+07  8.867631e+07
+iteration    36  logL = -9.475167e+02  delta_logL = 1.555651e-04   8.854920e+07  8.866254e+07
+iteration    37  logL = -9.473758e+02  delta_logL = 1.487347e-04   8.853603e+07  8.864937e+07
+iteration    38  logL = -9.472403e+02  delta_logL = 1.429937e-04   8.852338e+07  8.863672e+07
+iteration    39  logL = -9.471092e+02  delta_logL = 1.384116e-04   8.851113e+07  8.862447e+07
+iteration    40  logL = -9.469814e+02  delta_logL = 1.349728e-04   8.849919e+07  8.861253e+07
+iteration    41  logL = -9.468559e+02  delta_logL = 1.325170e-04   8.848746e+07  8.860080e+07
+iteration    42  logL = -9.467321e+02  delta_logL = 1.307590e-04   8.847589e+07  8.858924e+07
+iteration    43  logL = -9.466096e+02  delta_logL = 1.294306e-04   8.846445e+07  8.857779e+07
+iteration    44  logL = -9.464881e+02  delta_logL = 1.283776e-04   8.845309e+07  8.856643e+07
+iteration    45  logL = -9.463674e+02  delta_logL = 1.275125e-04   8.844182e+07  8.855516e+07
+iteration    46  logL = -9.462475e+02  delta_logL = 1.267272e-04   8.843061e+07  8.854395e+07
+iteration    47  logL = -9.461284e+02  delta_logL = 1.259111e-04   8.841948e+07  8.853282e+07
+iteration    48  logL = -9.460101e+02  delta_logL = 1.250265e-04   8.840843e+07  8.852177e+07
+iteration    49  logL = -9.458928e+02  delta_logL = 1.240703e-04   8.839746e+07  8.851081e+07
+iteration    50  logL = -9.457764e+02  delta_logL = 1.230055e-04   8.838659e+07  8.849994e+07
+iteration    51  logL = -9.456613e+02  delta_logL = 1.217405e-04   8.837584e+07  8.848918e+07
+iteration    52  logL = -9.455477e+02  delta_logL = 1.201580e-04   8.836522e+07  8.847856e+07
+iteration    53  logL = -9.454360e+02  delta_logL = 1.181658e-04   8.835478e+07  8.846812e+07
+iteration    54  logL = -9.453266e+02  delta_logL = 1.157190e-04   8.834456e+07  8.845790e+07
+iteration    55  logL = -9.452199e+02  delta_logL = 1.128179e-04   8.833460e+07  8.844794e+07
+iteration    56  logL = -9.451164e+02  delta_logL = 1.095112e-04   8.832493e+07  8.843827e+07
+iteration    57  logL = -9.450164e+02  delta_logL = 1.058876e-04   8.831558e+07  8.842892e+07
+iteration    58  logL = -9.449199e+02  delta_logL = 1.020548e-04   8.830657e+07  8.841991e+07
+iteration    59  logL = -9.448272e+02  delta_logL = 9.811827e-05   8.829790e+07  8.841124e+07
+iteration    60  logL = -9.447383e+02  delta_logL = 9.416710e-05   8.828959e+07  8.840293e+07
+iteration    61  logL = -9.446530e+02  delta_logL = 9.026679e-05   8.828162e+07  8.839496e+07
+iteration    62  logL = -9.445713e+02  delta_logL = 8.646086e-05   8.827399e+07  8.838733e+07
+iteration    63  logL = -9.444931e+02  delta_logL = 8.277769e-05   8.826669e+07  8.838003e+07
+iteration    64  logL = -9.444183e+02  delta_logL = 7.923769e-05   8.825970e+07  8.837304e+07
+iteration    65  logL = -9.443467e+02  delta_logL = 7.585826e-05   8.825300e+07  8.836634e+07
+iteration    66  logL = -9.442781e+02  delta_logL = 7.265603e-05   8.824659e+07  8.835993e+07
+iteration    67  logL = -9.442123e+02  delta_logL = 6.964622e-05   8.824045e+07  8.835379e+07
+iteration    68  logL = -9.441492e+02  delta_logL = 6.684016e-05   8.823455e+07  8.834789e+07
+iteration    69  logL = -9.440885e+02  delta_logL = 6.424300e-05   8.822888e+07  8.834222e+07
+iteration    70  logL = -9.440301e+02  delta_logL = 6.185313e-05   8.822343e+07  8.833677e+07
+iteration    71  logL = -9.439738e+02  delta_logL = 5.966324e-05   8.821816e+07  8.833151e+07
+iteration    72  logL = -9.439194e+02  delta_logL = 5.766224e-05   8.821308e+07  8.832642e+07
+iteration    73  logL = -9.438667e+02  delta_logL = 5.583699e-05   8.820815e+07  8.832150e+07
+iteration    74  logL = -9.438156e+02  delta_logL = 5.417327e-05   8.820338e+07  8.831672e+07
+iteration    75  logL = -9.437659e+02  delta_logL = 5.265623e-05   8.819873e+07  8.831207e+07
+iteration    76  logL = -9.437175e+02  delta_logL = 5.127094e-05   8.819421e+07  8.830755e+07
+iteration    77  logL = -9.436703e+02  delta_logL = 5.000295e-05   8.818980e+07  8.830314e+07
+iteration    78  logL = -9.436242e+02  delta_logL = 4.883870e-05   8.818550e+07  8.829884e+07
+iteration    79  logL = -9.435791e+02  delta_logL = 4.776539e-05   8.818129e+07  8.829463e+07
+iteration    80  logL = -9.435350e+02  delta_logL = 4.677100e-05   8.817716e+07  8.829050e+07
+iteration    81  logL = -9.434918e+02  delta_logL = 4.584453e-05   8.817312e+07  8.828646e+07
+iteration    82  logL = -9.434493e+02  delta_logL = 4.497630e-05   8.816916e+07  8.828250e+07
+iteration    83  logL = -9.434077e+02  delta_logL = 4.415780e-05   8.816526e+07  8.827860e+07
+iteration    84  logL = -9.433667e+02  delta_logL = 4.338117e-05   8.816144e+07  8.827478e+07
+iteration    85  logL = -9.433265e+02  delta_logL = 4.263881e-05   8.815768e+07  8.827102e+07
+iteration    86  logL = -9.432870e+02  delta_logL = 4.192339e-05   8.815399e+07  8.826733e+07
+iteration    87  logL = -9.432481e+02  delta_logL = 4.122816e-05   8.815035e+07  8.826369e+07
+iteration    88  logL = -9.432098e+02  delta_logL = 4.054727e-05   8.814678e+07  8.826012e+07
+iteration    89  logL = -9.431722e+02  delta_logL = 3.987599e-05   8.814327e+07  8.825661e+07
+iteration    90  logL = -9.431353e+02  delta_logL = 3.921101e-05   8.813981e+07  8.825315e+07
+iteration    91  logL = -9.430989e+02  delta_logL = 3.855027e-05   8.813641e+07  8.824975e+07
+iteration    92  logL = -9.430632e+02  delta_logL = 3.789248e-05   8.813307e+07  8.824641e+07
+iteration    93  logL = -9.430280e+02  delta_logL = 3.723626e-05   8.812979e+07  8.824313e+07
+iteration    94  logL = -9.429936e+02  delta_logL = 3.657952e-05   8.812657e+07  8.823991e+07
+iteration    95  logL = -9.429597e+02  delta_logL = 3.591949e-05   8.812340e+07  8.823675e+07
+iteration    96  logL = -9.429264e+02  delta_logL = 3.525333e-05   8.812030e+07  8.823364e+07
+iteration    97  logL = -9.428938e+02  delta_logL = 3.457908e-05   8.811725e+07  8.823059e+07
+iteration    98  logL = -9.428619e+02  delta_logL = 3.389638e-05   8.811427e+07  8.822761e+07
+iteration    99  logL = -9.428306e+02  delta_logL = 3.320671e-05   8.811134e+07  8.822468e+07
+iteration   100  logL = -9.427999e+02  delta_logL = 3.251304e-05   8.810848e+07  8.822182e+07
+iteration   101  logL = -9.427699e+02  delta_logL = 3.181918e-05   8.810567e+07  8.821901e+07
+iteration   102  logL = -9.427406e+02  delta_logL = 3.112896e-05   8.810293e+07  8.821627e+07
+iteration   103  logL = -9.427119e+02  delta_logL = 3.044582e-05   8.810025e+07  8.821359e+07
+iteration   104  logL = -9.426838e+02  delta_logL = 2.977267e-05   8.809763e+07  8.821097e+07
+iteration   105  logL = -9.426564e+02  delta_logL = 2.911216e-05   8.809506e+07  8.820840e+07
+iteration   106  logL = -9.426295e+02  delta_logL = 2.846678e-05   8.809256e+07  8.820590e+07
+iteration   107  logL = -9.426033e+02  delta_logL = 2.783869e-05   8.809010e+07  8.820344e+07
+iteration   108  logL = -9.425776e+02  delta_logL = 2.722954e-05   8.808771e+07  8.820105e+07
+iteration   109  logL = -9.425525e+02  delta_logL = 2.664035e-05   8.808536e+07  8.819870e+07
+iteration   110  logL = -9.425279e+02  delta_logL = 2.607146e-05   8.808306e+07  8.819640e+07
+iteration   111  logL = -9.425039e+02  delta_logL = 2.552246e-05   8.808082e+07  8.819416e+07
+iteration   112  logL = -9.424803e+02  delta_logL = 2.499227e-05   8.807861e+07  8.819196e+07
+iteration   113  logL = -9.424573e+02  delta_logL = 2.447944e-05   8.807646e+07  8.818980e+07
+iteration   114  logL = -9.424347e+02  delta_logL = 2.398253e-05   8.807435e+07  8.818769e+07
+iteration   115  logL = -9.424125e+02  delta_logL = 2.350045e-05   8.807228e+07  8.818562e+07
+iteration   116  logL = -9.423908e+02  delta_logL = 2.303277e-05   8.807025e+07  8.818359e+07
+iteration   117  logL = -9.423695e+02  delta_logL = 2.257991e-05   8.806826e+07  8.818160e+07
+iteration   118  logL = -9.423487e+02  delta_logL = 2.214315e-05   8.806631e+07  8.817965e+07
+iteration   119  logL = -9.423282e+02  delta_logL = 2.172443e-05   8.806440e+07  8.817774e+07
+iteration   120  logL = -9.423081e+02  delta_logL = 2.132609e-05   8.806252e+07  8.817586e+07
+iteration   121  logL = -9.422883e+02  delta_logL = 2.095043e-05   8.806068e+07  8.817402e+07
+iteration   122  logL = -9.422689e+02  delta_logL = 2.059933e-05   8.805886e+07  8.817220e+07
+iteration   123  logL = -9.422498e+02  delta_logL = 2.027398e-05   8.805708e+07  8.817042e+07
+iteration   124  logL = -9.422310e+02  delta_logL = 1.997485e-05   8.805532e+07  8.816866e+07
+iteration   125  logL = -9.422124e+02  delta_logL = 1.970195e-05   8.805358e+07  8.816693e+07
+iteration   126  logL = -9.421941e+02  delta_logL = 1.945575e-05   8.805187e+07  8.816521e+07
+iteration   127  logL = -9.421760e+02  delta_logL = 1.923829e-05   8.805018e+07  8.816352e+07
+iteration   128  logL = -9.421580e+02  delta_logL = 1.905376e-05   8.804850e+07  8.816184e+07
+iteration   129  logL = -9.421402e+02  delta_logL = 1.890783e-05   8.804684e+07  8.816018e+07
+iteration   130  logL = -9.421225e+02  delta_logL = 1.880547e-05   8.804518e+07  8.815852e+07
+iteration   131  logL = -9.421048e+02  delta_logL = 1.874887e-05   8.804353e+07  8.815687e+07
+iteration   132  logL = -9.420872e+02  delta_logL = 1.873709e-05   8.804188e+07  8.815522e+07
+iteration   133  logL = -9.420695e+02  delta_logL = 1.876726e-05   8.804023e+07  8.815357e+07
+iteration   134  logL = -9.420518e+02  delta_logL = 1.883530e-05   8.803857e+07  8.815191e+07
+iteration   135  logL = -9.420339e+02  delta_logL = 1.893444e-05   8.803690e+07  8.815025e+07
+iteration   136  logL = -9.420160e+02  delta_logL = 1.905334e-05   8.803523e+07  8.814857e+07
+iteration   137  logL = -9.419979e+02  delta_logL = 1.917486e-05   8.803354e+07  8.814688e+07
+iteration   138  logL = -9.419798e+02  delta_logL = 1.927593e-05   8.803184e+07  8.814518e+07
+iteration   139  logL = -9.419616e+02  delta_logL = 1.933020e-05   8.803014e+07  8.814348e+07
+iteration   140  logL = -9.419434e+02  delta_logL = 1.931394e-05   8.802844e+07  8.814178e+07
+iteration   141  logL = -9.419253e+02  delta_logL = 1.921384e-05   8.802675e+07  8.814009e+07
+iteration   142  logL = -9.419073e+02  delta_logL = 1.903180e-05   8.802508e+07  8.813842e+07
+iteration   143  logL = -9.418896e+02  delta_logL = 1.878305e-05   8.802342e+07  8.813676e+07
+iteration   144  logL = -9.418722e+02  delta_logL = 1.848911e-05   8.802180e+07  8.813514e+07
+iteration   145  logL = -9.418551e+02  delta_logL = 1.816783e-05   8.802020e+07  8.813354e+07
+iteration   146  logL = -9.418383e+02  delta_logL = 1.782985e-05   8.801863e+07  8.813197e+07
+iteration   147  logL = -9.418219e+02  delta_logL = 1.748276e-05   8.801709e+07  8.813043e+07
+iteration   148  logL = -9.418057e+02  delta_logL = 1.713615e-05   8.801558e+07  8.812892e+07
+iteration   149  logL = -9.417899e+02  delta_logL = 1.680104e-05   8.801410e+07  8.812744e+07
+iteration   150  logL = -9.417744e+02  delta_logL = 1.648595e-05   8.801265e+07  8.812599e+07
+iteration   151  logL = -9.417591e+02  delta_logL = 1.619504e-05   8.801123e+07  8.812457e+07
+iteration   152  logL = -9.417441e+02  delta_logL = 1.592897e-05   8.800983e+07  8.812317e+07
+iteration   153  logL = -9.417293e+02  delta_logL = 1.568644e-05   8.800844e+07  8.812179e+07
+iteration   154  logL = -9.417148e+02  delta_logL = 1.546540e-05   8.800708e+07  8.812042e+07
+iteration   155  logL = -9.417004e+02  delta_logL = 1.526364e-05   8.800574e+07  8.811908e+07
+iteration   156  logL = -9.416862e+02  delta_logL = 1.507916e-05   8.800441e+07  8.811775e+07
+iteration   157  logL = -9.416722e+02  delta_logL = 1.491004e-05   8.800310e+07  8.811644e+07
+iteration   158  logL = -9.416583e+02  delta_logL = 1.475432e-05   8.800180e+07  8.811514e+07
+iteration   159  logL = -9.416445e+02  delta_logL = 1.460988e-05   8.800052e+07  8.811386e+07
+iteration   160  logL = -9.416309e+02  delta_logL = 1.447441e-05   8.799925e+07  8.811259e+07
+iteration   161  logL = -9.416174e+02  delta_logL = 1.434568e-05   8.799798e+07  8.811132e+07
+iteration   162  logL = -9.416040e+02  delta_logL = 1.422176e-05   8.799673e+07  8.811007e+07
+iteration   163  logL = -9.415907e+02  delta_logL = 1.410146e-05   8.799549e+07  8.810883e+07
+iteration   164  logL = -9.415775e+02  delta_logL = 1.398460e-05   8.799426e+07  8.810760e+07
+iteration   165  logL = -9.415645e+02  delta_logL = 1.387226e-05   8.799304e+07  8.810638e+07
+iteration   166  logL = -9.415515e+02  delta_logL = 1.376678e-05   8.799183e+07  8.810517e+07
+iteration   167  logL = -9.415386e+02  delta_logL = 1.367170e-05   8.799063e+07  8.810397e+07
+iteration   168  logL = -9.415259e+02  delta_logL = 1.359175e-05   8.798943e+07  8.810277e+07
+iteration   169  logL = -9.415131e+02  delta_logL = 1.353308e-05   8.798824e+07  8.810158e+07
+iteration   170  logL = -9.415004e+02  delta_logL = 1.350361e-05   8.798705e+07  8.810039e+07
+iteration   171  logL = -9.414877e+02  delta_logL = 1.351323e-05   8.798586e+07  8.809920e+07
+iteration   172  logL = -9.414749e+02  delta_logL = 1.357360e-05   8.798467e+07  8.809801e+07
+iteration   173  logL = -9.414620e+02  delta_logL = 1.369707e-05   8.798346e+07  8.809681e+07
+iteration   174  logL = -9.414489e+02  delta_logL = 1.389420e-05   8.798224e+07  8.809558e+07
+iteration   175  logL = -9.414356e+02  delta_logL = 1.416863e-05   8.798100e+07  8.809434e+07
+iteration   176  logL = -9.414219e+02  delta_logL = 1.450848e-05   8.797972e+07  8.809306e+07
+iteration   177  logL = -9.414079e+02  delta_logL = 1.487530e-05   8.797841e+07  8.809175e+07
+iteration   178  logL = -9.413936e+02  delta_logL = 1.519748e-05   8.797707e+07  8.809042e+07
+iteration   179  logL = -9.413791e+02  delta_logL = 1.538014e-05   8.797572e+07  8.808906e+07
+iteration   180  logL = -9.413647e+02  delta_logL = 1.533639e-05   8.797437e+07  8.808771e+07
+iteration   181  logL = -9.413506e+02  delta_logL = 1.502547e-05   8.797305e+07  8.808639e+07
+iteration   182  logL = -9.413369e+02  delta_logL = 1.447400e-05   8.797178e+07  8.808512e+07
+iteration   183  logL = -9.413240e+02  delta_logL = 1.376621e-05   8.797057e+07  8.808391e+07
+iteration   184  logL = -9.413117e+02  delta_logL = 1.300895e-05   8.796942e+07  8.808276e+07
+iteration   185  logL = -9.413002e+02  delta_logL = 1.229384e-05   8.796834e+07  8.808168e+07
+iteration   186  logL = -9.412892e+02  delta_logL = 1.167594e-05   8.796731e+07  8.808066e+07
+iteration   187  logL = -9.412786e+02  delta_logL = 1.117354e-05   8.796633e+07  8.807967e+07
+iteration   188  logL = -9.412685e+02  delta_logL = 1.078059e-05   8.796538e+07  8.807872e+07
+iteration   189  logL = -9.412586e+02  delta_logL = 1.048060e-05   8.796446e+07  8.807780e+07
+iteration   190  logL = -9.412490e+02  delta_logL = 1.025585e-05   8.796356e+07  8.807690e+07
+iteration   191  logL = -9.412395e+02  delta_logL = 1.009148e-05   8.796267e+07  8.807601e+07
+iteration   192  logL = -9.412301e+02  delta_logL = 9.976582e-06   8.796180e+07  8.807514e+07
+iteration   193  logL = -9.412208e+02  delta_logL = 9.903757e-06   8.796092e+07  8.807426e+07
+iteration   194  logL = -9.412115e+02  delta_logL = 9.868342e-06   8.796006e+07  8.807340e+07
+iteration   195  logL = -9.412022e+02  delta_logL = 9.867642e-06   8.795919e+07  8.807253e+07
+iteration   196  logL = -9.411929e+02  delta_logL = 9.900328e-06   8.795832e+07  8.807166e+07
+iteration   197  logL = -9.411835e+02  delta_logL = 9.965991e-06   8.795744e+07  8.807078e+07
+iteration   198  logL = -9.411740e+02  delta_logL = 1.006479e-05   8.795656e+07  8.806990e+07
+iteration   199  logL = -9.411644e+02  delta_logL = 1.019718e-05   8.795566e+07  8.806900e+07
+iteration   200  logL = -9.411547e+02  delta_logL = 1.036367e-05   8.795475e+07  8.806809e+07
+class 0 with 657231 samples assigned
+class 1 with 73553 samples assigned
+class 2 with 91947 samples assigned
+class 3 with 100329 samples assigned
+class 4 with 95975 samples assigned
+class 5 with 74236 samples assigned
+class 6 with 136449 samples assigned
+class 7 with 103165 samples assigned
+class 8 with 81053 samples assigned
+class 9 with 88298 samples assigned
+class 10 with 4508 samples assigned
+class 11 with 57667 samples assigned
+class 12 with 90559 samples assigned
+class 13 with 32263 samples assigned
+class 14 with 121750 samples assigned
+class 15 with 129160 samples assigned
+class 16 with 74581 samples assigned
+class 17 with 45487 samples assigned
+class 18 with 48082 samples assigned
+class 19 with 92501 samples assigned
+class 20 with 60411 samples assigned
+class 21 with 84412 samples assigned
+class 22 with 63317 samples assigned
+class 23 with 42325 samples assigned
+class 24 with 33670 samples assigned
+class 25 with 55638 samples assigned
+class 26 with 89768 samples assigned
+class 27 with 70072 samples assigned
+class 28 with 55508 samples assigned
+class 29 with 119607 samples assigned
+class 30 with 103966 samples assigned
+class 31 with 72095 samples assigned
+class 32 with 134900 samples assigned
+class 33 with 50786 samples assigned
+class 34 with 130897 samples assigned
+class 35 with 111782 samples assigned
+class 36 with 155118 samples assigned
+class 37 with 105767 samples assigned
+class 38 with 67808 samples assigned
+class 39 with 111159 samples assigned
+class 40 with 89172 samples assigned
+class 41 with 70732 samples assigned
+class 42 with 40878 samples assigned
+class 43 with 104024 samples assigned
+class 44 with 54885 samples assigned
+class 45 with 152150 samples assigned
+class 46 with 85630 samples assigned
+class 47 with 74976 samples assigned
+class 48 with 48541 samples assigned
+class 49 with 80252 samples assigned
+class 50 with 129052 samples assigned
+class 51 with 74131 samples assigned
+class 52 with 95366 samples assigned
+class 53 with 45916 samples assigned
+class 54 with 61025 samples assigned
+class 55 with 160993 samples assigned
+class 56 with 89574 samples assigned
+class 57 with 121684 samples assigned
+class 58 with 82244 samples assigned
+class 59 with 129511 samples assigned
+class 60 with 135983 samples assigned
+class 61 with 76287 samples assigned
+class 62 with 54550 samples assigned
+class 63 with 127475 samples assigned
+class 64 with 99960 samples assigned
+class 65 with 149585 samples assigned
+class 66 with 58932 samples assigned
+class 67 with 46689 samples assigned
+class 68 with 121740 samples assigned
+class 69 with 117286 samples assigned
+class 70 with 129629 samples assigned
+class 71 with 58504 samples assigned
+class 72 with 65899 samples assigned
+class 73 with 66038 samples assigned
+class 74 with 116904 samples assigned
+class 75 with 51541 samples assigned
+class 76 with 62130 samples assigned
+class 77 with 78464 samples assigned
+class 78 with 99100 samples assigned
+class 79 with 114777 samples assigned
+class 80 with 59160 samples assigned
+class 81 with 99738 samples assigned
+class 82 with 53227 samples assigned
+class 83 with 68970 samples assigned
+class 84 with 104284 samples assigned
+class 85 with 115699 samples assigned
+class 86 with 166453 samples assigned
+class 87 with 74279 samples assigned
+class 88 with 127507 samples assigned
+class 89 with 56104 samples assigned
+class 90 with 94369 samples assigned
+class 91 with 64464 samples assigned
+class 92 with 80499 samples assigned
+class 93 with 65751 samples assigned
+class 94 with 121118 samples assigned
+class 95 with 45586 samples assigned
+class 96 with 84206 samples assigned
+class 97 with 49372 samples assigned
+class 98 with 123268 samples assigned
+class 99 with 126133 samples assigned
+class 100 with 83443 samples assigned
+class 101 with 101644 samples assigned
+class 102 with 56236 samples assigned
+class 103 with 70370 samples assigned
+class 104 with 75458 samples assigned
+class 105 with 98897 samples assigned
+class 106 with 138521 samples assigned
+class 107 with 120768 samples assigned
+class 108 with 105673 samples assigned
+class 109 with 139193 samples assigned
+class 110 with 64582 samples assigned
+class 111 with 88715 samples assigned
+class 112 with 71639 samples assigned
+class 113 with 90318 samples assigned
+class 114 with 96693 samples assigned
+class 115 with 104313 samples assigned
+class 116 with 93502 samples assigned
+class 117 with 65605 samples assigned
+class 118 with 95779 samples assigned
+class 119 with 110339 samples assigned
+class 120 with 79668 samples assigned
+class 121 with 101813 samples assigned
+class 122 with 125185 samples assigned
+class 123 with 79459 samples assigned
+class 124 with 114133 samples assigned
+class 125 with 67509 samples assigned
+class 126 with 16157 samples assigned
+class 127 with 92470 samples assigned
+class 128 with 76740 samples assigned
+class 129 with 59271 samples assigned
+class 130 with 104367 samples assigned
+class 131 with 142914 samples assigned
+class 132 with 33628 samples assigned
+class 133 with 42641 samples assigned
+class 134 with 83645 samples assigned
+class 135 with 124744 samples assigned
+class 136 with 73480 samples assigned
+class 137 with 87364 samples assigned
+class 138 with 90424 samples assigned
+class 139 with 56971 samples assigned
+class 140 with 118136 samples assigned
+class 141 with 61925 samples assigned
+class 142 with 161167 samples assigned
+class 143 with 120393 samples assigned
+class 144 with 104367 samples assigned
+class 145 with 139747 samples assigned
+class 146 with 86917 samples assigned
+class 147 with 123032 samples assigned
+class 148 with 61431 samples assigned
+class 149 with 77895 samples assigned
+class 150 with 79790 samples assigned
+class 151 with 85231 samples assigned
+class 152 with 126295 samples assigned
+class 153 with 64620 samples assigned
+class 154 with 96530 samples assigned
+class 155 with 134051 samples assigned
+class 156 with 113556 samples assigned
+class 157 with 59942 samples assigned
+class 158 with 132642 samples assigned
+class 159 with 117064 samples assigned
+class 160 with 76801 samples assigned
+class 161 with 58734 samples assigned
+class 162 with 141979 samples assigned
+class 163 with 69221 samples assigned
+class 164 with 102199 samples assigned
+class 165 with 100051 samples assigned
+class 166 with 62467 samples assigned
+class 167 with 57691 samples assigned
+class 168 with 96149 samples assigned
+class 169 with 78724 samples assigned
+class 170 with 102383 samples assigned
+class 171 with 109006 samples assigned
+class 172 with 68653 samples assigned
+class 173 with 114116 samples assigned
+class 174 with 100327 samples assigned
+class 175 with 101032 samples assigned
+class 176 with 76110 samples assigned
+class 177 with 129290 samples assigned
+class 178 with 47724 samples assigned
+class 179 with 92472 samples assigned
+class 180 with 86231 samples assigned
+class 181 with 91631 samples assigned
+class 182 with 88830 samples assigned
+class 183 with 87120 samples assigned
+class 184 with 77295 samples assigned
+class 185 with 101853 samples assigned
+class 186 with 53481 samples assigned
+class 187 with 41377 samples assigned
+class 188 with 39609 samples assigned
+class 189 with 86471 samples assigned
+class 190 with 153266 samples assigned
+class 191 with 126186 samples assigned
+class 192 with 134878 samples assigned
+class 193 with 107566 samples assigned
+class 194 with 120115 samples assigned
+class 195 with 140643 samples assigned
+class 196 with 110938 samples assigned
+class 197 with 87648 samples assigned
+class 198 with 66570 samples assigned
+class 199 with 82280 samples assigned
+class 200 with 50235 samples assigned
+class 201 with 78740 samples assigned
+class 202 with 87643 samples assigned
+class 203 with 83457 samples assigned
+class 204 with 44527 samples assigned
+class 205 with 107634 samples assigned
+class 206 with 83052 samples assigned
+class 207 with 75161 samples assigned
+class 208 with 79584 samples assigned
+class 209 with 64327 samples assigned
+class 210 with 74172 samples assigned
+class 211 with 97265 samples assigned
+class 212 with 46659 samples assigned
+class 213 with 78262 samples assigned
+class 214 with 97010 samples assigned
+class 215 with 90593 samples assigned
+class 216 with 115447 samples assigned
+class 217 with 77577 samples assigned
+class 218 with 84954 samples assigned
+class 219 with 108983 samples assigned
+class 220 with 74712 samples assigned
+class 221 with 77553 samples assigned
+class 222 with 91661 samples assigned
+class 223 with 66532 samples assigned
+class 224 with 63493 samples assigned
+class 225 with 74200 samples assigned
+class 226 with 84529 samples assigned
+class 227 with 78745 samples assigned
+class 228 with 96027 samples assigned
+class 229 with 84642 samples assigned
+class 230 with 58997 samples assigned
+class 231 with 79287 samples assigned
+class 232 with 79927 samples assigned
+class 233 with 76392 samples assigned
+class 234 with 59704 samples assigned
+class 235 with 84147 samples assigned
+class 236 with 86954 samples assigned
+class 237 with 79666 samples assigned
+class 238 with 66780 samples assigned
+class 239 with 118794 samples assigned
+class 240 with 84556 samples assigned
+class 241 with 109104 samples assigned
+class 242 with 79221 samples assigned
+class 243 with 97311 samples assigned
+class 244 with 72091 samples assigned
+class 245 with 81825 samples assigned
+class 246 with 87370 samples assigned
+class 247 with 83923 samples assigned
+class 248 with 114580 samples assigned
+class 249 with 67361 samples assigned
+class 250 with 94487 samples assigned
+class 251 with 71203 samples assigned
+class 252 with 53059 samples assigned
+class 253 with 70833 samples assigned
+class 254 with 92011 samples assigned
+class 255 with 72815 samples assigned
+class 256 with 83669 samples assigned
+class 257 with 81052 samples assigned
+class 258 with 94631 samples assigned
+class 259 with 79119 samples assigned
+class 260 with 86204 samples assigned
+n_components   261  logL = -9.411547e+02  aic 8.795475e+07  bic 8.806809e+07 
+    0   nsg   0    657231.000000     tsg  10        14.077400
+    1   nsg  86    166453.000000     tsg 188       -11.389023
+    2   nsg 142    161167.000000     tsg  53       -12.451486
+    3   nsg  55    160993.000000     tsg 132       -13.033358
+    4   nsg  36    155118.000000     tsg  44       -17.794282
+    5   nsg 190    153266.000000     tsg  95       -17.901053
+    6   nsg  45    152150.000000     tsg 133       -18.220157
+    7   nsg  65    149585.000000     tsg  97       -18.597693
+    8   nsg 131    142914.000000     tsg 178       -19.906805
+    9   nsg 162    141979.000000     tsg  24       -20.623237
+   10   nsg 195    140643.000000     tsg  23       -20.936062
+   11   nsg 145    139747.000000     tsg  67       -21.341452
+   12   nsg 109    139193.000000     tsg  42       -22.189960
+   13   nsg 106    138521.000000     tsg  73       -22.816898
+   14   nsg   6    136449.000000     tsg 148       -23.660233
+   15   nsg  60    135983.000000     tsg  71       -24.324640
+   16   nsg  32    134900.000000     tsg  13       -24.487509
+   17   nsg 192    134878.000000     tsg 104       -24.824759
+   18   nsg 155    134051.000000     tsg  75       -24.835951
+   19   nsg 158    132642.000000     tsg 129       -24.954454
+   20   nsg  34    130897.000000     tsg  47       -25.447455
+   21   nsg  70    129629.000000     tsg 125       -27.951465
+   22   nsg  59    129511.000000     tsg 167       -28.153751
+   23   nsg 177    129290.000000     tsg 233       -28.546409
+   24   nsg  15    129160.000000     tsg 252       -29.128630
+   25   nsg  50    129052.000000     tsg 251       -29.512441
+   26   nsg  88    127507.000000     tsg 212       -29.739626
+   27   nsg  63    127475.000000     tsg  28       -29.904648
+   28   nsg 152    126295.000000     tsg 136       -30.031947
+   29   nsg 191    126186.000000     tsg 180       -30.208577
+   30   nsg  99    126133.000000     tsg  89       -30.563658
+   31   nsg 122    125185.000000     tsg 186       -30.707169
+   32   nsg 135    124744.000000     tsg 207       -30.840818
+   33   nsg  98    123268.000000     tsg 201       -30.889207
+   34   nsg 147    123032.000000     tsg  80       -30.898693
+   35   nsg  14    121750.000000     tsg 163       -31.011668
+   36   nsg  68    121740.000000     tsg 204       -31.121962
+   37   nsg  57    121684.000000     tsg 238       -31.329040
+   38   nsg  94    121118.000000     tsg 102       -31.412921
+   39   nsg 107    120768.000000     tsg 198       -31.432197
+   40   nsg 143    120393.000000     tsg 206       -31.674255
+   41   nsg 194    120115.000000     tsg 217       -31.731103
+   42   nsg  29    119607.000000     tsg 223       -31.751047
+   43   nsg 239    118794.000000     tsg  62       -32.105703
+   44   nsg 140    118136.000000     tsg  93       -32.205244
+   45   nsg  69    117286.000000     tsg  54       -32.360676
+   46   nsg 159    117064.000000     tsg 230       -32.588979
+   47   nsg  74    116904.000000     tsg 244       -32.611618
+   48   nsg  85    115699.000000     tsg 160       -32.891061
+   49   nsg 216    115447.000000     tsg 211       -32.900308
+   50   nsg  79    114777.000000     tsg 232       -32.970310
+   51   nsg 248    114580.000000     tsg 229       -33.003761
+   52   nsg 124    114133.000000     tsg 150       -33.133166
+   53   nsg 173    114116.000000     tsg  77       -33.226694
+   54   nsg 156    113556.000000     tsg 137       -33.260684
+   55   nsg  35    111782.000000     tsg 187       -33.449133
+   56   nsg  39    111159.000000     tsg  82       -33.455961
+   57   nsg 196    110938.000000     tsg  91       -33.737778
+   58   nsg 119    110339.000000     tsg 220       -34.058864
+   59   nsg 241    109104.000000     tsg  41       -34.060420
+   60   nsg 171    109006.000000     tsg 200       -34.105467
+   61   nsg 219    108983.000000     tsg 208       -34.273389
+   62   nsg 205    107634.000000     tsg 149       -34.364504
+   63   nsg 193    107566.000000     tsg 247       -34.500034
+   64   nsg  37    105767.000000     tsg 183       -34.556023
+   65   nsg 108    105673.000000     tsg 166       -34.648933
+   66   nsg 144    104367.000000     tsg  76       -34.653243
+   67   nsg 130    104367.000000     tsg 218       -34.683251
+   68   nsg 115    104313.000000     tsg 184       -34.699865
+   69   nsg  84    104284.000000     tsg 260       -34.790336
+   70   nsg  43    104024.000000     tsg  87       -35.021571
+   71   nsg  30    103966.000000     tsg 234       -35.214545
+   72   nsg   7    103165.000000     tsg 112       -35.434982
+   73   nsg 170    102383.000000     tsg 128       -35.474791
+   74   nsg 164    102199.000000     tsg 209       -36.047301
+   75   nsg 185    101853.000000     tsg 249       -36.768001
+   76   nsg 121    101813.000000     tsg  33       -37.267599
+   77   nsg 101    101644.000000     tsg 214       -37.303802
+   78   nsg 175    101032.000000     tsg 224       -37.311956
+   79   nsg   3    100329.000000     tsg 242       -37.443560
+   80   nsg 174    100327.000000     tsg 240       -37.618366
+   81   nsg 165    100051.000000     tsg 222       -37.650961
+   82   nsg  64     99960.000000     tsg 246       -37.776190
+   83   nsg  81     99738.000000     tsg  92       -38.127698
+   84   nsg  78     99100.000000     tsg 101       -38.186559
+   85   nsg 105     98897.000000     tsg 172       -38.222521
+   86   nsg 243     97311.000000     tsg  48       -38.341225
+   87   nsg 211     97265.000000     tsg 120       -38.379177
+   88   nsg 214     97010.000000     tsg 157       -38.431044
+   89   nsg 114     96693.000000     tsg 245       -38.479703
+   90   nsg 154     96530.000000     tsg 255       -38.492606
+   91   nsg 168     96149.000000     tsg 243       -38.976320
+   92   nsg 228     96027.000000     tsg 259       -38.980487
+   93   nsg   4     95975.000000     tsg 227       -39.003049
+   94   nsg 118     95779.000000     tsg  17       -39.256844
+   95   nsg  52     95366.000000     tsg 130       -39.393564
+   96   nsg 258     94631.000000     tsg 141       -39.458947
+   97   nsg 250     94487.000000     tsg 253       -39.460551
+   98   nsg  90     94369.000000     tsg 181       -39.664158
+   99   nsg 116     93502.000000     tsg 139       -39.717549
+  100   nsg  19     92501.000000     tsg 254       -39.862642
+  101   nsg 179     92472.000000     tsg  20       -39.882027
+  102   nsg 127     92470.000000     tsg 199       -39.923617
+  103   nsg 254     92011.000000     tsg 231       -39.947141
+  104   nsg   2     91947.000000     tsg 153       -39.954814
+  105   nsg 222     91661.000000     tsg 134       -40.086254
+  106   nsg 181     91631.000000     tsg 258       -40.106269
+  107   nsg 215     90593.000000     tsg 237       -40.184724
+  108   nsg  12     90559.000000     tsg 241       -40.188915
+  109   nsg 138     90424.000000     tsg 202       -40.293199
+  110   nsg 113     90318.000000     tsg  38       -40.358177
+  111   nsg  26     89768.000000     tsg 169       -40.785661
+  112   nsg  56     89574.000000     tsg 203       -40.825917
+  113   nsg  40     89172.000000     tsg 257       -40.949596
+  114   nsg 182     88830.000000     tsg 216       -40.981471
+  115   nsg 111     88715.000000     tsg 213       -41.220595
+  116   nsg   9     88298.000000     tsg 127       -41.242786
+  117   nsg 197     87648.000000     tsg 110       -41.432846
+  118   nsg 202     87643.000000     tsg  40       -41.457259
+  119   nsg 246     87370.000000     tsg 164       -41.471501
+  120   nsg 137     87364.000000     tsg  31       -41.493345
+  121   nsg 183     87120.000000     tsg 189       -41.503647
+  122   nsg 236     86954.000000     tsg 174       -41.610707
+  123   nsg 146     86917.000000     tsg 248       -41.685981
+  124   nsg 189     86471.000000     tsg 256       -41.824733
+  125   nsg 180     86231.000000     tsg 250       -42.035929
+  126   nsg 260     86204.000000     tsg 221       -42.044463
+  127   nsg  46     85630.000000     tsg 196       -42.047560
+  128   nsg 151     85231.000000     tsg 235       -42.088998
+  129   nsg 218     84954.000000     tsg 226       -42.141901
+  130   nsg 229     84642.000000     tsg  11       -42.226282
+  131   nsg 240     84556.000000     tsg 194       -42.718156
+  132   nsg 226     84529.000000     tsg 146       -42.747084
+  133   nsg  21     84412.000000     tsg  66       -42.794572
+  134   nsg  96     84206.000000     tsg 228       -42.826849
+  135   nsg 235     84147.000000     tsg 155       -42.884119
+  136   nsg 247     83923.000000     tsg 161       -42.971947
+  137   nsg 256     83669.000000     tsg   7       -42.980209
+  138   nsg 134     83645.000000     tsg 215       -43.132158
+  139   nsg 203     83457.000000     tsg 192       -43.183586
+  140   nsg 100     83443.000000     tsg 171       -43.205099
+  141   nsg 206     83052.000000     tsg 176       -43.227898
+  142   nsg 199     82280.000000     tsg 175       -43.579230
+  143   nsg  58     82244.000000     tsg 210       -43.634067
+  144   nsg 245     81825.000000     tsg 191       -43.660913
+  145   nsg   8     81053.000000     tsg 152       -43.718678
+  146   nsg 257     81052.000000     tsg 119       -43.718916
+  147   nsg  92     80499.000000     tsg 151       -43.732679
+  148   nsg  49     80252.000000     tsg 239       -43.751441
+  149   nsg 232     79927.000000     tsg 179       -43.892887
+  150   nsg 150     79790.000000     tsg  46       -43.974361
+  151   nsg 120     79668.000000     tsg 165       -43.981494
+  152   nsg 237     79666.000000     tsg 219       -44.098028
+  153   nsg 208     79584.000000     tsg 177       -44.320658
+  154   nsg 123     79459.000000     tsg 205       -44.438552
+  155   nsg 231     79287.000000     tsg 100       -44.490831
+  156   nsg 242     79221.000000     tsg  56       -44.709754
+  157   nsg 259     79119.000000     tsg  19       -44.721851
+  158   nsg 227     78745.000000     tsg 193       -44.924404
+  159   nsg 201     78740.000000     tsg 123       -44.982951
+  160   nsg 169     78724.000000     tsg 225       -44.995680
+  161   nsg  77     78464.000000     tsg 173       -45.129064
+  162   nsg 213     78262.000000     tsg 185       -45.193637
+  163   nsg 149     77895.000000     tsg 103       -45.260824
+  164   nsg 217     77577.000000     tsg 154       -45.380736
+  165   nsg 221     77553.000000     tsg 140       -45.415408
+  166   nsg 184     77295.000000     tsg  94       -45.424783
+  167   nsg 160     76801.000000     tsg  79       -45.639530
+  168   nsg 128     76740.000000     tsg  12       -45.727937
+  169   nsg 233     76392.000000     tsg 144       -45.729276
+  170   nsg  61     76287.000000     tsg 158       -45.733865
+  171   nsg 176     76110.000000     tsg 170       -45.745243
+  172   nsg 104     75458.000000     tsg  84       -45.787549
+  173   nsg 207     75161.000000     tsg 114       -45.806449
+  174   nsg  47     74976.000000     tsg 108       -45.884418
+  175   nsg 220     74712.000000     tsg  27       -45.919119
+  176   nsg  16     74581.000000     tsg 131       -45.952652
+  177   nsg  87     74279.000000     tsg  18       -46.072136
+  178   nsg   5     74236.000000     tsg 117       -46.086504
+  179   nsg 225     74200.000000     tsg 159       -46.160907
+  180   nsg 210     74172.000000     tsg 121       -46.190945
+  181   nsg  51     74131.000000     tsg 182       -46.281413
+  182   nsg   1     73553.000000     tsg 111       -46.319119
+  183   nsg 136     73480.000000     tsg 162       -46.411413
+  184   nsg 255     72815.000000     tsg  49       -46.443686
+  185   nsg  31     72095.000000     tsg 190       -46.486984
+  186   nsg 244     72091.000000     tsg 122       -46.498248
+  187   nsg 112     71639.000000     tsg  39       -46.529370
+  188   nsg 251     71203.000000     tsg  85       -46.577390
+  189   nsg 253     70833.000000     tsg  72       -46.577859
+  190   nsg  41     70732.000000     tsg 105       -46.610568
+  191   nsg 103     70370.000000     tsg 195       -46.742893
+  192   nsg  27     70072.000000     tsg  68       -46.762173
+  193   nsg 163     69221.000000     tsg 116       -46.769158
+  194   nsg  83     68970.000000     tsg  61       -46.782166
+  195   nsg 172     68653.000000     tsg 138       -47.084295
+  196   nsg  38     67808.000000     tsg  96       -47.315005
+  197   nsg 125     67509.000000     tsg 236       -47.396714
+  198   nsg 249     67361.000000     tsg  52       -47.490357
+  199   nsg 238     66780.000000     tsg 168       -47.497589
+  200   nsg 198     66570.000000     tsg 143       -47.525101
+  201   nsg 223     66532.000000     tsg 109       -47.730734
+  202   nsg  73     66038.000000     tsg  43       -47.797398
+  203   nsg  72     65899.000000     tsg 113       -47.969201
+  204   nsg  93     65751.000000     tsg  90       -48.528838
+  205   nsg 117     65605.000000     tsg 124       -48.604700
+  206   nsg 153     64620.000000     tsg  22       -48.674661
+  207   nsg 110     64582.000000     tsg  88       -48.681445
+  208   nsg  91     64464.000000     tsg 106       -48.736986
+  209   nsg 209     64327.000000     tsg 197       -48.738344
+  210   nsg 224     63493.000000     tsg  98       -48.846779
+  211   nsg  22     63317.000000     tsg  57       -48.964717
+  212   nsg 166     62467.000000     tsg 142       -49.211870
+  213   nsg  76     62130.000000     tsg  86       -49.246845
+  214   nsg 141     61925.000000     tsg 145       -49.341546
+  215   nsg 148     61431.000000     tsg  25       -49.392020
+  216   nsg  54     61025.000000     tsg 118       -49.469423
+  217   nsg  20     60411.000000     tsg  78       -49.606441
+  218   nsg 157     59942.000000     tsg   5       -49.666878
+  219   nsg 234     59704.000000     tsg 135       -49.720897
+  220   nsg 129     59271.000000     tsg 107       -49.747342
+  221   nsg  80     59160.000000     tsg  36       -49.800915
+  222   nsg 230     58997.000000     tsg  55       -50.049861
+  223   nsg  66     58932.000000     tsg 156       -50.295845
+  224   nsg 161     58734.000000     tsg  99       -50.361718
+  225   nsg  71     58504.000000     tsg  69       -50.495901
+  226   nsg 167     57691.000000     tsg  29       -50.873302
+  227   nsg  11     57667.000000     tsg  63       -50.971394
+  228   nsg 139     56971.000000     tsg 147       -51.214780
+  229   nsg 102     56236.000000     tsg  83       -51.227107
+  230   nsg  89     56104.000000     tsg   4       -51.291889
+  231   nsg  25     55638.000000     tsg  32       -51.445533
+  232   nsg  28     55508.000000     tsg   2       -51.584983
+  233   nsg  44     54885.000000     tsg  81       -51.858866
+  234   nsg  62     54550.000000     tsg  50       -51.873868
+  235   nsg 186     53481.000000     tsg  45       -51.948768
+  236   nsg  82     53227.000000     tsg 115       -52.106004
+  237   nsg 252     53059.000000     tsg   1       -52.251074
+  238   nsg  75     51541.000000     tsg  60       -52.645010
+  239   nsg  33     50786.000000     tsg  58       -52.709877
+  240   nsg 200     50235.000000     tsg  34       -52.763980
+  241   nsg  97     49372.000000     tsg   9       -52.864197
+  242   nsg  48     48541.000000     tsg  65       -53.103240
+  243   nsg  18     48082.000000     tsg  14       -53.297060
+  244   nsg 178     47724.000000     tsg  30       -53.303909
+  245   nsg  67     46689.000000     tsg  59       -53.334986
+  246   nsg 212     46659.000000     tsg  21       -53.335238
+  247   nsg  53     45916.000000     tsg  35       -53.489808
+  248   nsg  95     45586.000000     tsg  16       -53.516558
+  249   nsg  17     45487.000000     tsg  70       -53.576306
+  250   nsg 204     44527.000000     tsg  74       -53.633159
+  251   nsg 133     42641.000000     tsg  15       -53.756404
+  252   nsg  23     42325.000000     tsg  37       -53.917487
+  253   nsg 187     41377.000000     tsg   8       -54.076829
+  254   nsg  42     40878.000000     tsg  51       -54.091147
+  255   nsg 188     39609.000000     tsg   6       -54.100422
+  256   nsg  24     33670.000000     tsg   3       -54.310787
+  257   nsg 132     33628.000000     tsg  64       -54.783378
+  258   nsg  13     32263.000000     tsg  26       -55.023678
+  259   nsg 126     16157.000000     tsg 126       -56.205906
+  260   nsg  10      4508.000000     tsg   0      -154.391954
+iteration     1  logL = -1.037535e+03  delta_logL = -9.289334e-02   9.696182e+07  9.708645e+07
+iteration     2  logL = -9.421506e+02  delta_logL = 1.012408e-01   8.804932e+07  8.817395e+07
+iteration     3  logL = -9.276752e+02  delta_logL = 1.560391e-02   8.669677e+07  8.682140e+07
+iteration     4  logL = -9.214469e+02  delta_logL = 6.759306e-03   8.611480e+07  8.623943e+07
+iteration     5  logL = -9.178804e+02  delta_logL = 3.885635e-03   8.578155e+07  8.590618e+07
+iteration     6  logL = -9.155845e+02  delta_logL = 2.507508e-03   8.556703e+07  8.569166e+07
+iteration     7  logL = -9.140250e+02  delta_logL = 1.706199e-03   8.542132e+07  8.554595e+07
+iteration     8  logL = -9.128640e+02  delta_logL = 1.271880e-03   8.531283e+07  8.543746e+07
+iteration     9  logL = -9.119452e+02  delta_logL = 1.007520e-03   8.522698e+07  8.535161e+07
+iteration    10  logL = -9.111867e+02  delta_logL = 8.323648e-04   8.515611e+07  8.528074e+07
+iteration    11  logL = -9.105405e+02  delta_logL = 7.097243e-04   8.509573e+07  8.522036e+07
+iteration    12  logL = -9.099762e+02  delta_logL = 6.201459e-04   8.504300e+07  8.516763e+07
+iteration    13  logL = -9.094738e+02  delta_logL = 5.523410e-04   8.499606e+07  8.512069e+07
+iteration    14  logL = -9.090200e+02  delta_logL = 4.992844e-04   8.495365e+07  8.507829e+07
+iteration    15  logL = -9.086055e+02  delta_logL = 4.562066e-04   8.491492e+07  8.503955e+07
+iteration    16  logL = -9.082242e+02  delta_logL = 4.197865e-04   8.487930e+07  8.500393e+07
+iteration    17  logL = -9.078720e+02  delta_logL = 3.879237e-04   8.484639e+07  8.497102e+07
+iteration    18  logL = -9.075459e+02  delta_logL = 3.593158e-04   8.481592e+07  8.494055e+07
+iteration    19  logL = -9.072436e+02  delta_logL = 3.331713e-04   8.478768e+07  8.491231e+07
+iteration    20  logL = -9.069633e+02  delta_logL = 3.091118e-04   8.476148e+07  8.488611e+07
+iteration    21  logL = -9.067031e+02  delta_logL = 2.870053e-04   8.473717e+07  8.486180e+07
+iteration    22  logL = -9.064612e+02  delta_logL = 2.667914e-04   8.471457e+07  8.483920e+07
+iteration    23  logL = -9.062361e+02  delta_logL = 2.484326e-04   8.469353e+07  8.481817e+07
+iteration    24  logL = -9.060260e+02  delta_logL = 2.319105e-04   8.467390e+07  8.479853e+07
+iteration    25  logL = -9.058292e+02  delta_logL = 2.171895e-04   8.465552e+07  8.478015e+07
+iteration    26  logL = -9.056443e+02  delta_logL = 2.041761e-04   8.463824e+07  8.476287e+07
+iteration    27  logL = -9.054698e+02  delta_logL = 1.927320e-04   8.462193e+07  8.474657e+07
+iteration    28  logL = -9.053044e+02  delta_logL = 1.827131e-04   8.460648e+07  8.473111e+07
+iteration    29  logL = -9.051469e+02  delta_logL = 1.739972e-04   8.459176e+07  8.471639e+07
+iteration    30  logL = -9.049962e+02  delta_logL = 1.664988e-04   8.457768e+07  8.470232e+07
+iteration    31  logL = -9.048513e+02  delta_logL = 1.601736e-04   8.456414e+07  8.468877e+07
+iteration    32  logL = -9.047111e+02  delta_logL = 1.549956e-04   8.455104e+07  8.467567e+07
+iteration    33  logL = -9.045746e+02  delta_logL = 1.508600e-04   8.453829e+07  8.466292e+07
+iteration    34  logL = -9.044412e+02  delta_logL = 1.475291e-04   8.452582e+07  8.465045e+07
+iteration    35  logL = -9.043102e+02  delta_logL = 1.448506e-04   8.451358e+07  8.463821e+07
+iteration    36  logL = -9.041812e+02  delta_logL = 1.426907e-04   8.450153e+07  8.462616e+07
+iteration    37  logL = -9.040539e+02  delta_logL = 1.408232e-04   8.448963e+07  8.461426e+07
+iteration    38  logL = -9.039282e+02  delta_logL = 1.390275e-04   8.447789e+07  8.460252e+07
+iteration    39  logL = -9.038046e+02  delta_logL = 1.367421e-04   8.446634e+07  8.459097e+07
+iteration    40  logL = -9.036840e+02  delta_logL = 1.334612e-04   8.445507e+07  8.457970e+07
+iteration    41  logL = -9.035671e+02  delta_logL = 1.294009e-04   8.444415e+07  8.456878e+07
+iteration    42  logL = -9.034539e+02  delta_logL = 1.252723e-04   8.443357e+07  8.455820e+07
+iteration    43  logL = -9.033440e+02  delta_logL = 1.215975e-04   8.442331e+07  8.454794e+07
+iteration    44  logL = -9.032369e+02  delta_logL = 1.186352e-04   8.441329e+07  8.453793e+07
+iteration    45  logL = -9.031316e+02  delta_logL = 1.165884e-04   8.440346e+07  8.452809e+07
+iteration    46  logL = -9.030271e+02  delta_logL = 1.156620e-04   8.439370e+07  8.451833e+07
+iteration    47  logL = -9.029223e+02  delta_logL = 1.160814e-04   8.438390e+07  8.450853e+07
+iteration    48  logL = -9.028157e+02  delta_logL = 1.181081e-04   8.437394e+07  8.449857e+07
+iteration    49  logL = -9.027057e+02  delta_logL = 1.218592e-04   8.436366e+07  8.448829e+07
+iteration    50  logL = -9.025910e+02  delta_logL = 1.270714e-04   8.435294e+07  8.447758e+07
+iteration    51  logL = -9.024708e+02  delta_logL = 1.331571e-04   8.434172e+07  8.446635e+07
+iteration    52  logL = -9.023460e+02  delta_logL = 1.383997e-04   8.433005e+07  8.445468e+07
+iteration    53  logL = -9.022182e+02  delta_logL = 1.415601e-04   8.431811e+07  8.444275e+07
+iteration    54  logL = -9.020901e+02  delta_logL = 1.420932e-04   8.430614e+07  8.443077e+07
+iteration    55  logL = -9.019655e+02  delta_logL = 1.380553e-04   8.429450e+07  8.441913e+07
+iteration    56  logL = -9.018477e+02  delta_logL = 1.306543e-04   8.428349e+07  8.440812e+07
+iteration    57  logL = -9.017391e+02  delta_logL = 1.204657e-04   8.427334e+07  8.439797e+07
+iteration    58  logL = -9.016402e+02  delta_logL = 1.096602e-04   8.426410e+07  8.438873e+07
+iteration    59  logL = -9.015510e+02  delta_logL = 9.891472e-05   8.425577e+07  8.438040e+07
+iteration    60  logL = -9.014705e+02  delta_logL = 8.937374e-05   8.424824e+07  8.437287e+07
+iteration    61  logL = -9.013968e+02  delta_logL = 8.167904e-05   8.424136e+07  8.436599e+07
+iteration    62  logL = -9.013287e+02  delta_logL = 7.561166e-05   8.423500e+07  8.435963e+07
+iteration    63  logL = -9.012648e+02  delta_logL = 7.089699e-05   8.422902e+07  8.435366e+07
+iteration    64  logL = -9.012042e+02  delta_logL = 6.718130e-05   8.422337e+07  8.434800e+07
+iteration    65  logL = -9.011464e+02  delta_logL = 6.417870e-05   8.421796e+07  8.434260e+07
+iteration    66  logL = -9.010908e+02  delta_logL = 6.169262e-05   8.421277e+07  8.433740e+07
+iteration    67  logL = -9.010371e+02  delta_logL = 5.959542e-05   8.420775e+07  8.433238e+07
+iteration    68  logL = -9.009850e+02  delta_logL = 5.780491e-05   8.420289e+07  8.432752e+07
+iteration    69  logL = -9.009343e+02  delta_logL = 5.626612e-05   8.419815e+07  8.432278e+07
+iteration    70  logL = -9.008849e+02  delta_logL = 5.493962e-05   8.419352e+07  8.431816e+07
+iteration    71  logL = -9.008364e+02  delta_logL = 5.379493e-05   8.418900e+07  8.431363e+07
+iteration    72  logL = -9.007888e+02  delta_logL = 5.280668e-05   8.418455e+07  8.430918e+07
+iteration    73  logL = -9.007420e+02  delta_logL = 5.195253e-05   8.418018e+07  8.430481e+07
+iteration    74  logL = -9.006959e+02  delta_logL = 5.121171e-05   8.417587e+07  8.430050e+07
+iteration    75  logL = -9.006504e+02  delta_logL = 5.056427e-05   8.417161e+07  8.429625e+07
+iteration    76  logL = -9.006053e+02  delta_logL = 4.999058e-05   8.416741e+07  8.429204e+07
+iteration    77  logL = -9.005608e+02  delta_logL = 4.947122e-05   8.416324e+07  8.428788e+07
+iteration    78  logL = -9.005167e+02  delta_logL = 4.898729e-05   8.415912e+07  8.428375e+07
+iteration    79  logL = -9.004730e+02  delta_logL = 4.852087e-05   8.415504e+07  8.427967e+07
+iteration    80  logL = -9.004297e+02  delta_logL = 4.805594e-05   8.415100e+07  8.427563e+07
+iteration    81  logL = -9.003869e+02  delta_logL = 4.757933e-05   8.414699e+07  8.427163e+07
+iteration    82  logL = -9.003445e+02  delta_logL = 4.708175e-05   8.414303e+07  8.426766e+07
+iteration    83  logL = -9.003026e+02  delta_logL = 4.655852e-05   8.413912e+07  8.426375e+07
+iteration    84  logL = -9.002611e+02  delta_logL = 4.600976e-05   8.413525e+07  8.425988e+07
+iteration    85  logL = -9.002202e+02  delta_logL = 4.543994e-05   8.413142e+07  8.425606e+07
+iteration    86  logL = -9.001799e+02  delta_logL = 4.485683e-05   8.412765e+07  8.425228e+07
+iteration    87  logL = -9.001400e+02  delta_logL = 4.427005e-05   8.412393e+07  8.424856e+07
+iteration    88  logL = -9.001007e+02  delta_logL = 4.368970e-05   8.412025e+07  8.424488e+07
+iteration    89  logL = -9.000619e+02  delta_logL = 4.312501e-05   8.411663e+07  8.424126e+07
+iteration    90  logL = -9.000235e+02  delta_logL = 4.258346e-05   8.411305e+07  8.423768e+07
+iteration    91  logL = -8.999857e+02  delta_logL = 4.206995e-05   8.410951e+07  8.423414e+07
+iteration    92  logL = -8.999483e+02  delta_logL = 4.158605e-05   8.410601e+07  8.423064e+07
+iteration    93  logL = -8.999112e+02  delta_logL = 4.112924e-05   8.410255e+07  8.422718e+07
+iteration    94  logL = -8.998746e+02  delta_logL = 4.069236e-05   8.409913e+07  8.422376e+07
+iteration    95  logL = -8.998384e+02  delta_logL = 4.026338e-05   8.409575e+07  8.422038e+07
+iteration    96  logL = -8.998026e+02  delta_logL = 3.982582e-05   8.409240e+07  8.421703e+07
+iteration    97  logL = -8.997671e+02  delta_logL = 3.935992e-05   8.408909e+07  8.421372e+07
+iteration    98  logL = -8.997322e+02  delta_logL = 3.884477e-05   8.408582e+07  8.421045e+07
+iteration    99  logL = -8.996978e+02  delta_logL = 3.826112e-05   8.408261e+07  8.420724e+07
+iteration   100  logL = -8.996639e+02  delta_logL = 3.759450e-05   8.407945e+07  8.420408e+07
+iteration   101  logL = -8.996308e+02  delta_logL = 3.683790e-05   8.407635e+07  8.420098e+07
+iteration   102  logL = -8.995984e+02  delta_logL = 3.599334e-05   8.407332e+07  8.419796e+07
+iteration   103  logL = -8.995669e+02  delta_logL = 3.507173e-05   8.407038e+07  8.419501e+07
+iteration   104  logL = -8.995362e+02  delta_logL = 3.409117e-05   8.406751e+07  8.419214e+07
+iteration   105  logL = -8.995065e+02  delta_logL = 3.307405e-05   8.406473e+07  8.418936e+07
+iteration   106  logL = -8.994776e+02  delta_logL = 3.204372e-05   8.406204e+07  8.418667e+07
+iteration   107  logL = -8.994497e+02  delta_logL = 3.102162e-05   8.405943e+07  8.418406e+07
+iteration   108  logL = -8.994227e+02  delta_logL = 3.002499e-05   8.405691e+07  8.418154e+07
+iteration   109  logL = -8.993966e+02  delta_logL = 2.906583e-05   8.405446e+07  8.417910e+07
+iteration   110  logL = -8.993713e+02  delta_logL = 2.815105e-05   8.405210e+07  8.417673e+07
+iteration   111  logL = -8.993467e+02  delta_logL = 2.728343e-05   8.404981e+07  8.417444e+07
+iteration   112  logL = -8.993229e+02  delta_logL = 2.646383e-05   8.404758e+07  8.417221e+07
+iteration   113  logL = -8.992998e+02  delta_logL = 2.569389e-05   8.404542e+07  8.417005e+07
+iteration   114  logL = -8.992774e+02  delta_logL = 2.497578e-05   8.404332e+07  8.416796e+07
+iteration   115  logL = -8.992555e+02  delta_logL = 2.430994e-05   8.404128e+07  8.416591e+07
+iteration   116  logL = -8.992342e+02  delta_logL = 2.369487e-05   8.403929e+07  8.416392e+07
+iteration   117  logL = -8.992134e+02  delta_logL = 2.312842e-05   8.403735e+07  8.416198e+07
+iteration   118  logL = -8.991931e+02  delta_logL = 2.260793e-05   8.403545e+07  8.416008e+07
+iteration   119  logL = -8.991732e+02  delta_logL = 2.212988e-05   8.403359e+07  8.415822e+07
+iteration   120  logL = -8.991537e+02  delta_logL = 2.169027e-05   8.403177e+07  8.415640e+07
+iteration   121  logL = -8.991345e+02  delta_logL = 2.128535e-05   8.402998e+07  8.415461e+07
+iteration   122  logL = -8.991157e+02  delta_logL = 2.091257e-05   8.402822e+07  8.415285e+07
+iteration   123  logL = -8.990972e+02  delta_logL = 2.056998e-05   8.402649e+07  8.415112e+07
+iteration   124  logL = -8.990790e+02  delta_logL = 2.025465e-05   8.402479e+07  8.414942e+07
+iteration   125  logL = -8.990611e+02  delta_logL = 1.996171e-05   8.402312e+07  8.414775e+07
+iteration   126  logL = -8.990434e+02  delta_logL = 1.968497e-05   8.402146e+07  8.414609e+07
+iteration   127  logL = -8.990259e+02  delta_logL = 1.941884e-05   8.401983e+07  8.414446e+07
+iteration   128  logL = -8.990087e+02  delta_logL = 1.916071e-05   8.401822e+07  8.414285e+07
+iteration   129  logL = -8.989917e+02  delta_logL = 1.891147e-05   8.401663e+07  8.414126e+07
+iteration   130  logL = -8.989749e+02  delta_logL = 1.867330e-05   8.401506e+07  8.413969e+07
+iteration   131  logL = -8.989583e+02  delta_logL = 1.844734e-05   8.401351e+07  8.413815e+07
+iteration   132  logL = -8.989419e+02  delta_logL = 1.823267e-05   8.401198e+07  8.413661e+07
+iteration   133  logL = -8.989257e+02  delta_logL = 1.802673e-05   8.401047e+07  8.413510e+07
+iteration   134  logL = -8.989097e+02  delta_logL = 1.782723e-05   8.400897e+07  8.413360e+07
+iteration   135  logL = -8.988939e+02  delta_logL = 1.763347e-05   8.400749e+07  8.413212e+07
+iteration   136  logL = -8.988782e+02  delta_logL = 1.744572e-05   8.400602e+07  8.413066e+07
+iteration   137  logL = -8.988627e+02  delta_logL = 1.726369e-05   8.400457e+07  8.412921e+07
+iteration   138  logL = -8.988473e+02  delta_logL = 1.708540e-05   8.400314e+07  8.412777e+07
+iteration   139  logL = -8.988321e+02  delta_logL = 1.690798e-05   8.400172e+07  8.412635e+07
+iteration   140  logL = -8.988171e+02  delta_logL = 1.672983e-05   8.400031e+07  8.412495e+07
+iteration   141  logL = -8.988022e+02  delta_logL = 1.655120e-05   8.399892e+07  8.412356e+07
+iteration   142  logL = -8.987875e+02  delta_logL = 1.637279e-05   8.399755e+07  8.412218e+07
+iteration   143  logL = -8.987729e+02  delta_logL = 1.619504e-05   8.399619e+07  8.412082e+07
+iteration   144  logL = -8.987585e+02  delta_logL = 1.601842e-05   8.399484e+07  8.411948e+07
+iteration   145  logL = -8.987443e+02  delta_logL = 1.584362e-05   8.399351e+07  8.411815e+07
+iteration   146  logL = -8.987302e+02  delta_logL = 1.567164e-05   8.399220e+07  8.411683e+07
+iteration   147  logL = -8.987163e+02  delta_logL = 1.550363e-05   8.399090e+07  8.411553e+07
+iteration   148  logL = -8.987025e+02  delta_logL = 1.534041e-05   8.398961e+07  8.411424e+07
+iteration   149  logL = -8.986888e+02  delta_logL = 1.518230e-05   8.398833e+07  8.411296e+07
+iteration   150  logL = -8.986753e+02  delta_logL = 1.502928e-05   8.398707e+07  8.411170e+07
+iteration   151  logL = -8.986620e+02  delta_logL = 1.488124e-05   8.398582e+07  8.411045e+07
+iteration   152  logL = -8.986487e+02  delta_logL = 1.473799e-05   8.398458e+07  8.410922e+07
+iteration   153  logL = -8.986356e+02  delta_logL = 1.459930e-05   8.398336e+07  8.410799e+07
+iteration   154  logL = -8.986226e+02  delta_logL = 1.446492e-05   8.398214e+07  8.410677e+07
+iteration   155  logL = -8.986097e+02  delta_logL = 1.433462e-05   8.398094e+07  8.410557e+07
+iteration   156  logL = -8.985969e+02  delta_logL = 1.420821e-05   8.397975e+07  8.410438e+07
+iteration   157  logL = -8.985843e+02  delta_logL = 1.408535e-05   8.397856e+07  8.410320e+07
+iteration   158  logL = -8.985717e+02  delta_logL = 1.396553e-05   8.397739e+07  8.410202e+07
+iteration   159  logL = -8.985593e+02  delta_logL = 1.384791e-05   8.397623e+07  8.410086e+07
+iteration   160  logL = -8.985470e+02  delta_logL = 1.373145e-05   8.397508e+07  8.409971e+07
+iteration   161  logL = -8.985347e+02  delta_logL = 1.361491e-05   8.397393e+07  8.409856e+07
+iteration   162  logL = -8.985226e+02  delta_logL = 1.349706e-05   8.397280e+07  8.409743e+07
+iteration   163  logL = -8.985106e+02  delta_logL = 1.337689e-05   8.397168e+07  8.409631e+07
+iteration   164  logL = -8.984987e+02  delta_logL = 1.325375e-05   8.397056e+07  8.409520e+07
+iteration   165  logL = -8.984869e+02  delta_logL = 1.312731e-05   8.396946e+07  8.409409e+07
+iteration   166  logL = -8.984752e+02  delta_logL = 1.299733e-05   8.396837e+07  8.409300e+07
+iteration   167  logL = -8.984636e+02  delta_logL = 1.286355e-05   8.396729e+07  8.409192e+07
+iteration   168  logL = -8.984522e+02  delta_logL = 1.272575e-05   8.396622e+07  8.409085e+07
+iteration   169  logL = -8.984409e+02  delta_logL = 1.258395e-05   8.396517e+07  8.408980e+07
+iteration   170  logL = -8.984297e+02  delta_logL = 1.243851e-05   8.396412e+07  8.408875e+07
+iteration   171  logL = -8.984187e+02  delta_logL = 1.229013e-05   8.396309e+07  8.408772e+07
+iteration   172  logL = -8.984078e+02  delta_logL = 1.213971e-05   8.396207e+07  8.408670e+07
+iteration   173  logL = -8.983970e+02  delta_logL = 1.198827e-05   8.396107e+07  8.408570e+07
+iteration   174  logL = -8.983864e+02  delta_logL = 1.183691e-05   8.396007e+07  8.408470e+07
+iteration   175  logL = -8.983759e+02  delta_logL = 1.168671e-05   8.395909e+07  8.408372e+07
+iteration   176  logL = -8.983655e+02  delta_logL = 1.153879e-05   8.395812e+07  8.408275e+07
+iteration   177  logL = -8.983553e+02  delta_logL = 1.139420e-05   8.395717e+07  8.408180e+07
+iteration   178  logL = -8.983452e+02  delta_logL = 1.125392e-05   8.395622e+07  8.408085e+07
+iteration   179  logL = -8.983352e+02  delta_logL = 1.111888e-05   8.395529e+07  8.407992e+07
+iteration   180  logL = -8.983253e+02  delta_logL = 1.098988e-05   8.395437e+07  8.407900e+07
+iteration   181  logL = -8.983155e+02  delta_logL = 1.086759e-05   8.395345e+07  8.407808e+07
+iteration   182  logL = -8.983059e+02  delta_logL = 1.075258e-05   8.395255e+07  8.407718e+07
+iteration   183  logL = -8.982963e+02  delta_logL = 1.064523e-05   8.395166e+07  8.407629e+07
+iteration   184  logL = -8.982868e+02  delta_logL = 1.054584e-05   8.395077e+07  8.407540e+07
+iteration   185  logL = -8.982774e+02  delta_logL = 1.045455e-05   8.394989e+07  8.407453e+07
+iteration   186  logL = -8.982681e+02  delta_logL = 1.037137e-05   8.394902e+07  8.407366e+07
+iteration   187  logL = -8.982589e+02  delta_logL = 1.029623e-05   8.394816e+07  8.407279e+07
+iteration   188  logL = -8.982497e+02  delta_logL = 1.022892e-05   8.394730e+07  8.407193e+07
+iteration   189  logL = -8.982406e+02  delta_logL = 1.016918e-05   8.394645e+07  8.407108e+07
+iteration   190  logL = -8.982315e+02  delta_logL = 1.011663e-05   8.394560e+07  8.407023e+07
+iteration   191  logL = -8.982224e+02  delta_logL = 1.007085e-05   8.394475e+07  8.406938e+07
+iteration   192  logL = -8.982134e+02  delta_logL = 1.003134e-05   8.394391e+07  8.406854e+07
+iteration   193  logL = -8.982044e+02  delta_logL = 9.997553e-06   8.394307e+07  8.406770e+07
+iteration   194  logL = -8.981955e+02  delta_logL = 9.968904e-06   8.394224e+07  8.406687e+07
+iteration   195  logL = -8.981866e+02  delta_logL = 9.944764e-06   8.394140e+07  8.406603e+07
+iteration   196  logL = -8.981776e+02  delta_logL = 9.924483e-06   8.394057e+07  8.406520e+07
+iteration   197  logL = -8.981687e+02  delta_logL = 9.907391e-06   8.393974e+07  8.406437e+07
+iteration   198  logL = -8.981599e+02  delta_logL = 9.892807e-06   8.393891e+07  8.406354e+07
+iteration   199  logL = -8.981510e+02  delta_logL = 9.880050e-06   8.393808e+07  8.406271e+07
+iteration   200  logL = -8.981421e+02  delta_logL = 9.868442e-06   8.393725e+07  8.406188e+07
+class 0 with 657231 samples assigned
+class 1 with 62694 samples assigned
+class 2 with 89854 samples assigned
+class 3 with 86281 samples assigned
+class 4 with 92377 samples assigned
+class 5 with 70423 samples assigned
+class 6 with 125346 samples assigned
+class 7 with 102847 samples assigned
+class 8 with 77652 samples assigned
+class 9 with 84637 samples assigned
+class 10 with 4439 samples assigned
+class 11 with 52282 samples assigned
+class 12 with 84084 samples assigned
+class 13 with 30283 samples assigned
+class 14 with 113978 samples assigned
+class 15 with 121510 samples assigned
+class 16 with 60434 samples assigned
+class 17 with 40950 samples assigned
+class 18 with 45852 samples assigned
+class 19 with 66351 samples assigned
+class 20 with 57819 samples assigned
+class 21 with 74812 samples assigned
+class 22 with 72579 samples assigned
+class 23 with 40622 samples assigned
+class 24 with 32476 samples assigned
+class 25 with 45175 samples assigned
+class 26 with 79797 samples assigned
+class 27 with 60305 samples assigned
+class 28 with 54670 samples assigned
+class 29 with 105738 samples assigned
+class 30 with 92715 samples assigned
+class 31 with 61565 samples assigned
+class 32 with 118668 samples assigned
+class 33 with 46721 samples assigned
+class 34 with 108706 samples assigned
+class 35 with 104050 samples assigned
+class 36 with 147850 samples assigned
+class 37 with 111243 samples assigned
+class 38 with 63694 samples assigned
+class 39 with 107028 samples assigned
+class 40 with 77636 samples assigned
+class 41 with 56056 samples assigned
+class 42 with 35554 samples assigned
+class 43 with 99134 samples assigned
+class 44 with 55221 samples assigned
+class 45 with 141689 samples assigned
+class 46 with 76397 samples assigned
+class 47 with 59628 samples assigned
+class 48 with 43529 samples assigned
+class 49 with 65671 samples assigned
+class 50 with 130030 samples assigned
+class 51 with 71278 samples assigned
+class 52 with 97862 samples assigned
+class 53 with 39771 samples assigned
+class 54 with 69717 samples assigned
+class 55 with 140022 samples assigned
+class 56 with 88746 samples assigned
+class 57 with 122535 samples assigned
+class 58 with 62006 samples assigned
+class 59 with 115749 samples assigned
+class 60 with 121011 samples assigned
+class 61 with 70192 samples assigned
+class 62 with 46715 samples assigned
+class 63 with 106483 samples assigned
+class 64 with 92464 samples assigned
+class 65 with 151059 samples assigned
+class 66 with 58385 samples assigned
+class 67 with 41902 samples assigned
+class 68 with 106509 samples assigned
+class 69 with 122440 samples assigned
+class 70 with 114608 samples assigned
+class 71 with 55445 samples assigned
+class 72 with 62418 samples assigned
+class 73 with 66187 samples assigned
+class 74 with 110175 samples assigned
+class 75 with 54266 samples assigned
+class 76 with 59507 samples assigned
+class 77 with 64066 samples assigned
+class 78 with 91761 samples assigned
+class 79 with 104878 samples assigned
+class 80 with 54737 samples assigned
+class 81 with 76546 samples assigned
+class 82 with 43003 samples assigned
+class 83 with 67811 samples assigned
+class 84 with 101658 samples assigned
+class 85 with 109870 samples assigned
+class 86 with 147848 samples assigned
+class 87 with 55020 samples assigned
+class 88 with 123792 samples assigned
+class 89 with 52593 samples assigned
+class 90 with 77028 samples assigned
+class 91 with 67275 samples assigned
+class 92 with 71215 samples assigned
+class 93 with 58413 samples assigned
+class 94 with 112572 samples assigned
+class 95 with 39765 samples assigned
+class 96 with 95567 samples assigned
+class 97 with 44449 samples assigned
+class 98 with 110069 samples assigned
+class 99 with 106269 samples assigned
+class 100 with 73478 samples assigned
+class 101 with 76719 samples assigned
+class 102 with 33604 samples assigned
+class 103 with 67305 samples assigned
+class 104 with 62509 samples assigned
+class 105 with 93745 samples assigned
+class 106 with 119135 samples assigned
+class 107 with 109345 samples assigned
+class 108 with 98803 samples assigned
+class 109 with 143067 samples assigned
+class 110 with 54120 samples assigned
+class 111 with 85508 samples assigned
+class 112 with 65858 samples assigned
+class 113 with 96460 samples assigned
+class 114 with 97221 samples assigned
+class 115 with 104834 samples assigned
+class 116 with 97272 samples assigned
+class 117 with 62010 samples assigned
+class 118 with 90950 samples assigned
+class 119 with 130620 samples assigned
+class 120 with 69863 samples assigned
+class 121 with 92043 samples assigned
+class 122 with 103775 samples assigned
+class 123 with 72894 samples assigned
+class 124 with 103923 samples assigned
+class 125 with 59205 samples assigned
+class 126 with 16327 samples assigned
+class 127 with 85753 samples assigned
+class 128 with 62898 samples assigned
+class 129 with 53277 samples assigned
+class 130 with 79158 samples assigned
+class 131 with 146697 samples assigned
+class 132 with 33016 samples assigned
+class 133 with 36335 samples assigned
+class 134 with 80195 samples assigned
+class 135 with 110347 samples assigned
+class 136 with 75463 samples assigned
+class 137 with 85898 samples assigned
+class 138 with 64995 samples assigned
+class 139 with 56808 samples assigned
+class 140 with 89423 samples assigned
+class 141 with 66039 samples assigned
+class 142 with 139925 samples assigned
+class 143 with 114640 samples assigned
+class 144 with 104484 samples assigned
+class 145 with 118012 samples assigned
+class 146 with 81726 samples assigned
+class 147 with 114435 samples assigned
+class 148 with 44240 samples assigned
+class 149 with 74991 samples assigned
+class 150 with 73178 samples assigned
+class 151 with 76347 samples assigned
+class 152 with 129079 samples assigned
+class 153 with 64398 samples assigned
+class 154 with 95694 samples assigned
+class 155 with 114580 samples assigned
+class 156 with 105401 samples assigned
+class 157 with 63264 samples assigned
+class 158 with 107698 samples assigned
+class 159 with 95378 samples assigned
+class 160 with 82732 samples assigned
+class 161 with 57748 samples assigned
+class 162 with 128475 samples assigned
+class 163 with 61439 samples assigned
+class 164 with 72876 samples assigned
+class 165 with 102274 samples assigned
+class 166 with 57300 samples assigned
+class 167 with 54720 samples assigned
+class 168 with 92584 samples assigned
+class 169 with 80694 samples assigned
+class 170 with 99458 samples assigned
+class 171 with 96484 samples assigned
+class 172 with 63700 samples assigned
+class 173 with 111232 samples assigned
+class 174 with 66799 samples assigned
+class 175 with 104750 samples assigned
+class 176 with 76363 samples assigned
+class 177 with 127628 samples assigned
+class 178 with 41251 samples assigned
+class 179 with 84579 samples assigned
+class 180 with 64110 samples assigned
+class 181 with 82434 samples assigned
+class 182 with 84542 samples assigned
+class 183 with 75677 samples assigned
+class 184 with 70813 samples assigned
+class 185 with 83394 samples assigned
+class 186 with 52348 samples assigned
+class 187 with 23813 samples assigned
+class 188 with 39077 samples assigned
+class 189 with 80188 samples assigned
+class 190 with 140653 samples assigned
+class 191 with 119939 samples assigned
+class 192 with 106102 samples assigned
+class 193 with 86705 samples assigned
+class 194 with 99976 samples assigned
+class 195 with 145823 samples assigned
+class 196 with 90722 samples assigned
+class 197 with 78799 samples assigned
+class 198 with 61217 samples assigned
+class 199 with 86870 samples assigned
+class 200 with 44068 samples assigned
+class 201 with 70107 samples assigned
+class 202 with 57728 samples assigned
+class 203 with 85274 samples assigned
+class 204 with 51999 samples assigned
+class 205 with 101921 samples assigned
+class 206 with 73101 samples assigned
+class 207 with 69372 samples assigned
+class 208 with 80901 samples assigned
+class 209 with 46212 samples assigned
+class 210 with 86530 samples assigned
+class 211 with 52358 samples assigned
+class 212 with 43082 samples assigned
+class 213 with 80345 samples assigned
+class 214 with 95947 samples assigned
+class 215 with 102510 samples assigned
+class 216 with 78490 samples assigned
+class 217 with 64045 samples assigned
+class 218 with 81196 samples assigned
+class 219 with 92569 samples assigned
+class 220 with 81473 samples assigned
+class 221 with 61140 samples assigned
+class 222 with 67708 samples assigned
+class 223 with 63256 samples assigned
+class 224 with 58711 samples assigned
+class 225 with 63934 samples assigned
+class 226 with 90469 samples assigned
+class 227 with 72343 samples assigned
+class 228 with 105165 samples assigned
+class 229 with 75278 samples assigned
+class 230 with 54356 samples assigned
+class 231 with 76330 samples assigned
+class 232 with 60190 samples assigned
+class 233 with 63672 samples assigned
+class 234 with 55365 samples assigned
+class 235 with 71185 samples assigned
+class 236 with 82119 samples assigned
+class 237 with 89103 samples assigned
+class 238 with 66514 samples assigned
+class 239 with 97852 samples assigned
+class 240 with 94590 samples assigned
+class 241 with 113503 samples assigned
+class 242 with 65399 samples assigned
+class 243 with 41925 samples assigned
+class 244 with 64589 samples assigned
+class 245 with 97043 samples assigned
+class 246 with 95110 samples assigned
+class 247 with 74443 samples assigned
+class 248 with 105887 samples assigned
+class 249 with 73289 samples assigned
+class 250 with 92431 samples assigned
+class 251 with 61532 samples assigned
+class 252 with 55779 samples assigned
+class 253 with 58448 samples assigned
+class 254 with 82555 samples assigned
+class 255 with 87802 samples assigned
+class 256 with 85627 samples assigned
+class 257 with 64832 samples assigned
+class 258 with 63451 samples assigned
+class 259 with 64474 samples assigned
+class 260 with 82376 samples assigned
+class 261 with 85954 samples assigned
+class 262 with 91856 samples assigned
+class 263 with 69630 samples assigned
+class 264 with 75531 samples assigned
+class 265 with 62239 samples assigned
+class 266 with 101372 samples assigned
+class 267 with 67463 samples assigned
+class 268 with 83582 samples assigned
+class 269 with 107945 samples assigned
+class 270 with 63612 samples assigned
+class 271 with 76928 samples assigned
+class 272 with 94057 samples assigned
+class 273 with 56539 samples assigned
+class 274 with 48612 samples assigned
+class 275 with 86525 samples assigned
+class 276 with 72761 samples assigned
+class 277 with 80103 samples assigned
+class 278 with 56599 samples assigned
+class 279 with 84748 samples assigned
+class 280 with 77757 samples assigned
+class 281 with 59543 samples assigned
+class 282 with 37536 samples assigned
+class 283 with 83985 samples assigned
+class 284 with 61970 samples assigned
+class 285 with 84508 samples assigned
+class 286 with 51813 samples assigned
+n_components   287  logL = -8.981421e+02  aic 8.393725e+07  bic 8.406188e+07 
+    0   nsg   0    657231.000000     tsg  10        13.825313
+    1   nsg  65    151059.000000     tsg 132       -11.085062
+    2   nsg  36    147850.000000     tsg 188       -12.316272
+    3   nsg  86    147848.000000     tsg  53       -13.237242
+    4   nsg 131    146697.000000     tsg  95       -17.434033
+    5   nsg 195    145823.000000     tsg 178       -17.983578
+    6   nsg 109    143067.000000     tsg  97       -18.077103
+    7   nsg  45    141689.000000     tsg 133       -18.105367
+    8   nsg 190    140653.000000     tsg  44       -20.324491
+    9   nsg  55    140022.000000     tsg  24       -21.330426
+   10   nsg 142    139925.000000     tsg 148       -21.719544
+   11   nsg 119    130620.000000     tsg  23       -21.757948
+   12   nsg  50    130030.000000     tsg  67       -21.930005
+   13   nsg 152    129079.000000     tsg 282       -22.827987
+   14   nsg 162    128475.000000     tsg  42       -23.081114
+   15   nsg 177    127628.000000     tsg  73       -23.132236
+   16   nsg   6    125346.000000     tsg  75       -24.239281
+   17   nsg  88    123792.000000     tsg  13       -24.914534
+   18   nsg  57    122535.000000     tsg  71       -25.222011
+   19   nsg  69    122440.000000     tsg 104       -25.626274
+   20   nsg  15    121510.000000     tsg 129       -26.870117
+   21   nsg  60    121011.000000     tsg 233       -27.232971
+   22   nsg 191    119939.000000     tsg 180       -28.474026
+   23   nsg 106    119135.000000     tsg 206       -28.623546
+   24   nsg  32    118668.000000     tsg 243       -28.642077
+   25   nsg 145    118012.000000     tsg 102       -29.101883
+   26   nsg  59    115749.000000     tsg 163       -29.282728
+   27   nsg 143    114640.000000     tsg 136       -29.493675
+   28   nsg  70    114608.000000     tsg 252       -29.831428
+   29   nsg 155    114580.000000     tsg 244       -29.854671
+   30   nsg 147    114435.000000     tsg  89       -29.875841
+   31   nsg  14    113978.000000     tsg  28       -29.934666
+   32   nsg 241    113503.000000     tsg 217       -30.063056
+   33   nsg  94    112572.000000     tsg 212       -30.280682
+   34   nsg  37    111243.000000     tsg  47       -30.464676
+   35   nsg 173    111232.000000     tsg 207       -30.756562
+   36   nsg 135    110347.000000     tsg 167       -30.767736
+   37   nsg  74    110175.000000     tsg 238       -30.791485
+   38   nsg  98    110069.000000     tsg 251       -30.792969
+   39   nsg  85    109870.000000     tsg 125       -30.796086
+   40   nsg 107    109345.000000     tsg  80       -31.005382
+   41   nsg  34    108706.000000     tsg 211       -31.507996
+   42   nsg 269    107945.000000     tsg 284       -31.534405
+   43   nsg 158    107698.000000     tsg 201       -31.859549
+   44   nsg  39    107028.000000     tsg 186       -31.897583
+   45   nsg  68    106509.000000     tsg  62       -31.941726
+   46   nsg  63    106483.000000     tsg 232       -31.989026
+   47   nsg  99    106269.000000     tsg 281       -32.010908
+   48   nsg 192    106102.000000     tsg  77       -32.053759
+   49   nsg 248    105887.000000     tsg  93       -32.162957
+   50   nsg  29    105738.000000     tsg 223       -32.184289
+   51   nsg 156    105401.000000     tsg  54       -32.645432
+   52   nsg 228    105165.000000     tsg 198       -32.735944
+   53   nsg  79    104878.000000     tsg 204       -32.821586
+   54   nsg 115    104834.000000     tsg 229       -32.977179
+   55   nsg 175    104750.000000     tsg  76       -33.181368
+   56   nsg 144    104484.000000     tsg 247       -33.340792
+   57   nsg  35    104050.000000     tsg  91       -33.529536
+   58   nsg 124    103923.000000     tsg  82       -33.571134
+   59   nsg 122    103775.000000     tsg 230       -33.666350
+   60   nsg   7    102847.000000     tsg 280       -33.897191
+   61   nsg 215    102510.000000     tsg 150       -34.012284
+   62   nsg 165    102274.000000     tsg  87       -34.013626
+   63   nsg 205    101921.000000     tsg 286       -34.026023
+   64   nsg  84    101658.000000     tsg 220       -34.182377
+   65   nsg 266    101372.000000     tsg 166       -34.183396
+   66   nsg 194     99976.000000     tsg 160       -34.406048
+   67   nsg 170     99458.000000     tsg 270       -34.576681
+   68   nsg  43     99134.000000     tsg 200       -34.602426
+   69   nsg 108     98803.000000     tsg 260       -34.642269
+   70   nsg  52     97862.000000     tsg 184       -34.724710
+   71   nsg 239     97852.000000     tsg 112       -34.964193
+   72   nsg 116     97272.000000     tsg 128       -34.978483
+   73   nsg 114     97221.000000     tsg  41       -35.276660
+   74   nsg 245     97043.000000     tsg 234       -35.305060
+   75   nsg 171     96484.000000     tsg 209       -35.373953
+   76   nsg 113     96460.000000     tsg 285       -35.498910
+   77   nsg 214     95947.000000     tsg 183       -35.643678
+   78   nsg 154     95694.000000     tsg 149       -35.873368
+   79   nsg  96     95567.000000     tsg 273       -36.392192
+   80   nsg 159     95378.000000     tsg 208       -36.445647
+   81   nsg 246     95110.000000     tsg 277       -36.542193
+   82   nsg 240     94590.000000     tsg 271       -36.595907
+   83   nsg 272     94057.000000     tsg 218       -36.987654
+   84   nsg 105     93745.000000     tsg 267       -37.048435
+   85   nsg  30     92715.000000     tsg 242       -37.418206
+   86   nsg 168     92584.000000     tsg 276       -37.554343
+   87   nsg 219     92569.000000     tsg 265       -37.566072
+   88   nsg  64     92464.000000     tsg 245       -37.756487
+   89   nsg 250     92431.000000     tsg  33       -37.988528
+   90   nsg   4     92377.000000     tsg 172       -37.994084
+   91   nsg 121     92043.000000     tsg 157       -38.017764
+   92   nsg 262     91856.000000     tsg  92       -38.128903
+   93   nsg  78     91761.000000     tsg  48       -38.244208
+   94   nsg 118     90950.000000     tsg 274       -38.365987
+   95   nsg 196     90722.000000     tsg 249       -38.459492
+   96   nsg 226     90469.000000     tsg 224       -38.521936
+   97   nsg   2     89854.000000     tsg 222       -38.585259
+   98   nsg 140     89423.000000     tsg 258       -38.699072
+   99   nsg 237     89103.000000     tsg 246       -38.720153
+  100   nsg  56     88746.000000     tsg 262       -38.737222
+  101   nsg 255     87802.000000     tsg 259       -39.062702
+  102   nsg 199     86870.000000     tsg 137       -39.277387
+  103   nsg 193     86705.000000     tsg 253       -39.501833
+  104   nsg 210     86530.000000     tsg 120       -39.684584
+  105   nsg 275     86525.000000     tsg 139       -39.691694
+  106   nsg   3     86281.000000     tsg 199       -39.757994
+  107   nsg 261     85954.000000     tsg 263       -39.909013
+  108   nsg 137     85898.000000     tsg 181       -39.933084
+  109   nsg 127     85753.000000     tsg 255       -39.992269
+  110   nsg 256     85627.000000     tsg 214       -40.011360
+  111   nsg 111     85508.000000     tsg 275       -40.043082
+  112   nsg 203     85274.000000     tsg  17       -40.128224
+  113   nsg 279     84748.000000     tsg 213       -40.140304
+  114   nsg   9     84637.000000     tsg 237       -40.161014
+  115   nsg 179     84579.000000     tsg  38       -40.264770
+  116   nsg 182     84542.000000     tsg 134       -40.348682
+  117   nsg 285     84508.000000     tsg  20       -40.444266
+  118   nsg  12     84084.000000     tsg 141       -40.499564
+  119   nsg 283     83985.000000     tsg 261       -40.717973
+  120   nsg 268     83582.000000     tsg 221       -40.766067
+  121   nsg 185     83394.000000     tsg 153       -40.801877
+  122   nsg 160     82732.000000     tsg 248       -41.142478
+  123   nsg 254     82555.000000     tsg 272       -41.237620
+  124   nsg 181     82434.000000     tsg 278       -41.326921
+  125   nsg 260     82376.000000     tsg 227       -41.354280
+  126   nsg 236     82119.000000     tsg 279       -41.387570
+  127   nsg 146     81726.000000     tsg  31       -41.452680
+  128   nsg 220     81473.000000     tsg 231       -41.499494
+  129   nsg 218     81196.000000     tsg 202       -41.522758
+  130   nsg 208     80901.000000     tsg 203       -41.612895
+  131   nsg 169     80694.000000     tsg 196       -41.834216
+  132   nsg 213     80345.000000     tsg 169       -42.005155
+  133   nsg 134     80195.000000     tsg 256       -42.090572
+  134   nsg 189     80188.000000     tsg 283       -42.094506
+  135   nsg 277     80103.000000     tsg  11       -42.194669
+  136   nsg  26     79797.000000     tsg 110       -42.209197
+  137   nsg 130     79158.000000     tsg 174       -42.275021
+  138   nsg 197     78799.000000     tsg 257       -42.437213
+  139   nsg 216     78490.000000     tsg 187       -42.522373
+  140   nsg 280     77757.000000     tsg 240       -42.528455
+  141   nsg   8     77652.000000     tsg 269       -42.599741
+  142   nsg  40     77636.000000     tsg  66       -42.775485
+  143   nsg  90     77028.000000     tsg 161       -42.907556
+  144   nsg 271     76928.000000     tsg 266       -42.938628
+  145   nsg 101     76719.000000     tsg 264       -42.946323
+  146   nsg  81     76546.000000     tsg 155       -43.011801
+  147   nsg  46     76397.000000     tsg   7       -43.013168
+  148   nsg 176     76363.000000     tsg 146       -43.033604
+  149   nsg 151     76347.000000     tsg 127       -43.138723
+  150   nsg 231     76330.000000     tsg 175       -43.258407
+  151   nsg 183     75677.000000     tsg 215       -43.349074
+  152   nsg 264     75531.000000     tsg 176       -43.385495
+  153   nsg 136     75463.000000     tsg 250       -43.557936
+  154   nsg 229     75278.000000     tsg 226       -43.606516
+  155   nsg 149     74991.000000     tsg 235       -43.795458
+  156   nsg  21     74812.000000     tsg 164       -43.846015
+  157   nsg 247     74443.000000     tsg 101       -43.894567
+  158   nsg 100     73478.000000     tsg 254       -43.968811
+  159   nsg 249     73289.000000     tsg 268       -44.129629
+  160   nsg 150     73178.000000     tsg 152       -44.132065
+  161   nsg 206     73101.000000     tsg 219       -44.175160
+  162   nsg 123     72894.000000     tsg 216       -44.270762
+  163   nsg 164     72876.000000     tsg  46       -44.337577
+  164   nsg 276     72761.000000     tsg 192       -44.445327
+  165   nsg  22     72579.000000     tsg 239       -44.511746
+  166   nsg 227     72343.000000     tsg 177       -44.569073
+  167   nsg  51     71278.000000     tsg 130       -44.700604
+  168   nsg  92     71215.000000     tsg 123       -44.771482
+  169   nsg 235     71185.000000     tsg 241       -44.875810
+  170   nsg 184     70813.000000     tsg 228       -45.055022
+  171   nsg   5     70423.000000     tsg 171       -45.137427
+  172   nsg  61     70192.000000     tsg  56       -45.145475
+  173   nsg 201     70107.000000     tsg 225       -45.216630
+  174   nsg 120     69863.000000     tsg  40       -45.285778
+  175   nsg  54     69717.000000     tsg 191       -45.315716
+  176   nsg 263     69630.000000     tsg 170       -45.330551
+  177   nsg 207     69372.000000     tsg 165       -45.399977
+  178   nsg  83     67811.000000     tsg 205       -45.447087
+  179   nsg 222     67708.000000     tsg  79       -45.528111
+  180   nsg 267     67463.000000     tsg 114       -45.534681
+  181   nsg 103     67305.000000     tsg 151       -45.610583
+  182   nsg  91     67275.000000     tsg 179       -45.612948
+  183   nsg 174     66799.000000     tsg 185       -45.669285
+  184   nsg 238     66514.000000     tsg 194       -45.694141
+  185   nsg  19     66351.000000     tsg 154       -45.803760
+  186   nsg  73     66187.000000     tsg 103       -45.871365
+  187   nsg 141     66039.000000     tsg 189       -45.927694
+  188   nsg 112     65858.000000     tsg 182       -45.985908
+  189   nsg  49     65671.000000     tsg  94       -46.055154
+  190   nsg 242     65399.000000     tsg 111       -46.110848
+  191   nsg 138     64995.000000     tsg 108       -46.131870
+  192   nsg 257     64832.000000     tsg  12       -46.201595
+  193   nsg 244     64589.000000     tsg  27       -46.267117
+  194   nsg 259     64474.000000     tsg 140       -46.388437
+  195   nsg 153     64398.000000     tsg  18       -46.416958
+  196   nsg 180     64110.000000     tsg 210       -46.449670
+  197   nsg  77     64066.000000     tsg  19       -46.507696
+  198   nsg 217     64045.000000     tsg 105       -46.519807
+  199   nsg 225     63934.000000     tsg 121       -46.551441
+  200   nsg 172     63700.000000     tsg 158       -46.558469
+  201   nsg  38     63694.000000     tsg  85       -46.648455
+  202   nsg 233     63672.000000     tsg 117       -46.718425
+  203   nsg 270     63612.000000     tsg  84       -46.795243
+  204   nsg 258     63451.000000     tsg 100       -46.871320
+  205   nsg 157     63264.000000     tsg  61       -46.904667
+  206   nsg 223     63256.000000     tsg 116       -46.978511
+  207   nsg 128     62898.000000     tsg  72       -46.980721
+  208   nsg   1     62694.000000     tsg 119       -47.086730
+  209   nsg 104     62509.000000     tsg 131       -47.131629
+  210   nsg  72     62418.000000     tsg 162       -47.187965
+  211   nsg 265     62239.000000     tsg 122       -47.242972
+  212   nsg 117     62010.000000     tsg  39       -47.347491
+  213   nsg  58     62006.000000     tsg  49       -47.359430
+  214   nsg 284     61970.000000     tsg 159       -47.462171
+  215   nsg  31     61565.000000     tsg 195       -47.534470
+  216   nsg 251     61532.000000     tsg 236       -47.591254
+  217   nsg 163     61439.000000     tsg 190       -47.606513
+  218   nsg 198     61217.000000     tsg  96       -47.687524
+  219   nsg 221     61140.000000     tsg 173       -47.747418
+  220   nsg  16     60434.000000     tsg 193       -47.892350
+  221   nsg  27     60305.000000     tsg 138       -47.904680
+  222   nsg 232     60190.000000     tsg  43       -47.937466
+  223   nsg  47     59628.000000     tsg  68       -47.985370
+  224   nsg 281     59543.000000     tsg  22       -48.013125
+  225   nsg  76     59507.000000     tsg 145       -48.019747
+  226   nsg 125     59205.000000     tsg 113       -48.064854
+  227   nsg 224     58711.000000     tsg 168       -48.116092
+  228   nsg 253     58448.000000     tsg 109       -48.138406
+  229   nsg  93     58413.000000     tsg 144       -48.264057
+  230   nsg  66     58385.000000     tsg 143       -48.885776
+  231   nsg  20     57819.000000     tsg  52       -48.975383
+  232   nsg 161     57748.000000     tsg 124       -49.103161
+  233   nsg 202     57728.000000     tsg  57       -49.110351
+  234   nsg 166     57300.000000     tsg 197       -49.138118
+  235   nsg 139     56808.000000     tsg  88       -49.145652
+  236   nsg 278     56599.000000     tsg  98       -49.296455
+  237   nsg 273     56539.000000     tsg 142       -49.375433
+  238   nsg  41     56056.000000     tsg 107       -49.520723
+  239   nsg 252     55779.000000     tsg  25       -49.547510
+  240   nsg  71     55445.000000     tsg  78       -49.706763
+  241   nsg 234     55365.000000     tsg  36       -49.817323
+  242   nsg  44     55221.000000     tsg  90       -49.929208
+  243   nsg  87     55020.000000     tsg 118       -50.122773
+  244   nsg  80     54737.000000     tsg  86       -50.167142
+  245   nsg 167     54720.000000     tsg 135       -50.306357
+  246   nsg  28     54670.000000     tsg   5       -50.411724
+  247   nsg 230     54356.000000     tsg  69       -50.586189
+  248   nsg  75     54266.000000     tsg  55       -50.598660
+  249   nsg 110     54120.000000     tsg 156       -50.894523
+  250   nsg 129     53277.000000     tsg  99       -51.020017
+  251   nsg  89     52593.000000     tsg  29       -51.278559
+  252   nsg 211     52358.000000     tsg  83       -51.303435
+  253   nsg 186     52348.000000     tsg   4       -51.709834
+  254   nsg  11     52282.000000     tsg 147       -51.893382
+  255   nsg 204     51999.000000     tsg   1       -51.966937
+  256   nsg 286     51813.000000     tsg  32       -52.245620
+  257   nsg 274     48612.000000     tsg  45       -52.358998
+  258   nsg  33     46721.000000     tsg   2       -52.466593
+  259   nsg  62     46715.000000     tsg   9       -52.555578
+  260   nsg 209     46212.000000     tsg 106       -52.569375
+  261   nsg  18     45852.000000     tsg 115       -52.637511
+  262   nsg  25     45175.000000     tsg  63       -52.789896
+  263   nsg  97     44449.000000     tsg  50       -52.946401
+  264   nsg 148     44240.000000     tsg  60       -53.087395
+  265   nsg 200     44068.000000     tsg  65       -53.195950
+  266   nsg  48     43529.000000     tsg  37       -53.273061
+  267   nsg 212     43082.000000     tsg  58       -53.364180
+  268   nsg  82     43003.000000     tsg  34       -53.582447
+  269   nsg 243     41925.000000     tsg  21       -53.626009
+  270   nsg  67     41902.000000     tsg  14       -53.692315
+  271   nsg 178     41251.000000     tsg  15       -53.737031
+  272   nsg  17     40950.000000     tsg  35       -53.774181
+  273   nsg  23     40622.000000     tsg  59       -53.974376
+  274   nsg  53     39771.000000     tsg  30       -54.030962
+  275   nsg  95     39765.000000     tsg  70       -54.058439
+  276   nsg 188     39077.000000     tsg  74       -54.230648
+  277   nsg 282     37536.000000     tsg  81       -54.237082
+  278   nsg 133     36335.000000     tsg  16       -54.336175
+  279   nsg  42     35554.000000     tsg   6       -54.360740
+  280   nsg 102     33604.000000     tsg   8       -54.423381
+  281   nsg 132     33016.000000     tsg  51       -54.528782
+  282   nsg  24     32476.000000     tsg  64       -54.979586
+  283   nsg  13     30283.000000     tsg   3       -55.302165
+  284   nsg 187     23813.000000     tsg  26       -55.526910
+  285   nsg 126     16327.000000     tsg 126       -56.012844
+  286   nsg  10      4439.000000     tsg   0      -154.391954
+MLE task completed when 300 components where execeeded with 318
