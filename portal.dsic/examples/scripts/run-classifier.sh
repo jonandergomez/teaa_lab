@@ -9,13 +9,16 @@ case $(hostname) in
         ;;
 esac
 
-for q in $(ls models/kmeans_model-uc13* | cut -f3 -d'-' | cut -f1 -d'.')
+#models_dir="models"
+models_dir="models.pca"
+
+for q in $(ls ${models_dir}/kmeans_model-uc13* | cut -f3 -d'-' | cut -f1 -d'.')
 do
-    codebook=$(printf "models/kmeans_model-uc13-${q}.pkl")
+    codebook=$(printf "${models_dir}/kmeans_model-uc13-${q}.pkl")
     if [ -f ${codebook} ]
     then
         #echo "we have this codebook ${codebook}"
-        counter_pairs=$(printf "models/cluster-distribution-${q}.csv")
+        counter_pairs=$(printf "${models_dir}/cluster-distribution-${q}.csv")
         if [ -f ${counter_pairs} ]
         then
             results_file=$(printf "results3/classification-results-${q}.txt")
@@ -24,7 +27,9 @@ do
                 scripts/run-python.sh python/kmeans_uc13_classifier.py  \
                                         --num-partitions ${num_partitions} \
                                         --codebook ${codebook} \
-                                        --counter-pairs ${counter_pairs}
+                                        --models-dir ${models_dir} \
+                                        --counter-pairs ${counter_pairs} \
+                                        --from-pca --no-reduce-labels
             fi
         fi
     fi

@@ -5,7 +5,7 @@
     Universitat Politecnica de Valencia
     Technical University of Valencia TU.VLC
 
-    Computing the confusionn matrix for a K-Means-based naive classifier 
+    Computing the confusion matrix for a K-Means-based naive classifier 
 
 """
 

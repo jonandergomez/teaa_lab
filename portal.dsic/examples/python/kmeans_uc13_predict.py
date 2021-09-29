@@ -57,6 +57,10 @@ if __name__ == "__main__":
     batch_size = 100
     num_channels = 21
     results_dir = 'results3.train'
+    models_dir = 'models'
+    log_dir = 'log'
+    do_reshape = True
+    do_standard_scaling = True
                                                    
     for i in range(len(sys.argv)):
         if sys.argv[i] == "--verbosity":
@@ -74,6 +78,12 @@ if __name__ == "__main__":
             label_mapping[6] = 1
             label_mapping[7] = 0
             label_mapping[8] = 0
+            label_mapping[9] = 0
+        elif sys.argv[i] == "--from-pca":
+            models_dir = 'models.pca'
+            log_dir = 'log.pca'
+            do_reshape = False
+            do_standard_scaling = False
 
 
     # Load the codebook
@@ -104,15 +114,19 @@ if __name__ == "__main__":
     target_class_a_priori_probabilities = counter_pairs.sum(axis = 1) / counter_pairs.sum()
 
 
-    def csv_line_to_patient_label_and_sample(line):
+    def csv_line_to_patient_label_and_sample_reshape(line):
         parts = line.split(';')
         return (parts[0], label_mapping[int(parts[1])], numpy.array([float(x) for x in parts[2:]]).reshape(num_channels, 14))
+
+    def csv_line_to_patient_label_and_sample(line):
+        parts = line.split(';')
+        return (parts[0], label_mapping[int(parts[1])], numpy.array([float(x) for x in parts[2:]]))
 
     ####################################################################
     # begin: load standard scaling 
     ####################################################################
-    statistics_filename = 'models/mean_and_std.pkl'
-    if os.path.exists(statistics_filename):
+    statistics_filename = f'{models_dir}/mean_and_std.pkl'
+    if do_standard_scaling and os.path.exists(statistics_filename):
         with open(statistics_filename, 'rb') as f:
             stats = pickle.load(f)
             f.close()
@@ -127,11 +141,18 @@ if __name__ == "__main__":
 
     def classify_sample(t):
         patient, label, sample = t
-        sample = (sample - x_mean) / x_std
-        cluster_assignment = kmeans.predict(sample)
-        probs = numpy.zeros(conditional_probabilities.shape[0]) # one per target class
-        for j in cluster_assignment:
-            probs += conditional_probabilities[:, j] 
+        if do_standard_scaling:
+            sample = (sample - x_mean) / x_std
+
+        if do_reshape:
+            cluster_assignment = kmeans.predict(sample)
+            probs = numpy.zeros(conditional_probabilities.shape[0]) # one per target class
+            for j in cluster_assignment:
+                probs += conditional_probabilities[:, j] 
+        else:
+            cluster_assignment = kmeans.predict([sample])
+            j = cluster_assignment[0]
+            probs = conditional_probabilities[:, j] 
         #probs *= target_class_a_priori_probabilities
         k = probs.argmax()
         return (patient, label, k)
@@ -153,7 +174,10 @@ if __name__ == "__main__":
     
     old_patient = "non-existent-yet"
     for line in sys.stdin:
-        patient, label, predicted_label = classify_sample(csv_line_to_patient_label_and_sample(line))
+        if do_reshape:
+            patient, label, predicted_label = classify_sample(csv_line_to_patient_label_and_sample_reshape(line))
+        else:
+            patient, label, predicted_label = classify_sample(csv_line_to_patient_label_and_sample(line))
         #
         if patient != old_patient:
             # reset variables

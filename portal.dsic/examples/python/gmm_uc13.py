@@ -87,6 +87,9 @@ if __name__ == "__main__":
     do_classification = False
     do_prediction = False
     results_dir = 'results3.train'
+    models_dir = 'models'
+    log_dir = 'log'
+    do_reshape = True
                                                    
     for i in range(len(sys.argv)):
         if sys.argv[i] == "--covar":
@@ -123,13 +126,17 @@ if __name__ == "__main__":
             label_mapping[7] = 0
             label_mapping[8] = 0
             label_mapping[9] = 0
+        elif sys.argv[i] == "--from-pca":
+            models_dir = 'models.pca'
+            log_dir = 'log.pca'
+            do_reshape = False
 
     if not standalone and not do_prediction:
         spark_context = SparkContext(appName = "GMM-MLE-dataset-UC13")
 
 
-    os.makedirs(base_dir + '/log',    exist_ok = True)
-    os.makedirs(base_dir + '/models', exist_ok = True)
+    os.makedirs(base_dir + '/' + log_dir,    exist_ok = True)
+    os.makedirs(base_dir + '/' + models_dir, exist_ok = True)
 
     if spark_context is not None:
 
@@ -158,11 +165,18 @@ if __name__ == "__main__":
             So, instead of an RDD with of numpy arrays we get an RDD with tuples [ int, numpy.array ]
         """
 
-        def csv_line_to_patient_label_and_sample(line):
+        def csv_line_to_patient_label_and_sample_reshape(line):
             parts = line.split(';')
             return (parts[0], label_mapping[int(parts[1])], numpy.array([float(x) for x in parts[2:]]).reshape(num_channels, 14))
 
-        data = csv_lines.map(csv_line_to_patient_label_and_sample)
+        def csv_line_to_patient_label_and_sample(line):
+            parts = line.split(';')
+            return (parts[0], label_mapping[int(parts[1])], numpy.array([float(x) for x in parts[2:]]))
+
+        if do_reshape:
+            data = csv_lines.map(csv_line_to_patient_label_and_sample_reshape)
+        else
+            data = csv_lines.map(csv_line_to_patient_label_and_sample)
         num_samples = data.count()
         x = data.take(1)
         dim = x[0][2].shape[1]
@@ -189,7 +203,7 @@ if __name__ == "__main__":
                 x = row[1]
                 accumulators[l] += x
 
-            f = open('models/gmm-distribution-%04d.csv' % gmm.n_components, 'wt')
+            f = open(f'{models_dir}/gmm-distribution-%04d.csv' % gmm.n_components, 'wt')
             for l in range(len(accumulators)):
                 print(";".join("{:f}".format(v) for v in accumulators[l]), file = f)
             f.close()
@@ -199,7 +213,7 @@ if __name__ == "__main__":
             gmm = machine_learning.GMM()
             gmm.load_from_text(gmm_filename)
 
-            filename = 'models/gmm-distribution-%04d.csv' % gmm.n_components
+            filename = f'{models_dir}/gmm-distribution-%04d.csv' % gmm.n_components
             accumulators = numpy.genfromtxt(filename, delimiter = ';')
             conditional_probabilities = accumulators.copy()
             for i in range(conditional_probabilities.shape[0]):
@@ -303,7 +317,7 @@ if __name__ == "__main__":
             # Gets the dimensionality of samples in order to create the object of the class MLE.
             dim_x = samples.first().shape[1]
 
-            mle = machine_learning.MLE(covar_type = covar_type, dim = dim_x, log_dir = base_dir + '/log', models_dir = base_dir + '/models')
+            mle = machine_learning.MLE(covar_type = covar_type, dim = dim_x, log_dir = base_dir + '/' + log_dir, models_dir = base_dir + '/' + models_dir)
             if gmm_filename is not None:
                 mle.gmm.load_from_text(gmm_filename)
 
@@ -318,7 +332,7 @@ if __name__ == "__main__":
         gmm = machine_learning.GMM()
         gmm.load_from_text(gmm_filename)
 
-        filename = 'models/gmm-distribution-%04d.csv' % gmm.n_components
+        filename = f'{models_dir}/gmm-distribution-%04d.csv' % gmm.n_components
         accumulators = numpy.genfromtxt(filename, delimiter = ';')
         conditional_probabilities = accumulators.copy()
         for i in range(conditional_probabilities.shape[0]):

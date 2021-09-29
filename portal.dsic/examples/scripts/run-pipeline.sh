@@ -11,6 +11,11 @@ case $(hostname) in
         ;;
 esac
 
+#models_dir="models"
+models_dir="models.pca"
+pca="pca-"
+options="--from-pca"
+
 while [ $# -ge 1 ]
 do
     case $1 in
@@ -27,16 +32,16 @@ done
 
 
 
-codebook=$(printf "models/kmeans_model-uc13-%03d.pkl" ${num_clusters})
+codebook=$(printf "${models_dir}/kmeans_model-uc13-%03d.pkl" ${num_clusters})
 if [ ! -f ${codebook} ]
 then
-    scripts/run-python.sh python/kmeans_uc13.py  --n-clusters ${num_clusters}
+    scripts/run-python.sh python/kmeans_uc13.py  --n-clusters ${num_clusters} ${options}
 fi
 
-counter_pairs=$(printf "models/cluster-distribution-%03d.csv" ${num_clusters})
+counter_pairs=$(printf "${models_dir}/cluster-distribution-%03d.csv" ${num_clusters})
 if [ ! -f ${counter_pairs} ]
 then
-    scripts/run-python.sh python/kmeans_uc13_compute_confusion_matrix_spark.py --num-partitions 80  --codebook ${codebook}
+    scripts/run-python.sh python/kmeans_uc13_compute_confusion_matrix_spark.py --num-partitions 80  --codebook ${codebook} ${options}
 fi
 
 results_dir="results3.train"
@@ -44,11 +49,12 @@ results_file=$(printf "${results_dir}/classification-results-%03d.txt" ${num_clu
 if [ ! -f ${results_file} ]
 then
     scripts/run-python.sh python/kmeans_uc13_classifier.py  \
-                                --dataset data/uc13-train.csv \
+                                --dataset data/uc13-${pca}train.csv \
+                                --models-dir ${models_dir} \
                                 --results-dir ${results_dir} \
                                 --num-partitions ${num_partitions} \
                                 --codebook ${codebook} \
-                                --counter-pairs ${counter_pairs}
+                                --counter-pairs ${counter_pairs} ${options}
 fi
 
 results_dir="results3.test"
@@ -56,9 +62,10 @@ results_file=$(printf "${results_dir}/classification-results-%03d.txt" ${num_clu
 if [ ! -f ${results_file} ]
 then
     scripts/run-python.sh python/kmeans_uc13_classifier.py  \
-                                --dataset data/uc13-test.csv \
+                                --dataset data/uc13-${pca}test.csv \
+                                --models-dir ${models_dir} \
                                 --results-dir ${results_dir} \
                                 --num-partitions ${num_partitions} \
                                 --codebook ${codebook} \
-                                --counter-pairs ${counter_pairs}
+                                --counter-pairs ${counter_pairs} ${options}
 fi

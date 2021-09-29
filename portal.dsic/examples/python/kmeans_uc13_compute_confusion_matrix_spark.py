@@ -5,7 +5,7 @@
     Universitat Politecnica de Valencia
     Technical University of Valencia TU.VLC
 
-    Computing the confusionn matrix for a K-Means-based naive classifier 
+    Computing the confusion matrix for a K-Means-based naive classifier 
 
 """
 
@@ -34,11 +34,15 @@ if __name__ == "__main__":
 
     verbose = 0
     dataset_filename = 'data/uc13-train.csv'
-    codebook_filename = 'models/kmeans_model-uc13-200.pkl'
+    codebook_filename = None
     spark_context = None
     num_partitions = 40
     batch_size = 100
     num_channels = 21
+    models_dir = 'models'
+    log_dir = 'log'
+    do_reshape = True
+    do_standard_scaling = True
                                                    
     for i in range(len(sys.argv)):
         if sys.argv[i] == "--dataset":
@@ -58,6 +62,12 @@ if __name__ == "__main__":
             label_mapping[6] = 1
             label_mapping[7] = 0
             label_mapping[8] = 0
+            label_mapping[9] = 0
+        elif sys.argv[i] == "--from-pca":
+            models_dir = 'models.pca'
+            log_dir = 'log.pca'
+            do_reshape = False
+            do_standard_scaling = False
 
     spark_context = SparkContext(appName = "K-Means compute confusion matrix")
 
@@ -83,50 +93,70 @@ if __name__ == "__main__":
     csv_lines.unpersist()
 
 
-    def csv_line_to_patient_label_and_sample(line):
+    def csv_line_to_patient_label_and_sample_reshape(line):
         parts = line.split(';')
         return (parts[0], label_mapping[int(parts[1])], numpy.array([float(x) for x in parts[2:]]).reshape(num_channels, 14))
 
-    data = csv_lines.map(csv_line_to_patient_label_and_sample)
+    def csv_line_to_patient_label_and_sample(line):
+        parts = line.split(';')
+        return (parts[0], label_mapping[int(parts[1])], numpy.array([float(x) for x in parts[2:]]))
 
-    ####################################################################
-    # begin: do standard scaling 
-    ####################################################################
-    statistics_filename = 'models/mean_and_std.pkl'
-    if os.path.exists(statistics_filename):
-        with open(statistics_filename, 'rb') as f:
-            stats = pickle.load(f)
-            f.close()
-        x_mean, x_std = stats
+    if do_reshape:
+        data = csv_lines.map(csv_line_to_patient_label_and_sample_reshape)
     else:
-        x_mean = data.map(lambda x: x[2]).reduce(lambda x1, x2: x1 + x2)
-        x_mean = x_mean.sum(axis = 0) # merging all the channels altogether, i.e. sum(axis = 0)
-        x_mean /= (num_samples * num_channels)
-        print(x_mean.shape) # should be (14,)
-        x_std = data.map(lambda x: x[2]).map(lambda x: (x - x_mean) ** 2).reduce(lambda x1, x2: x1 + x2)
-        x_std = x_std.sum(axis = 0) # merging all the channels altogether, i.e. sum(axis = 0)
-        x_std = numpy.sqrt(x_std / (num_samples * num_channels))
-        print(x_std.shape) # should be (14,)
-        with open(statistics_filename, 'wb') as f:
-            pickle.dump([x_mean, x_std], f)
-            f.close()
-    #
-    data = data.map(lambda x: (x[0], x[1], (x[2] - x_mean) / x_std))
-    ####################################################################
-    # end: do standard scaling 
-    ####################################################################
+        data = csv_lines.map(csv_line_to_patient_label_and_sample)
 
-    def assign_sample_to_cluster(t):
-        patient, label, sample = t 
-        output = list()
-        cluster_assignments = kmeans.predict(sample)
-        for j in cluster_assignments:
+    if do_standard_scaling:
+        ####################################################################
+        # begin: do standard scaling 
+        ####################################################################
+        statistics_filename = f'{models_dir}/mean_and_std.pkl'
+        if os.path.exists(statistics_filename):
+            with open(statistics_filename, 'rb') as f:
+                stats = pickle.load(f)
+                f.close()
+            x_mean, x_std = stats
+        else:
+        x_mean = data.map(lambda x: x[2]).reduce(lambda x1, x2: x1 + x2)
+            x_mean = x_mean.sum(axis = 0) # merging all the channels altogether, i.e. sum(axis = 0)
+            x_mean /= (num_samples * num_channels)
+            print(x_mean.shape) # should be (14,)
+            x_std = data.map(lambda x: x[2]).map(lambda x: (x - x_mean) ** 2).reduce(lambda x1, x2: x1 + x2)
+            x_std = x_std.sum(axis = 0) # merging all the channels altogether, i.e. sum(axis = 0)
+            x_std = numpy.sqrt(x_std / (num_samples * num_channels))
+            print(x_std.shape) # should be (14,)
+            with open(statistics_filename, 'wb') as f:
+                pickle.dump([x_mean, x_std], f)
+                f.close()
+        #
+        data = data.map(lambda x: (x[0], x[1], (x[2] - x_mean) / x_std))
+        ####################################################################
+        # end: do standard scaling 
+        ####################################################################
+
+    if do_reshape:
+        def assign_sample_to_cluster(t):
+            patient, label, sample = t 
+            output = list()
+            cluster_assignments = kmeans.predict(sample)
+            for j in cluster_assignments:
             x = numpy.zeros(kmeans.n_clusters)
+                x[j] = 1
+                output.append((label, x)) # for this purpose patient is dropped
+            return output
+            
+        data = data.flatMap(assign_sample_to_cluster)
+    else:
+        def assign_sample_to_cluster(t):
+            patient, label, sample = t 
+            cluster_assignments = kmeans.predict([sample])
+            x = numpy.zeros(kmeans.n_clusters)
+            j = cluster_assignments[0]
             x[j] = 1
-            output.append((label, x)) # for this purpose patient is dropped
-        return output
-        
-    data = data.flatMap(assign_sample_to_cluster)
+            return (label, x) # for this purpose patient is dropped
+
+        data = data.map(assign_sample_to_cluster)
+    #
 
     matrix = data.reduceByKey(lambda x, y: x + y).collect()
     
@@ -138,7 +168,7 @@ if __name__ == "__main__":
         x = row[1]
         counters[l] += x
 
-    f = open('models/cluster-distribution-%03d.csv' % kmeans.n_clusters, 'wt')
+    f = open(f'{models_dir}/cluster-distribution-%03d.csv' % kmeans.n_clusters, 'wt')
     for l in range(len(counters)):
         print(";".join("{:.0f}".format(v) for v in counters[l]), file = f)
     f.close()

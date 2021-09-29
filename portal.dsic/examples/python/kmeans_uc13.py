@@ -39,12 +39,17 @@ if __name__ == "__main__":
     debug = 0
     filename = 'data/uc13-train.csv'
     num_channels = 21
+    do_reshape = True
+    do_standard_scaling = True
+    models_dir = 'models'
+    log_dir = 'log'
 
     list_of_num_clusters = list()
     #for k in range(   2,  150,   1): list_of_num_clusters.append(k) # comment this line to skip these clustering sizes
-    #for k in range( 150,  500,  50): list_of_num_clusters.append(k) # comment this line to skip these clustering sizes
-    #for k in range( 500, 1000, 100): list_of_num_clusters.append(k) # comment this line to skip these clustering sizes
-    #list_of_num_clusters.append(1000)
+    for k in range(  10,  150,  10): list_of_num_clusters.append(k) # comment this line to skip these clustering sizes
+    for k in range( 150,  500,  50): list_of_num_clusters.append(k) # comment this line to skip these clustering sizes
+    for k in range( 500, 1000, 100): list_of_num_clusters.append(k) # comment this line to skip these clustering sizes
+    list_of_num_clusters.append(1000)
     #list_of_num_clusters.append(60)
 
     num_partitions = 80
@@ -52,55 +57,77 @@ if __name__ == "__main__":
     for i in range(1, len(sys.argv)):
         if sys.argv[i] == '--filename':
             filename = sys.argv[i + 1]
+        elif sys.argv[i] == '--models-dir':
+            models_dir = sys.argv[i + 1]
         elif sys.argv[i] == '--n-clusters':
             list_of_num_clusters.append(int(sys.argv[i + 1]))
             print(list_of_num_clusters)
         elif sys.argv[i] == '--n-partitions':
             num_partitions = int(sys.argv[i + 1])
+        elif sys.argv[i] == '--no-reshape':
+            do_reshape = False
+        elif sys.argv[i] == '--no-standard-scaling':
+            do_standard_scaling = False
+        elif sys.argv[i] == '--from-pca':
+            do_standard_scaling = False
+            do_reshape = False
+            models_dir = 'models.pca'
+            log_dir = 'log.pca'
 
     # Load and parse the data
     csv_lines = sc.textFile(filename)
     csv_lines = csv_lines.repartition(num_partitions)
 
 
-    def csv_line_to_patient_label_and_sample(line):
+    def csv_line_to_patient_label_and_sample_reshape(line):
         parts = line.split(';')
         return (parts[0], int(parts[1]), numpy.array([float(x) for x in parts[2:]]).reshape(num_channels, 14))
 
-    data = csv_lines.map(csv_line_to_patient_label_and_sample)
+    def csv_line_to_patient_label_and_sample(line):
+        parts = line.split(';')
+        return (parts[0], int(parts[1]), numpy.array([float(x) for x in parts[2:]]))
+
+    if do_reshape:
+        data = csv_lines.map(csv_line_to_patient_label_and_sample_reshape)
+    else:
+        data = csv_lines.map(csv_line_to_patient_label_and_sample)
     num_samples = data.count()
 
     print(f'loaded {num_samples} samples into {data.getNumPartitions()} partitions')
 
-    ####################################################################
-    # begin: do standard scaling 
-    ####################################################################
-    statistics_filename = 'models/mean_and_std.pkl'
-    if os.path.exists(statistics_filename):
-        with open(statistics_filename, 'rb') as f:
-            stats = pickle.load(f)
-            f.close()
-        x_mean, x_std = stats
-    else:
-        x_mean = data.map(lambda x: x[2]).reduce(lambda x1, x2: x1 + x2)
-        x_mean = x_mean.sum(axis = 0) # merging all the channels altogether, i.e. sum(axis = 0)
-        x_mean /= (num_samples * num_channels)
-        print(x_mean.shape) # should be (14,)
-        x_std = data.map(lambda x: x[2]).map(lambda x: (x - x_mean) ** 2).reduce(lambda x1, x2: x1 + x2)
-        x_std = x_std.sum(axis = 0) # merging all the channels altogether, i.e. sum(axis = 0)
-        x_std = numpy.sqrt(x_std / (num_samples * num_channels))
-        print(x_std.shape) # should be (14,)
-        with open(statistics_filename, 'wb') as f:
-            pickle.dump([x_mean, x_std], f)
-            f.close()
-    #
-    data = data.map(lambda x: (x[0], x[1], (x[2] - x_mean) / x_std))
-    ####################################################################
-    # end: do standard scaling 
-    ####################################################################
+    if do_standard_scaling:
+        ####################################################################
+        # begin: do standard scaling 
+        ####################################################################
+        statistics_filename = f'{models_dir}/mean_and_std.pkl'
+        if os.path.exists(statistics_filename):
+            with open(statistics_filename, 'rb') as f:
+                stats = pickle.load(f)
+                f.close()
+            x_mean, x_std = stats
+        else:
+            x_mean = data.map(lambda x: x[2]).reduce(lambda x1, x2: x1 + x2)
+            x_mean = x_mean.sum(axis = 0) # merging all the channels altogether, i.e. sum(axis = 0)
+            x_mean /= (num_samples * num_channels)
+            print(x_mean.shape) # should be (14,)
+            x_std = data.map(lambda x: x[2]).map(lambda x: (x - x_mean) ** 2).reduce(lambda x1, x2: x1 + x2)
+            x_std = x_std.sum(axis = 0) # merging all the channels altogether, i.e. sum(axis = 0)
+            x_std = numpy.sqrt(x_std / (num_samples * num_channels))
+            print(x_std.shape) # should be (14,)
+            with open(statistics_filename, 'wb') as f:
+                pickle.dump([x_mean, x_std], f)
+                f.close()
+        #
+        data = data.map(lambda x: (x[0], x[1], (x[2] - x_mean) / x_std))
+        ####################################################################
+        # end: do standard scaling 
+        ####################################################################
 
     # removes first and second columns corresponding to patient and label
-    data = data.flatMap(lambda x: [x[2][i] for i in range(x[2].shape[0])])
+    if do_reshape:
+        data = data.flatMap(lambda x: [x[2][i] for i in range(x[2].shape[0])])
+    else:
+        data = data.map(lambda x: x[2])
 
     data.persist()
 
@@ -120,7 +147,7 @@ if __name__ == "__main__":
     
     for num_clusters in list_of_num_clusters:
 
-        codebook_filename = 'models/kmeans_model-uc13-%03d.pkl' % num_clusters
+        codebook_filename = f'{models_dir}/kmeans_model-uc13-%03d.pkl' % num_clusters
         
         if os.path.exists(codebook_filename):
             with open(codebook_filename, 'rb') as f:
@@ -188,7 +215,7 @@ if __name__ == "__main__":
         print(f'Davies Bouldin index for {num_clusters} clusters is {davies_bouldin_index}')
 
         # save KPIs to measure the quality of the clusterings
-        with open('log/kmeans-kpis.txt', 'at') as f:
+        with open(f'{log_dir}/kmeans-kpis.txt', 'at') as f:
             print(f'{num_clusters}  {WSSSE / num_samples}  {calinski_harabasz_index}  {davies_bouldin_index}', file = f)
             f.close()
 

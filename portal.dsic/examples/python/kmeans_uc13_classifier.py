@@ -84,6 +84,7 @@ if __name__ == "__main__":
             label_mapping[6] = 1
             label_mapping[7] = 0
             label_mapping[8] = 0
+            label_mapping[9] = 0
 
     spark_context = SparkContext(appName = "K-Means-based naive classifier")
 
