@@ -223,7 +223,7 @@ if it is possible, before 30 minutes of the seizure.
     to obtain the results of the classifier.
 
 4. Obtain several **Gaussian Mixture Models (GMM)** using the Python code
-   [gmm_uc13_v2.py](../../portal.dsic/examples/python/gmm_uc13_v2.py)
+   [gmm_uc13.py](../../portal.dsic/examples/python/gmm_uc13.py)
 
 5. Compute a confusion matrix between target classes and the components of the GMM for different number
    of components in order to construct a classifier based on [this formulation](docs/formulas_gmm.pdf)
