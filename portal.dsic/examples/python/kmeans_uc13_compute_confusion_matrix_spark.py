@@ -117,7 +117,7 @@ if __name__ == "__main__":
                 f.close()
             x_mean, x_std = stats
         else:
-        x_mean = data.map(lambda x: x[2]).reduce(lambda x1, x2: x1 + x2)
+            x_mean = data.map(lambda x: x[2]).reduce(lambda x1, x2: x1 + x2)
             x_mean = x_mean.sum(axis = 0) # merging all the channels altogether, i.e. sum(axis = 0)
             x_mean /= (num_samples * num_channels)
             print(x_mean.shape) # should be (14,)
@@ -140,7 +140,7 @@ if __name__ == "__main__":
             output = list()
             cluster_assignments = kmeans.predict(sample)
             for j in cluster_assignments:
-            x = numpy.zeros(kmeans.n_clusters)
+                x = numpy.zeros(kmeans.n_clusters)
                 x[j] = 1
                 output.append((label, x)) # for this purpose patient is dropped
             return output

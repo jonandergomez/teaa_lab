@@ -18,7 +18,8 @@ do
                                     --model ${gmm_filename} \
                                     --compute-confusion-matrix \
                                     --models-dir ${models_dir} \
-                                    --reduce-labels
+                                    --from-pca --no-reduce-labels \
+                                    --dataset data/uc13-pca-train.csv
         fi
     fi
 done

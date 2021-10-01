@@ -18,6 +18,7 @@ do
                                     --num-partitions 80 \
                                     --codebook ${codebook} \
                                     --models_dir ${models_dir} \
+                                    --dataset data/uc13-pca-train.csv \
                                     --from-pca --no-reduce-labels
         fi
     fi

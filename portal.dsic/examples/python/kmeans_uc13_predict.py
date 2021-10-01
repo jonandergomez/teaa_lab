@@ -113,7 +113,6 @@ if __name__ == "__main__":
     # Compute the a priori probabilities of target classes
     target_class_a_priori_probabilities = counter_pairs.sum(axis = 1) / counter_pairs.sum()
 
-
     def csv_line_to_patient_label_and_sample_reshape(line):
         parts = line.split(';')
         return (parts[0], label_mapping[int(parts[1])], numpy.array([float(x) for x in parts[2:]]).reshape(num_channels, 14))
@@ -160,13 +159,10 @@ if __name__ == "__main__":
 
     y_true_and_pred = list()
     #
-    sliding_window_length = 30 * 60 # 1800 seconds -> 30 minutes
+    sliding_window_length = 5 * 60 # 1800 seconds -> 30 minutes
     sliding_window_step = 60 * 5 # 300 seconds -> 5 minute
-    lower_threshold_for_target_class_2 = 0.10
-    lower_threshold_for_target_class_1 = 0.05
-    upper_threshold_for_target_class_1 = 0.95
     #
-    target_class_counters = [0] * 10
+    target_class_counters = [0] * conditional_probabilities.shape[0]
     list_of_predictions = list()
     list_of_alarms = list()
     current_time = 0
@@ -183,7 +179,7 @@ if __name__ == "__main__":
             # reset variables
             # 
             old_patient = patient
-            target_class_counters = [0] * 10
+            target_class_counters = [0] * conditional_probabilities.shape[0]
             list_of_predictions = list()
             list_of_alarms = list()
             current_time = 0
@@ -195,6 +191,13 @@ if __name__ == "__main__":
             target_class_counters[list_of_predictions[0]] -= 1
             del list_of_predictions[0]
         # 
+        target_class_probs = numpy.array([float(x) for x in target_class_counters]) / sum(target_class_counters)
+        #
+        current_time += 2 # add 2 seconds because each sample comes 2 seconds after the previous one
+        #
+        if current_time > 0 and current_time % sliding_window_step == 0:
+            print(patient, label, " ".join("{:8.2f}".format(100 * x) for x in target_class_probs))
+
         if label == 1: # an ictal period is reached
             if state == 'inter-ictal':
                 print('ictal period starts, press enter ...')
@@ -210,20 +213,12 @@ if __name__ == "__main__":
         elif label in [0, 2, 3, 4, 5]: # exclude post-ictal periods
             state = 'inter-ictal'
             #
-            total = sum(target_class_counters)
-            target_class_probs = [x / total for x in target_class_counters]
             if current_time > 0 and current_time % sliding_window_step == 0:
-                #if lower_threshold_for_target_class_2 <= target_class_probs[2] and \
-                #   lower_threshold_for_target_class_1 <= target_class_probs[1] <= upper_threshold_for_target_class_1:
-                if (target_class_probs[6] + target_class_probs[7] + target_class_probs[9]) > 0.40 or \
-                   target_class_probs[2] > 0.10 or target_class_probs[1] > 0.20:
+                if target_class_probs[1:4].sum() > 0.33:
                     list_of_alarms.append((1, current_time))
                 else:
                     list_of_alarms.append((0, current_time))
-                
-                print(" ".join("{:8.2f}".format(100 * x / total) for x in target_class_counters))
             # 
-        current_time += 2 # add 2 seconds because each sample comes 2 seconds after the previous one
     #        
     #
     for pred_label, pred_time in list_of_alarms:

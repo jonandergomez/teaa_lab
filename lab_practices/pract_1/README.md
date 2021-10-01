@@ -73,6 +73,10 @@ that is the total energy contained in the frequency domain for a given sliding w
 
 ![Here](figures/cepstral-coefficients.svg)
 
+******
+
+You can find more information on voice signal preprocessing in Spanish
+in [this internal report from DSIC UPV](docs/param.pdf).
 
 ******
 
@@ -222,9 +226,7 @@ if it is possible, before 30 minutes of the seizure.
    [gmm_uc13_v2.py](../../portal.dsic/examples/python/gmm_uc13_v2.py)
 
 5. Compute a confusion matrix between target classes and the components of the GMM for different number
-of components.
-
-<img src="docs/formulas_gmm.png" alt="Formulation" align="center" style="width:80%" />
+   of components in order to construct a classifier based on [this formulation](docs/formulas_gmm.pdf)
 
 6. Carry out several tests to evaluate the performance (KPI accuracy) of the classifier 
 based on GMMs according to the J, the number of Gaussian components in the GMM, and

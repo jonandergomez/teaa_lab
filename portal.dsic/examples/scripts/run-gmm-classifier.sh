@@ -14,6 +14,8 @@ models_dir="models.pca"
 #data_filename_prefix="data/uc13"
 data_filename_prefix="data/uc13-pca"
 
+results_base_dir="results4.pca"
+
 for q in $(ls ${models_dir}/gmm-*.txt | grep -v "0001" | cut -f2 -d'-' | cut -f1 -d'.')
 do
     gmm_filename=$(printf "${models_dir}/gmm-${q}.txt")
@@ -26,7 +28,7 @@ do
 
             for subset in "train" "test"
             do
-                results_dir="results3.${subset}"
+                results_dir="${results_base_dir}.${subset}"
                 results_file=$(printf "${results_dir}/gmm-classification-results-${q}.txt")
                 if [ ! -f ${results_file} ]
                 then
@@ -35,7 +37,8 @@ do
                                         --model ${gmm_filename} \
                                         --classify \
                                         --results-dir ${results_dir} \
-                                        --reduce-labels \
+                                        --no-reduce-labels \
+                                        --from-pca \
                                         --models-dir ${models_dir} \
                                         --dataset ${data_filename_prefix}-${subset}.csv
                 fi

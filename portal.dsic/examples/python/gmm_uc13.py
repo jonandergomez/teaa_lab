@@ -135,6 +135,15 @@ if __name__ == "__main__":
         spark_context = SparkContext(appName = "GMM-MLE-dataset-UC13")
 
 
+    def csv_line_to_patient_label_and_sample_reshape(line):
+        parts = line.split(';')
+        return (parts[0], label_mapping[int(parts[1])], numpy.array([float(x) for x in parts[2:]]).reshape(num_channels, 14))
+
+    def csv_line_to_patient_label_and_sample(line):
+        parts = line.split(';')
+        return (parts[0], label_mapping[int(parts[1])], numpy.array([float(x) for x in parts[2:]]))
+
+
     os.makedirs(base_dir + '/' + log_dir,    exist_ok = True)
     os.makedirs(base_dir + '/' + models_dir, exist_ok = True)
 
@@ -165,21 +174,16 @@ if __name__ == "__main__":
             So, instead of an RDD with of numpy arrays we get an RDD with tuples [ int, numpy.array ]
         """
 
-        def csv_line_to_patient_label_and_sample_reshape(line):
-            parts = line.split(';')
-            return (parts[0], label_mapping[int(parts[1])], numpy.array([float(x) for x in parts[2:]]).reshape(num_channels, 14))
-
-        def csv_line_to_patient_label_and_sample(line):
-            parts = line.split(';')
-            return (parts[0], label_mapping[int(parts[1])], numpy.array([float(x) for x in parts[2:]]))
-
         if do_reshape:
             data = csv_lines.map(csv_line_to_patient_label_and_sample_reshape)
-        else
+            num_samples = data.count()
+            x = data.take(1)
+            dim = x[0][2].shape[1]
+        else:
             data = csv_lines.map(csv_line_to_patient_label_and_sample)
-        num_samples = data.count()
-        x = data.take(1)
-        dim = x[0][2].shape[1]
+            num_samples = data.count()
+            x = data.take(1)
+            dim = x[0][2].shape[0]
 
         print(f'loaded {num_samples} {dim}-dimensional samples into {data.getNumPartitions()} partitions')
 
@@ -190,8 +194,12 @@ if __name__ == "__main__":
 
             def samples_to_probs(t):
                 patient, label, x = t
-                probs, logL = gmm.posteriors_batch(x.T) # this works with one sample per column, so the transpose should be provided
-                return (label, probs.sum(axis = 1)) # because the rows are the number of components in the GMM
+                if len(x.shape) == 2:
+                    probs, logL = gmm.posteriors_batch(x.T) # this works with one sample per column, so the transpose should be provided
+                    return (label, probs.sum(axis = 1)) # because the rows are the number of components in the GMM
+                else:
+                    probs, logL = gmm.posteriors(x) # this works with one sample per column, so the transpose should be provided
+                    return (label, probs) # because the rows are the number of components in the GMM
 
             data = data.map(samples_to_probs)
 
@@ -223,10 +231,16 @@ if __name__ == "__main__":
 
             def classify_sample(t):
                 patient, label, x = t
-                _log_densities = gmm.log_densities_batch(x.T, with_a_priori_probs = False) # J x N
-                _densities = numpy.exp(_log_densities - _log_densities.max(axis = 0)) # J x N
-                _probs = numpy.dot(conditional_probabilities, _densities).T # N x K
-                _probs = _probs.sum(axis = 0) # * target_classes_a_priori_probabilities
+                if len(x.shape) == 2:
+                    _log_densities = gmm.log_densities_batch(x.T, with_a_priori_probs = False) # J x N
+                    _densities = numpy.exp(_log_densities - _log_densities.max(axis = 0)) # J x N
+                    _probs = numpy.dot(conditional_probabilities, _densities).T # N x K
+                    _probs = _probs.sum(axis = 0) # * target_classes_a_priori_probabilities
+                else:
+                    _log_densities = gmm.log_densities(x, with_a_priori_probs = False) # J x 1
+                    _densities = numpy.exp(_log_densities - _log_densities.max()) # J x 1
+                    _probs = numpy.dot(conditional_probabilities, _densities).T # 1 x K
+                # _probs *= target_classes_a_priori_probabilities
 
                 return (patient, label, _probs.argmax())
 
@@ -340,28 +354,25 @@ if __name__ == "__main__":
 
         target_classes_a_priori_probabilities = accumulators.sum(axis = 1) / accumulators.sum()
 
-        def csv_line_to_patient_label_and_sample(line):
-            parts = line.split(';')
-            return (parts[0], label_mapping[int(parts[1])], numpy.array([float(x) for x in parts[2:]]).reshape(num_channels, 14))
-
         def classify_sample(t):
             patient, label, x = t
-            _log_densities = gmm.log_densities_batch(x.T, with_a_priori_probs = False) # J x N
-            _densities = numpy.exp(_log_densities - _log_densities.max(axis = 0)) # J x N
-            _probs = numpy.dot(conditional_probabilities, _densities).T # N x K
-            _probs = _probs.sum(axis = 0) #* target_classes_a_priori_probabilities
-            _probs /= _probs.sum()
+            if len(x.shape) == 2:
+                _log_densities = gmm.log_densities_batch(x.T, with_a_priori_probs = False) # J x N
+                _densities = numpy.exp(_log_densities - _log_densities.max(axis = 0)) # J x N
+                _probs = numpy.dot(conditional_probabilities, _densities).T # N x K
+                _probs = _probs.sum(axis = 0) # * target_classes_a_priori_probabilities
+            else:
+                _log_densities = gmm.log_densities(x, with_a_priori_probs = False) # J x 1
+                _densities = numpy.exp(_log_densities - _log_densities.max()) # J x 1
+                _probs = numpy.dot(conditional_probabilities, _densities).T # 1 x K
+            #_probs *= target_classes_a_priori_probabilities
 
-            #return (patient, label, _probs.argmax())
             return (patient, label, _probs)
 
         y_true_and_pred = list()
         #
-        sliding_window_length = 30 * 60 # 1800 seconds -> 30 minutes
+        sliding_window_length = 5 * 60 # 1800 seconds -> 30 minutes
         sliding_window_step = 60 * 5 # 300 seconds -> 5 minute
-        lower_threshold_for_target_class_2 = 0.10
-        lower_threshold_for_target_class_1 = 0.05
-        upper_threshold_for_target_class_1 = 0.95
         #
         target_class_accumulators = numpy.zeros(conditional_probabilities.shape[0])
         list_of_predictions = list()
@@ -371,8 +382,10 @@ if __name__ == "__main__":
         
         old_patient = "non-existent-yet"
         for line in sys.stdin:
-            #patient, label, predicted_label = classify_sample(csv_line_to_patient_label_and_sample(line))
-            patient, label, label_probs = classify_sample(csv_line_to_patient_label_and_sample(line))
+            if do_reshape:
+                patient, label, label_probs = classify_sample(csv_line_to_patient_label_and_sample_reshape(line))
+            else:
+                patient, label, label_probs = classify_sample(csv_line_to_patient_label_and_sample(line))
             #
             if patient != old_patient:
                 # reset variables
@@ -415,7 +428,7 @@ if __name__ == "__main__":
                     #if lower_threshold_for_target_class_2 <= target_class_probs[2] and \
                     #   lower_threshold_for_target_class_1 <= target_class_probs[1] <= upper_threshold_for_target_class_1:
                     if target_class_probs[6:].sum() > 0.40 or \
-                       target_class_probs[1:4].sum() > 0.30:
+                       target_class_probs[1:5].sum() > 0.40:
                         list_of_alarms.append((1, current_time))
                     else:
                         list_of_alarms.append((0, current_time))
@@ -435,7 +448,7 @@ if __name__ == "__main__":
         ### presentation of results
         #####################################################################
         os.makedirs(results_dir, exist_ok = True)
-        f_results = open(f'{results_dir}/gmm-prediction-results-%03d.txt' % gmm.n_components, 'wt')
+        f_results = open(f'{results_dir}/gmm-prediction-results-%04d.txt' % gmm.n_components, 'wt')
         _cm_ = confusion_matrix(y_true, y_pred)
         for i in range(_cm_.shape[0]):
             for j in range(_cm_.shape[1]):
@@ -457,6 +470,6 @@ if __name__ == "__main__":
                               normalize = 'pred', ax = axes[1], cmap = 'Oranges', colorbar = False)
         #
         pyplot.tight_layout()
-        pyplot.savefig(f'{results_dir}/gmm-prediction-results-%03d.svg' % gmm.n_components, format = 'svg')
-        pyplot.savefig(f'{results_dir}/gmm-prediction-results-%03d.png' % gmm.n_components, format = 'png')
+        pyplot.savefig(f'{results_dir}/gmm-prediction-results-%04d.svg' % gmm.n_components, format = 'svg')
+        pyplot.savefig(f'{results_dir}/gmm-prediction-results-%04d.png' % gmm.n_components, format = 'png')
         del fig

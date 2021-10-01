@@ -61,6 +61,10 @@ if __name__ == "__main__":
     batch_size = 100
     num_channels = 21
     results_dir = 'results3.train'
+    models_dir = 'models'
+    log_dir = 'log'
+    do_reshape = True
+    do_standard_scaling = True
                                                    
     for i in range(len(sys.argv)):
         if sys.argv[i] == "--dataset":
@@ -85,6 +89,11 @@ if __name__ == "__main__":
             label_mapping[7] = 0
             label_mapping[8] = 0
             label_mapping[9] = 0
+        elif sys.argv[i] == "--from-pca":
+            models_dir = 'models.pca'
+            log_dir = 'log.pca'
+            do_reshape = False
+            do_standard_scaling = False
 
     spark_context = SparkContext(appName = "K-Means-based naive classifier")
 
@@ -127,11 +136,18 @@ if __name__ == "__main__":
     #csv_lines.unpersist()
 
 
-    def csv_line_to_patient_label_and_sample(line):
+    def csv_line_to_patient_label_and_sample_reshape(line):
         parts = line.split(';')
         return (parts[0], label_mapping[int(parts[1])], numpy.array([float(x) for x in parts[2:]]).reshape(num_channels, 14))
 
-    data = csv_lines.map(csv_line_to_patient_label_and_sample)
+    def csv_line_to_patient_label_and_sample(line):
+        parts = line.split(';')
+        return (parts[0], label_mapping[int(parts[1])], numpy.array([float(x) for x in parts[2:]]))
+
+    if do_reshape:
+        data = csv_lines.map(csv_line_to_patient_label_and_sample_reshape)
+    else:
+        data = csv_lines.map(csv_line_to_patient_label_and_sample)
 
     '''
     x = data.first()
@@ -140,36 +156,40 @@ if __name__ == "__main__":
     print(x[2].shape)
     '''
 
-    ####################################################################
-    # begin: do standard scaling 
-    ####################################################################
-    statistics_filename = 'models/mean_and_std.pkl'
-    if os.path.exists(statistics_filename):
-        with open(statistics_filename, 'rb') as f:
-            stats = pickle.load(f)
-            f.close()
-        x_mean, x_std = stats
-    else:
-        x_mean = data.map(lambda x: x[2]).reduce(lambda x1, x2: x1 + x2)
-        x_mean = x_mean.sum(axis = 0) # merging all the channels altogether, i.e. sum(axis = 0)
-        x_mean /= (num_samples * num_channels)
-        print(x_mean.shape) # should be (14,)
-        x_std = data.map(lambda x: x[2]).map(lambda x: (x - x_mean) ** 2).reduce(lambda x1, x2: x1 + x2)
-        x_std = x_std.sum(axis = 0) # merging all the channels altogether, i.e. sum(axis = 0)
-        x_std = numpy.sqrt(x_std / (num_samples * num_channels))
-        print(x_std.shape) # should be (14,)
-        with open(statistics_filename, 'wb') as f:
-            pickle.dump([x_mean, x_std], f)
-            f.close()
-    #
-    data = data.map(lambda x: (x[0], x[1], (x[2] - x_mean) / x_std))
-    ####################################################################
-    # end: do standard scaling 
-    ####################################################################
+    if do_standard_scaling:
+        ####################################################################
+        # begin: do standard scaling 
+        ####################################################################
+        statistics_filename = 'models/mean_and_std.pkl'
+        if os.path.exists(statistics_filename):
+            with open(statistics_filename, 'rb') as f:
+                stats = pickle.load(f)
+                f.close()
+            x_mean, x_std = stats
+        else:
+            x_mean = data.map(lambda x: x[2]).reduce(lambda x1, x2: x1 + x2)
+            x_mean = x_mean.sum(axis = 0) # merging all the channels altogether, i.e. sum(axis = 0)
+            x_mean /= (num_samples * num_channels)
+            print(x_mean.shape) # should be (14,)
+            x_std = data.map(lambda x: x[2]).map(lambda x: (x - x_mean) ** 2).reduce(lambda x1, x2: x1 + x2)
+            x_std = x_std.sum(axis = 0) # merging all the channels altogether, i.e. sum(axis = 0)
+            x_std = numpy.sqrt(x_std / (num_samples * num_channels))
+            print(x_std.shape) # should be (14,)
+            with open(statistics_filename, 'wb') as f:
+                pickle.dump([x_mean, x_std], f)
+                f.close()
+        #
+        data = data.map(lambda x: (x[0], x[1], (x[2] - x_mean) / x_std))
+        ####################################################################
+        # end: do standard scaling 
+        ####################################################################
 
     def classify_sample(t):
         patient, label, sample = t
-        cluster_assignment = kmeans.predict(sample)
+        if do_reshape:
+            cluster_assignment = kmeans.predict(sample)
+        else:
+            cluster_assignment = kmeans.predict([sample])
         probs = numpy.zeros(conditional_probabilities.shape[0]) # one per target class
         for j in cluster_assignment:
             probs += conditional_probabilities[:, j] 

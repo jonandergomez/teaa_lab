@@ -4,14 +4,27 @@ import numpy
 from matplotlib import pyplot
 
 
-filename = 'models/cluster-distribution-066.csv'
+filename = None
+do_save_fig = False
+results_dir = None
+clustering_type = 'kmeans'
 
-if len(sys.argv) > 1:
-    filename = sys.argv[1]
+for i in range(len(sys.argv)):
+    if sys.argv[i] == '--filename':
+        filename = sys.argv[i + 1]
+    elif sys.argv[i] == '--kmeans':
+        clustering_type = 'kmeans'
+    elif sys.argv[i] == '--gmm':
+        clustering_type = 'gmm'
+    elif sys.argv[i] == '--results-dir':
+        results_dir = sys.argv[i + 1]
+        do_save_fig = True
+    elif sys.argv[i] == '--save-figs':
+        do_save_fig = True
 
 mat = numpy.genfromtxt(filename, delimiter = ';')
 
-print(mat.shape)
+#print(mat.shape)
 
 for i in range(mat.shape[0]): mat[i, :] /= sum(mat[i, :])
 
@@ -25,4 +38,8 @@ axis.set_xlabel('Clusters')
 axis.set_ylabel('Target classes')
 axis.set_title('Conditional probabilities')
 pyplot.tight_layout()
-pyplot.show()
+if do_save_fig and results_dir is not None:
+    pyplot.savefig(f'{results_dir}/conditional-probabilities-{clustering_type}-%d-%04d.svg' % (mat.shape[0], mat.shape[1]), format = 'svg')
+    pyplot.savefig(f'{results_dir}/conditional-probabilities-{clustering_type}-%d-%04d.png' % (mat.shape[0], mat.shape[1]), format = 'png')
+else:
+    pyplot.show()
