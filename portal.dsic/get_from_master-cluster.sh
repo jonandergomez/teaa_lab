@@ -53,26 +53,28 @@ done
 
 pushd examples
 
-for dir in python scripts \
-            models models.pca \
-            log log.pca \
-            results results2 \
-            results3.train results3.test \
-            results4.pca.train results4.pca.test
-do
+#for dir in python scripts \
+#            models models.pca \
+#            log log.pca \
+#            results results2 \
+#            results3.train results3.test \
+#            results4.pca.train results4.pca.test
+#do
     echo ""
     echo "######################################### ${dir}"
     if [ ${sense} = "from-master" ]
     then
-        rsync -avHC${no_force} ${additional_options} ubuntu@${server}:teaa/examples/${dir} .
+        #rsync -avHC${no_force} ${additional_options} ubuntu@${server}:teaa/examples/${dir} .
+        rsync -avHC${no_force} ${additional_options} ubuntu@${server}:teaa/examples/ .
     elif [ ${sense} = "to-master" ]
     then
-        rsync -avHC${no_force} ${additional_options} ${dir} ubuntu@${server}:teaa/examples/
+        #rsync -avHC${no_force} ${additional_options} ${dir} ubuntu@${server}:teaa/examples/
+        rsync -avHC${no_force} ${additional_options} ./ ubuntu@${server}:teaa/examples/
     else
         echo "PANIC"
         exit 1
     fi
-done
+#done
 
 
 popd
