@@ -53,7 +53,12 @@ done
 
 pushd examples
 
-for dir in python scripts models results log results2 results3.train results3.test
+for dir in python scripts \
+            models models.pca \
+            log log.pca \
+            results results2 \
+            results3.train results3.test \
+            results4.pca.train results4.pca.test
 do
     echo ""
     echo "######################################### ${dir}"
