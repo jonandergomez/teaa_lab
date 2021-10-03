@@ -100,7 +100,7 @@ if __name__ == "__main__":
         gmm.load_from_text(gmm_filename)
 
         def samples_to_probs(t):
-            patient, label, x = t
+            label, x = t
             probs, logL = gmm.posteriors(x) # this works with one sample per column, so the transpose should be provided
             return (label, probs) # because the rows are the number of components in the GMM
 
