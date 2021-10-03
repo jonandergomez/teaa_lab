@@ -5,6 +5,7 @@ server="teaa-master-cluster.dsicv.upv.es"
 
 no_force="n"
 additional_options=""
+additional_options="${additional_options}  --exclude __pycache__"
 
 sense="none"
 

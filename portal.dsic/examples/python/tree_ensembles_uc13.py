@@ -75,9 +75,8 @@ def save_results(results_dir, filename_prefix, y_true, y_pred):
 # ---------------------------------------------------------------------------------------------------
 
 if __name__ == "__main__":
-
     """
-    Usage: spark-submit --master local[4]  python/rf_uc13.py --dataset data/uc13-train.csv --num-trees <nt> --max-depth <md> --impurity <imp> 
+    Usage: spark-submit --master local[4]  python/tree_ensembles_uc13.py --dataset data/uc13-train.csv --num-trees <nt> --max-depth <md> --impurity <imp> 
     """
 
     impurity = 'gini'
@@ -137,6 +136,13 @@ if __name__ == "__main__":
     spark_context = SparkContext(appName = "RandomForest-dataset-UC13")
 
 
+    '''
+        In order to use the Spark implementation of classifiers each data point must be
+        an object of the class LabeledPoint.
+        Basically, each object of this class has two attributes: label and features.
+        For classification tasks, label should be an integer, for regression tasks label
+        should be a floating-point number.
+    '''
     def csv_line_to_labeled_point(line):
         parts = line.split(';')
         return LabeledPoint(label_mapping[int(parts[1])], numpy.array([float(x) for x in parts[2:]]))
@@ -144,37 +150,36 @@ if __name__ == "__main__":
     #os.makedirs(base_dir + '/' + log_dir,    exist_ok = True)
     #os.makedirs(base_dir + '/' + models_dir, exist_ok = True)
 
-    """
-        Load all the lines in a file (or files in a directory) into an RDD of text lines.
+    '''
+        Load all the lines from a file (or files in a directory) into an RDD of text lines.
 
         It is assumed there is no header, each CSV file contains an undefined number or lines.
         - Each line represents a sample.
         - All the lines **must** contain the same number of values.
-        - All the values **must** be numeric, integers or real values.
-    """
-    # Load and parse the data
+        - All the values **must** be numeric, i.e., integers or real values.
+    '''
+    # Data loading and parsing
     csv_lines = spark_context.textFile(dataset_filename)
     print("file(s) loaded ")
+    # RDD repartitioning
     csv_lines = csv_lines.repartition(num_partitions)
 
-    """
-        Convert the text lines into numpy arrays.
+    '''
+        Convert the text lines into objects of the class LabeledPoint, where features are numpy arrays.
 
         Taking as input the RDD text_lines, a map operation is applied to each text line in order
-        to convert it into a numpy array, as a result a new RDD of numpy arrays is obtained.
-        
-        Nevertheless, as we need an RDD with blocks of samples instead of single samples, we 
-        associate with each sample a random integer number in a specific range.
-
-        So, instead of an RDD with of numpy arrays we get an RDD with tuples [ int, numpy.array ]
-    """
-
+        to convert it into an object of the class LabeledPoint numpy array, as a result a new RDD
+        of LabeledPoint objects is obtained.
+    '''
+    # RDD object conversion
     data = csv_lines.map(csv_line_to_labeled_point)
+    # Retrives basic info from the RDD object
     num_samples = data.count()
     x = data.take(1)
     dim = x[0].features.shape[0]
 
     print(f'loaded {num_samples} {dim}-dimensional samples into {data.getNumPartitions()} partitions')
+
 
     if do_training:
         if ensemble_type == 'random-forest':
@@ -199,13 +204,15 @@ if __name__ == "__main__":
             model.save(spark_context, model_filename)
 
         elif ensemble_type == 'extra-trees':
+            # Retrieves all the dataset in the RDD to a local list
             local_data = data.collect()
-            X = numpy.array([item.features for item in local_data])
-            y = numpy.array([item.label    for item in local_data])
-            del local_data
+            X = numpy.array([item.features for item in local_data]) # get features
+            y = numpy.array([item.label    for item in local_data]) # get labels
+            del local_data # free memory, just in case
             #
             model = ExtraTreesClassifier(n_estimators = num_trees, criterion = impurity, max_depth = max_depth, n_jobs = -1, verbose = 1)
             model.fit(X, y)
+            # Saves the model to local disk (in the master) using Pickle serialization for Python
             os.makedirs(base_dir + '/' + models_dir, exist_ok = True)
             with open(model_filename, 'wb') as f:
                 pickle.dump(model, f)
@@ -216,43 +223,55 @@ if __name__ == "__main__":
             
     if do_classification:
         if ensemble_type == 'random-forest':
+            # Loads the model
             model = RandomForestModel.load(spark_context, model_filename)
+            # Classifies the samples
             y_pred = model.predict(data.map(lambda x: x.features))
+            # Merge ground-truth with predictions
             y_true_and_pred = data.map(lambda x: x.label).zip(y_pred).collect()
             y_true = numpy.array([x[0] for x in y_true_and_pred])
             y_pred = numpy.array([x[1] for x in y_true_and_pred])
 
         elif ensemble_type == 'gradient-boosted-trees':
+            # Loads the model
             model = GradientBoostedTreesModel.load(spark_context, model_filename)
+            # Classifies the samples
             y_pred = model.predict(data.map(lambda x: x.features))
+            # Merge ground-truth with predictions
             y_true_and_pred = data.map(lambda x: x.label).zip(y_pred).collect()
             y_true = numpy.array([x[0] for x in y_true_and_pred])
             y_pred = numpy.array([x[1] for x in y_true_and_pred])
 
         elif ensemble_type == 'extra-trees':
+            # Loads the model
             with open(model_filename, 'rb') as f:
                 model = pickle.load(f)
                 f.close()
+            # Retrieves all the dataset in the RDD to a local list
             local_data = data.collect()
             X = numpy.array([item.features   for item in local_data])
             y_true = numpy.array([item.label for item in local_data])
             del local_data
+            # Classifies the samples
             y_pred = model.predict(X)
         else:
             raise Exception(f'{ensemble_type} is no a valid ensemble type')
 
-
+        # Save results in text and graphically represented confusion matrices
         filename_prefix = f'{ensemble_type}-classification-results-{num_trees}-{impurity}-{max_depth}'
         save_results(results_dir, filename_prefix, y_true, y_pred)
 
     if do_prediction:
         if ensemble_type == 'random-forest':
+            # Loads the model
             model = RandomForestModel.load(spark_context, model_filename)
 
         elif ensemble_type == 'gradient-boosted-trees':
+            # Loads the model
             model = GradientBoostedTreesModel.load(spark_context, model_filename)
 
         elif ensemble_type == 'extra-trees':
+            # Loads the model
             with open(model_filename, 'rb') as f:
                 model = pickle.load(f)
                 f.close()
