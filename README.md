@@ -23,7 +23,7 @@ of the Department of Computer Science [DSIC](https://www.dsic.upv.es)
 
 + [Lab practice 1](lab_practices/pract_1)
 
-+ Lab practice 2
++ [Lab practice 2](lab_practices/pract_2)
 
 + Lab practice 3
 
