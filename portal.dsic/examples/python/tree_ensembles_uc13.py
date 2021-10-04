@@ -90,7 +90,6 @@ if __name__ == "__main__":
     verbose = 0
     dataset_filename = 'data/uc13-train.csv'
     model_filename = None
-    base_dir = '.'
 
     spark_context = None
     num_partitions = 80
@@ -101,6 +100,7 @@ if __name__ == "__main__":
     do_training = False
     do_classification = False
     do_prediction = False
+    learning_rate = 0.1
     label_mapping = [i for i in range(10)]
                                                    
     for i in range(len(sys.argv)):
@@ -114,10 +114,13 @@ if __name__ == "__main__":
         elif sys.argv[i] == "--max-depth"     :         max_depth = int(sys.argv[i + 1])
         elif sys.argv[i] == "--max-bins"      :          max_bins = int(sys.argv[i + 1])
         elif sys.argv[i] == "--model"         :    model_filename = sys.argv[i + 1]
+        elif sys.argv[i] == "--learning-rate" :     learning_rate = float(sys.argv[i + 1])
         elif sys.argv[i] == "--train"         :       do_training = True
         elif sys.argv[i] == "--classify"      : do_classification = True
         elif sys.argv[i] == "--predict"       :     do_prediction = True
         elif sys.argv[i] == "--results-dir"   :       results_dir = sys.argv[i + 1]
+        elif sys.argv[i] == "--models-dir"    :        models_dir = sys.argv[i + 1]
+        elif sys.argv[i] == "--log-dir"       :           log_dir = sys.argv[i + 1]
         elif sys.argv[i] == "--reduce-labels":
             label_mapping[0] = 0
             label_mapping[1] = 1
@@ -131,7 +134,7 @@ if __name__ == "__main__":
             label_mapping[9] = 0
 
     if model_filename is None:
-        model_filename = f'{base_dir}/{models_dir}/{ensemble_type}-{num_trees}-{impurity}-{max_depth}'
+        model_filename = f'{models_dir}/{ensemble_type}-{num_trees}-{impurity}-{max_depth}'
 
     spark_context = SparkContext(appName = "RandomForest-dataset-UC13")
 
@@ -147,8 +150,8 @@ if __name__ == "__main__":
         parts = line.split(';')
         return LabeledPoint(label_mapping[int(parts[1])], numpy.array([float(x) for x in parts[2:]]))
 
-    #os.makedirs(base_dir + '/' + log_dir,    exist_ok = True)
-    #os.makedirs(base_dir + '/' + models_dir, exist_ok = True)
+    #os.makedirs(log_dir,    exist_ok = True)
+    #os.makedirs(models_dir, exist_ok = True)
 
     '''
         Load all the lines from a file (or files in a directory) into an RDD of text lines.
@@ -197,7 +200,7 @@ if __name__ == "__main__":
             model = GradientBoostedTrees.trainClassifier(data,
                                                         categoricalFeaturesInfo = {}, # nothing to use here
                                                         loss = 'logLoss',
-                                                        learningRate = 0.1,
+                                                        learningRate = learning_rate,
                                                         numIterations = num_iterations,
                                                         maxDepth = max_depth,
                                                         maxBins = max_bins)
@@ -213,7 +216,7 @@ if __name__ == "__main__":
             model = ExtraTreesClassifier(n_estimators = num_trees, criterion = impurity, max_depth = max_depth, n_jobs = -1, verbose = 1)
             model.fit(X, y)
             # Saves the model to local disk (in the master) using Pickle serialization for Python
-            os.makedirs(base_dir + '/' + models_dir, exist_ok = True)
+            os.makedirs(models_dir, exist_ok = True)
             with open(model_filename, 'wb') as f:
                 pickle.dump(model, f)
                 f.close()

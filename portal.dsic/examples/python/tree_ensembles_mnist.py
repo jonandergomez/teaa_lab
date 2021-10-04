@@ -66,11 +66,13 @@ if __name__ == "__main__":
         elif sys.argv[i] == "--impurity"      :          impurity = sys.argv[i + 1]
         elif sys.argv[i] == "--max-depth"     :         max_depth = int(sys.argv[i + 1])
         elif sys.argv[i] == "--max-bins"      :          max_bins = int(sys.argv[i + 1])
-        elif sys.argv[i] == "--learninng-rate":     learning_rate = float(sys.argv[i + 1])
+        elif sys.argv[i] == "--learning-rate" :     learning_rate = float(sys.argv[i + 1])
         elif sys.argv[i] == "--model"         :    model_filename = sys.argv[i + 1]
         elif sys.argv[i] == "--train"         :       do_training = True
         elif sys.argv[i] == "--classify"      : do_classification = True
         elif sys.argv[i] == "--results-dir"   :       results_dir = sys.argv[i + 1]
+        elif sys.argv[i] == "--models-dir"    :        models_dir = sys.argv[i + 1]
+        elif sys.argv[i] == "--log-dir"       :           log_dir = sys.argv[i + 1]
 
 
     if model_filename is None:
