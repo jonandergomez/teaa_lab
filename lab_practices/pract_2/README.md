@@ -73,7 +73,7 @@ Lab practice 2 is about two use cases:
     >
     >    `cd teaa/examples`
     >
-    >    `scripts/run-python.sh python/tree_ensembles_mnist.py --max-depth 10 --num-trees 200 --train --classify --results-dir ${HOME}/digits/results --models-dir /user/jon/digits/models --log-dir ${HOME}/digits/log --ensemble-type random-forest' `
+    >    `scripts/run-python.sh python/tree_ensembles_mnist.py --max-depth 10 --num-trees 200 --train --classify --results-dir ${HOME}/digits/results --models-dir /user/jon/digits/models --log-dir ${HOME}/digits/log --ensemble-type random-forest`
     >
 
     Let see an example of executing this instruction:
