@@ -9,8 +9,8 @@ case $(hostname) in
         ;;
 esac
 
-models_dir="models.digits"
-results_base_dir="results.digits"
+models_dir="models.digits.2"
+results_base_dir="results.digits.2"
 
 for q in $(ls ${models_dir}/gmm-*.txt | grep -v "0001" | cut -f2 -d'-' | cut -f1 -d'.')
 do

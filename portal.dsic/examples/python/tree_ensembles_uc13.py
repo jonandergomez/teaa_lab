@@ -121,13 +121,13 @@ if __name__ == "__main__":
         elif sys.argv[i] == "--reduce-labels":
             label_mapping[0] = 0
             label_mapping[1] = 1
-            label_mapping[2] = 2
+            label_mapping[2] = 1
             label_mapping[3] = 0
             label_mapping[4] = 0
             label_mapping[5] = 0
-            label_mapping[6] = 3
-            label_mapping[7] = 2
-            label_mapping[8] = 2
+            label_mapping[6] = 1
+            label_mapping[7] = 0
+            label_mapping[8] = 0
             label_mapping[9] = 0
 
     if model_filename is None:
@@ -278,6 +278,7 @@ if __name__ == "__main__":
         else:
             raise Exception(f'{ensemble_type} is no a valid ensemble type')
 
+        #
         y_true_and_pred = list()
         #
         sliding_window_length = 5 * 60 # 1800 seconds -> 30 minutes
@@ -290,14 +291,20 @@ if __name__ == "__main__":
         state = 'inter-ictal'
         
         old_patient = "non-existent-yet"
-        for line in sys.stdin:
-            y_pred = model.predict(csv_line_to_labeled_point(line).features)
+        #f = sys.stdin
+        f = os.popen(f'hdfs dfs -cat {dataset_filename}')
+        for line in f:
+            parts = line.split(';')
+            patient = parts[0]
+            label =  int(parts[1])
+            y_pred = model.predict(numpy.array([float(x) for x in parts[2:]]))
+            y_pred = int(y_pred)
             #
             if patient != old_patient:
                 # reset variables
                 # 
                 old_patient = patient
-                target_class_accumulators = numpy.zeros(conditional_probabilities.shape[0])
+                target_class_accumulators = numpy.zeros(len(numpy.unique(label_mapping)))
                 list_of_predictions = list()
                 list_of_alarms = list()
                 current_time = 0
@@ -305,10 +312,10 @@ if __name__ == "__main__":
                 for pred_label, pred_time in list_of_alarms:
                     y_true_and_pred.append((0, pred_label))
             #
-            list_of_predictions.append(label_probs)
-            target_class_accumulators += label_probs
+            list_of_predictions.append(y_pred)
+            target_class_accumulators[y_pred] += 1
             if len(list_of_predictions) > sliding_window_length:
-                target_class_accumulators -= list_of_predictions[0]
+                target_class_accumulators[list_of_predictions[0]] -= 1
                 del list_of_predictions[0]
             # 
             target_class_probs = target_class_accumulators / sum(target_class_accumulators)
@@ -327,14 +334,11 @@ if __name__ == "__main__":
                     state = 'ictal'
                     list_of_alarms = list()
                 #
-            elif label in [0, 2, 3, 4, 5]: # exclude post-ictal periods
+            else:
                 state = 'inter-ictal'
                 #
                 if current_time > 0 and current_time % sliding_window_step == 0:
-                    #if lower_threshold_for_target_class_2 <= target_class_probs[2] and \
-                    #   lower_threshold_for_target_class_1 <= target_class_probs[1] <= upper_threshold_for_target_class_1:
-                    if target_class_probs[6:].sum() > 0.40 or \
-                       target_class_probs[1:5].sum() > 0.40:
+                    if target_class_probs[1].sum() > 0.30:
                         list_of_alarms.append((1, current_time))
                     else:
                         list_of_alarms.append((0, current_time))

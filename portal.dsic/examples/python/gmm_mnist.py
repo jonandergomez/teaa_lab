@@ -38,9 +38,9 @@ if __name__ == "__main__":
     batch_size = 500
     do_compute_confusion_matrix = False
     do_classification = False
-    results_dir = 'results.digits.train'
-    models_dir = 'models.digits'
-    log_dir = 'log.digits'
+    results_dir = 'results.digits.2'
+    models_dir = 'models.digits.2'
+    log_dir = 'log.digits.2'
                                                    
     for i in range(len(sys.argv)):
         if sys.argv[i] == "--covar":
@@ -78,7 +78,8 @@ if __name__ == "__main__":
     X_train, X_test = X[:60000], X[60000:]
     y_train, y_test = y[:60000], y[60000:]
     #
-    pca = PCA(n_components = 0.95)
+    #pca = PCA(n_components = 0.95)
+    pca = PCA(n_components = 30)
     pca.fit(X_train)
     X_train = pca.transform(X_train)
     X_test = pca.transform(X_test)
@@ -143,13 +144,13 @@ if __name__ == "__main__":
         y_true_and_pred = data.collect()
         y_true = numpy.array([x[0] for x in y_true_and_pred])
         y_pred = numpy.array([x[1] for x in y_true_and_pred])
-        save_results('results.digits.train', filename_prefix, y_true, y_pred)
+        save_results(f'{results_dir}.train', filename_prefix, y_true, y_pred)
         #
         data = rdd_test.map(classify_sample)
         y_true_and_pred = data.collect()
         y_true = numpy.array([x[0] for x in y_true_and_pred])
         y_pred = numpy.array([x[1] for x in y_true_and_pred])
-        save_results('results.digits.test', filename_prefix, y_true, y_pred)
+        save_results(f'{results_dir}.test', filename_prefix, y_true, y_pred)
 
     else:
         ####################################################################

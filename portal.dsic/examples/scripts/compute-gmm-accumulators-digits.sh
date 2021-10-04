@@ -1,6 +1,6 @@
 #!/bin/bash
 
-models_dir="models.digits"
+models_dir="models.digits.2"
 
 for q in $(ls ${models_dir}/gmm-*.txt | grep -v "0001" | cut -f2 -d'-' | cut -f1 -d'.')
 do

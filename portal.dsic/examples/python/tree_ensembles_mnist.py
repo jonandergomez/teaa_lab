@@ -49,12 +49,13 @@ if __name__ == "__main__":
 
     spark_context = None
     num_partitions = 80
-    models_dir = 'models.digits'
-    log_dir = 'log.digits'
-    results_dir = 'results.digits.train'
+    models_dir = 'models.digits.2'
+    log_dir = 'log.digits.2'
+    results_dir = 'results.digits.2'
     do_training = False
     do_classification = False
     model_filename = None
+    learning_rate = 0.1
                                                    
     for i in range(len(sys.argv)):
         if   sys.argv[i] == "--verbosity"     :           verbose = int(sys.argv[i + 1])
@@ -65,6 +66,7 @@ if __name__ == "__main__":
         elif sys.argv[i] == "--impurity"      :          impurity = sys.argv[i + 1]
         elif sys.argv[i] == "--max-depth"     :         max_depth = int(sys.argv[i + 1])
         elif sys.argv[i] == "--max-bins"      :          max_bins = int(sys.argv[i + 1])
+        elif sys.argv[i] == "--learninng-rate":     learning_rate = float(sys.argv[i + 1])
         elif sys.argv[i] == "--model"         :    model_filename = sys.argv[i + 1]
         elif sys.argv[i] == "--train"         :       do_training = True
         elif sys.argv[i] == "--classify"      : do_classification = True
@@ -82,7 +84,8 @@ if __name__ == "__main__":
     X_train, X_test = X[:60000], X[60000:]
     y_train, y_test = y[:60000], y[60000:]
     #
-    pca = PCA(n_components = 0.95)
+    #pca = PCA(n_components = 0.95)
+    pca = PCA(n_components = 30)
     pca.fit(X_train)
     X_train = pca.transform(X_train)
     X_test = pca.transform(X_test)
@@ -120,7 +123,7 @@ if __name__ == "__main__":
             model = GradientBoostedTrees.trainClassifier(rdd_train,
                                                         categoricalFeaturesInfo = {}, # nothing to use here
                                                         loss = 'logLoss',
-                                                        learningRate = 0.1,
+                                                        learningRate = learning_rate,
                                                         numIterations = num_iterations,
                                                         maxDepth = max_depth,
                                                         maxBins = max_bins)
@@ -174,7 +177,7 @@ if __name__ == "__main__":
 
         # Save results in text and graphically represented confusion matrices
         filename_prefix = f'{ensemble_type}-classification-results-{num_trees}-{impurity}-{max_depth}'
-        save_results('results.digits.train', filename_prefix, y_train_true, y_train_pred)
-        save_results('results.digits.test',  filename_prefix, y_test_true, y_test_pred)
+        save_results(f'{results_dir}.train', filename_prefix, y_train_true, y_train_pred)
+        save_results(f'{results_dir}.test',  filename_prefix, y_test_true, y_test_pred)
     #
     spark_context.stop()
