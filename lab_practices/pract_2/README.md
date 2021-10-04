@@ -101,6 +101,7 @@ Lab practice 2 is about two use cases:
 
     >
     > `cd`
+    > 
     > `cd digits`
     >
     > `viewnior results.train/random-forest-classification-results-200-gini-10.png`
@@ -116,9 +117,13 @@ Lab practice 2 is about two use cases:
 
     >
     >    `cd`
+    >
     >    `mkdir -p uc13/results.train`
+    >
     >    `mkdir -p uc13/results.test`
+    >
     >    `hdfs dfs -mkdir -p uc13/models`
+    >
     >    `cd teaa/examples`
     >
     >    `scripts/run-python.sh python/tree_ensembles_uc13.py --max-depth 5 --num-trees 100 --train --classify --results-dir ${HOME}/uc13/results.train --models-dir /user/jon/uc13/models --log-dir ${HOME}/uc13/log --ensemble-type random-forest  --dataset /user/ubuntu/data/uc13-pca-train.csv`
@@ -132,12 +137,17 @@ Lab practice 2 is about two use cases:
     > `hdfs dfs -ls uc13/models`
     >
     > `cd`
+    >
     > `cd uc13`
     >
     > `cat results.train/random-forest-classification-results-100-gini-5.txt`
+    >
     > `cat results.test/random-forest-classification-results-100-gini-5.txt`
+    >
     > `viewnior results.train/random-forest-classification-results-100-gini-5.png`
+    >
     > `viewnior results.test/random-forest-classification-results-100-gini-5.png`
+    >
 
 11. Do the same using `extra-trees` instead of `random-forest`
 
