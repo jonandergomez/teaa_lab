@@ -13,7 +13,7 @@ Lab practice 2 is about two use cases:
 
 1. Accessing to the cluster from a computer in the UPVNET domain or via Virtual Private Network (VPN) previously configured
 
-    >    `ssh -YC jon@teaa-master-cluster.dsic.upv.es`
+    >    `ssh -YC jon@teaa-master-cluster.dsicv.upv.es`
 
 2. Interaction with the Hadoop Distributed File System (HDFS)
 
