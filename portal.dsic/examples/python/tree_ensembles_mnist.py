@@ -56,6 +56,7 @@ if __name__ == "__main__":
     do_classification = False
     model_filename = None
     learning_rate = 0.1
+    pca_components = 30
                                                    
     for i in range(len(sys.argv)):
         if   sys.argv[i] == "--verbosity"     :           verbose = int(sys.argv[i + 1])
@@ -73,6 +74,7 @@ if __name__ == "__main__":
         elif sys.argv[i] == "--results-dir"   :       results_dir = sys.argv[i + 1]
         elif sys.argv[i] == "--models-dir"    :        models_dir = sys.argv[i + 1]
         elif sys.argv[i] == "--log-dir"       :           log_dir = sys.argv[i + 1]
+        elif sys.argv[i] == "--pca"           :    pca_components = float(sys.argv[i + 1])
 
 
     if model_filename is None:
@@ -87,7 +89,8 @@ if __name__ == "__main__":
     y_train, y_test = y[:60000], y[60000:]
     #
     #pca = PCA(n_components = 0.95)
-    pca = PCA(n_components = 30)
+    if pca_components > 1: pca_components = int(pca_components)
+    pca = PCA(n_components = pca_components)
     pca.fit(X_train)
     X_train = pca.transform(X_train)
     X_test = pca.transform(X_test)
@@ -101,8 +104,35 @@ if __name__ == "__main__":
         For classification tasks, label should be an integer, for regression tasks label
         should be a floating-point number.
     '''
-    rdd_train = spark_context.parallelize([LabeledPoint(y, x.copy()) for x, y in zip(X_train, y_train)], numSlices = num_partitions)
-    rdd_test  = spark_context.parallelize([LabeledPoint(y, x.copy()) for x, y in zip(X_test, y_test)], numSlices = num_partitions)
+    label_mapping = [i for i in range(10)]
+    label_unmapping = dict()
+    if ensemble_type == 'gradient-boosted-trees':
+        label_mapping[1] = 0
+        label_mapping[7] = 100
+        label_mapping[4] = 200
+        label_mapping[5] = 300
+        label_mapping[3] = 400
+        label_mapping[2] = 500
+        label_mapping[8] = 600
+        label_mapping[6] = 700
+        label_mapping[9] = 800
+        label_mapping[0] = 900
+
+    for i in range(len(label_mapping)):
+        label_unmapping[label_mapping[i]] = i
+
+    def remap_label(k):
+        return label_mapping[k]
+
+    def undo_remap_label(k):
+        if label_mapping[0] == 0:
+            return int(k)
+        else:
+            k = int(k / 100 + 0.5) * 100
+            return label_unmapping[max(0, min(900, k))]
+            
+    rdd_train = spark_context.parallelize([LabeledPoint(remap_label(y), x.copy()) for x, y in zip(X_train, y_train)], numSlices = num_partitions)
+    rdd_test  = spark_context.parallelize([LabeledPoint(remap_label(y), x.copy()) for x, y in zip(X_test, y_test)], numSlices = num_partitions)
 
     num_samples = rdd_train.count()
 
@@ -122,9 +152,9 @@ if __name__ == "__main__":
             model.save(spark_context, model_filename)
 
         elif ensemble_type == 'gradient-boosted-trees':
-            model = GradientBoostedTrees.trainClassifier(rdd_train,
+            #model = GradientBoostedTrees.trainClassifier(rdd_train, loss = 'logLoss',
+            model = GradientBoostedTrees.trainRegressor(rdd_train, loss = 'leastSquaresError',
                                                         categoricalFeaturesInfo = {}, # nothing to use here
-                                                        loss = 'logLoss',
                                                         learningRate = learning_rate,
                                                         numIterations = num_iterations,
                                                         maxDepth = max_depth,
@@ -153,14 +183,14 @@ if __name__ == "__main__":
                 model = GradientBoostedTreesModel.load(spark_context, model_filename)
             #
             # Classifies the samples
-            y_train_pred = model.predict(rdd_train.map(lambda x: x.features))
-            y_test_pred  = model.predict(rdd_test.map(lambda x: x.features))
+            y_train_pred = model.predict(rdd_train.map(lambda x: x.features)).map(undo_remap_label)
+            y_test_pred  = model.predict(rdd_test.map(lambda x: x.features)).map(undo_remap_label)
             # Merge ground-truth with predictions
-            y_true_and_pred = rdd_train.map(lambda x: x.label).zip(y_train_pred).collect()
+            y_true_and_pred = rdd_train.map(lambda x: undo_remap_label(x.label)).zip(y_train_pred).collect()
             y_train_true = numpy.array([x[0] for x in y_true_and_pred])
             y_train_pred = numpy.array([x[1] for x in y_true_and_pred])
             #
-            y_true_and_pred = rdd_test.map(lambda x: x.label).zip(y_test_pred).collect()
+            y_true_and_pred = rdd_test.map(lambda x: undo_remap_label(x.label)).zip(y_test_pred).collect()
             y_test_true = numpy.array([x[0] for x in y_true_and_pred])
             y_test_pred = numpy.array([x[1] for x in y_true_and_pred])
 
