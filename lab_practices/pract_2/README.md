@@ -112,41 +112,60 @@ Lab practice 2 is about two use cases:
 9. Do similar steps for the use case based on the
    [CHB-MIT Scalp EEG Database](https://physionet.org/lightwave/?db=chbmit/1.0.0)
 
-   In this case the code available is
-   [tree_ensembles_uc13.py](../../portal.dsic/examples/python/tree_ensembles_uc13.py)
+    In this case the code available is
+    [tree_ensembles_uc13.py](../../portal.dsic/examples/python/tree_ensembles_uc13.py)
 
-    >
-    >    `cd`
-    >
-    >    `mkdir -p uc13/results.train`
-    >
-    >    `mkdir -p uc13/results.test`
-    >
-    >    `hdfs dfs -mkdir -p uc13/models`
     >
     >    `cd teaa/examples`
     >
-    >    `scripts/run-python.sh python/tree_ensembles_uc13.py --max-depth 5 --num-trees 100 --train --classify --results-dir ${HOME}/uc13/results.train --models-dir /user/jon/uc13/models --log-dir ${HOME}/uc13/log --ensemble-type random-forest  --dataset /user/ubuntu/data/uc13-pca-train.csv`
+    >    `scripts/run-python.sh python/tree_ensembles_uc13.py --max-depth 5 --num-trees 100 --train --classify --ensemble-type random-forest  --dataset /user/ubuntu/data/uc13-pca-train.csv`
     >
-    >    `scripts/run-python.sh python/tree_ensembles_uc13.py --max-depth 5 --num-trees 100 --classify --results-dir ${HOME}/uc13/results.test --model uc13/models/random-forest-100-gini-5 --ensemble-type random-forest  --dataset /user/ubuntu/data/uc13-pca-test.csv`
+    >    `scripts/run-python.sh python/tree_ensembles_uc13.py --max-depth 5 --num-trees 100 --classify --ensemble-type random-forest  --dataset /user/ubuntu/data/uc13-pca-test.csv`
+    >
+
+    An alternative to work with the data of each patient individually and with a different data preprocessing is 
+    [tree_ensembles_uc13_21x20.py](../../portal.dsic/examples/python/tree_ensembles_uc13_21x20.py)
+
+    To see the files with data run:
+
+    >
+    > `hdfs dfs -ls -h data/uc13`
+    >
+
+    Then for training and evaluating you can run:
+
+    >
+    >    `cd teaa/examples`
+    >
+    >    `scripts/run-python.sh python/tree_ensembles_uc13_21x20.py --patient chb03 --max-depth 5 --num-trees 100 --train --classify --ensemble-type random-forest  --dataset /user/ubuntu/data/uc13-pca-train.csv`
+    >
+    >    `scripts/run-python.sh python/tree_ensembles_uc13_21x20.py --patient chb03 --max-depth 5 --num-trees 100 --classify --ensemble-type random-forest  --dataset /user/ubuntu/data/uc13-pca-test.csv`
     >
 
 10. See where the models and the results have been stored:
 
     >
-    > `hdfs dfs -ls uc13/models`
+    > `hdfs dfs -ls uc13.1/models.ensembles`
+    >
+    > `hdfs dfs -ls uc13-21x20/chb03/models.ensembles`
     >
     > `cd`
     >
-    > `cd uc13`
+    > `cat uc13.1/results.ensembles-train/random-forest-classification-results-100-gini-5.txt`
     >
-    > `cat results.train/random-forest-classification-results-100-gini-5.txt`
+    > `cat uc13.1/results.ensembles-test/random-forest-classification-results-100-gini-5.txt`
     >
-    > `cat results.test/random-forest-classification-results-100-gini-5.txt`
+    > `viewnior uc13.1/results.ensembles-train/random-forest-classification-results-100-gini-5.png`
     >
-    > `viewnior results.train/random-forest-classification-results-100-gini-5.png`
+    > `viewnior uc13.1/results.ensembles-test/random-forest-classification-results-100-gini-5.png`
     >
-    > `viewnior results.test/random-forest-classification-results-100-gini-5.png`
+    > `cat uc13-21x20/chb03/results.ensembles-train/random-forest-classification-results-100-gini-5.txt`
+    >
+    > `cat uc13-21x20/chb03/results.ensembles-test/random-forest-classification-results-100-gini-5.txt`
+    >
+    > `viewnior uc13-21x20/chb03/results.ensembles-train/random-forest-classification-results-100-gini-5.png`
+    >
+    > `viewnior uc13-21x20/chb03/results.ensembles-test/random-forest-classification-results-100-gini-5.png`
     >
 
 11. Do the same using `extra-trees` instead of `random-forest`
@@ -154,3 +173,7 @@ Lab practice 2 is about two use cases:
     In this case the `models-dir` option should refer to a directory in the local filesystem instead of the HDFS
     because the _Extra-Trees_ do not work in Apache Spark, the only work in local.
     But do not worry, _Extra-Trees_  are fast.
+
+12. Do the same using `grradient-boosted-trees` instead of `random-forest` or `extra-trees` 
+
+    Be careful, `gradient-boosted-trees` are much slower (i.e., computationally expensive) than previous ones.

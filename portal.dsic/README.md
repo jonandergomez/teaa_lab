@@ -30,9 +30,9 @@ From a UNIX terminal once connected to a Linux virtual machine of PoliLabs,
 students can connect by using their username and password to the master of
 the cluster as follows:
 
->
+>   
 > `ssh  <username>@teaa-master-cluster.dsicv.upv.es`
->
+>   
 
 ******
 #

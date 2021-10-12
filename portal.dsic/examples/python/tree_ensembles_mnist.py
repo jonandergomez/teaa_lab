@@ -29,6 +29,7 @@ from pyspark.mllib.regression import LabeledPoint
 from pyspark import SparkContext
 
 from sklearn.decomposition import PCA
+from sklearn.preprocessing import PolynomialFeatures
 from load_mnist import load_mnist
 from utils_for_results import save_results
 
@@ -57,6 +58,7 @@ if __name__ == "__main__":
     model_filename = None
     learning_rate = 0.1
     pca_components = 30
+    pf_degree = 1
                                                    
     for i in range(len(sys.argv)):
         if   sys.argv[i] == "--verbosity"     :           verbose = int(sys.argv[i + 1])
@@ -75,6 +77,7 @@ if __name__ == "__main__":
         elif sys.argv[i] == "--models-dir"    :        models_dir = sys.argv[i + 1]
         elif sys.argv[i] == "--log-dir"       :           log_dir = sys.argv[i + 1]
         elif sys.argv[i] == "--pca"           :    pca_components = float(sys.argv[i + 1])
+        elif sys.argv[i] == "--pf-degree"     :         pf_degree = int(sys.argv[i + 1])
 
 
     if model_filename is None:
@@ -94,6 +97,11 @@ if __name__ == "__main__":
     pca.fit(X_train)
     X_train = pca.transform(X_train)
     X_test = pca.transform(X_test)
+    pca_components = X_train.shape[1]
+    if pf_degree > 1:
+        pf = PolynomialFeatures(degree = pf_degree, interaction_only = True, include_bias = False)
+        X_train = pf.fit_transform(X_train)
+        X_test = pf.fit_transform(X_test)
     print(X_train.shape, y_train.shape)
     print(X_test.shape, y_test.shape)
 
@@ -208,7 +216,7 @@ if __name__ == "__main__":
             raise Exception(f'{ensemble_type} is no a valid ensemble type')
 
         # Save results in text and graphically represented confusion matrices
-        filename_prefix = f'{ensemble_type}-classification-results-{num_trees}-{impurity}-{max_depth}'
+        filename_prefix = f'{ensemble_type}-classification-results-{num_trees}-{impurity}-{max_depth}-{pca_components}'
         save_results(f'{results_dir}.train', filename_prefix, y_train_true, y_train_pred)
         save_results(f'{results_dir}.test',  filename_prefix, y_test_true, y_test_pred)
     #

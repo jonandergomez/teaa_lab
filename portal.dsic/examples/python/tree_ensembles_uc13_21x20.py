@@ -44,7 +44,7 @@ if __name__ == "__main__":
 
     home_dir = os.getenv('HOME')
     if home_dir is None:
-        raise Exception("Impossible to continue without a reference to the user's home directory")
+        raise Exception("Impossible to continue without the user's home directory")
 
     f = os.popen('hostname')
     hostname = f.readline().strip()
@@ -57,15 +57,12 @@ if __name__ == "__main__":
     ensemble_type = 'random-forest'
 
     verbose = 0
-    dataset_filename = f'{hdfs_home_dir}/data/uc13-pca-train.csv'
     model_filename = None
 
     spark_context = None
     num_partitions = 80
     num_channels = 21
-    results_dir = f'{home_dir}/uc13.1/results.ensembles'
-    models_dir = 'uc13.1/models.ensembles'
-    log_dir = f'{home_dir}/uc13.1/log.ensembles'
+    global_patient = 'chb01'
     do_training = False
     do_classification = False
     do_prediction = False
@@ -74,8 +71,18 @@ if __name__ == "__main__":
     subset = 'train'
                                                    
     for i in range(len(sys.argv)):
-        if   sys.argv[i] == "--dataset"       :  dataset_filename = sys.argv[i + 1]
+        #if   sys.argv[i] == "--dataset"       :  dataset_filename = sys.argv[i + 1]
+        #elif sys.argv[i] == "--results-dir"   :       results_dir = sys.argv[i + 1]
+        #elif sys.argv[i] == "--models-dir"    :        models_dir = sys.argv[i + 1]
+        #elif sys.argv[i] == "--log-dir"       :           log_dir = sys.argv[i + 1]
+        if sys.argv[i] in ['--dataset', '--results-dir', '--models-dir', '--log-dir']:
+            print()
+            print('Option no longer accepted, for this code use --patient --subset')
+            print()
+            sys.exit(0)
+
         elif sys.argv[i] == "--subset"        :            subset = sys.argv[i + 1]
+        elif sys.argv[i] == "--patient"       :    global_patient = sys.argv[i + 1]
         elif sys.argv[i] == "--verbosity"     :           verbose = int(sys.argv[i + 1])
         elif sys.argv[i] == "--num-partitions":    num_partitions = int(sys.argv[i + 1])
         elif sys.argv[i] == "--ensemble-type" :     ensemble_type = sys.argv[i + 1]
@@ -89,9 +96,6 @@ if __name__ == "__main__":
         elif sys.argv[i] == "--train"         :       do_training = True
         elif sys.argv[i] == "--classify"      : do_classification = True
         elif sys.argv[i] == "--predict"       :     do_prediction = True
-        elif sys.argv[i] == "--results-dir"   :       results_dir = sys.argv[i + 1]
-        elif sys.argv[i] == "--models-dir"    :        models_dir = sys.argv[i + 1]
-        elif sys.argv[i] == "--log-dir"       :           log_dir = sys.argv[i + 1]
         elif sys.argv[i] == "--reduce-labels":
             label_mapping[0] = 0
             label_mapping[1] = 1
@@ -104,11 +108,13 @@ if __name__ == "__main__":
             label_mapping[8] = 0
             label_mapping[9] = 0
 
+    results_dir = f'{home_dir}/uc13-21x20/{global_patient}/results.ensembles'
+    models_dir = f'uc13-21x20/{global_patient}/models.ensembles'
+    log_dir = f'{home_dir}/uc13-21x20/{global_patient}/log.ensembles'
+    dataset_filename = f'{hdfs_home_dir}/data/uc13/uc13-{global_patient}-21x20-{subset}.csv'
+
     if model_filename is None:
         model_filename = f'{models_dir}/{ensemble_type}-{num_trees}-{impurity}-{max_depth}'
-
-    if dataset_filename[0] != '/':
-        dataset_filename = f'{hdfs_home_dir}/{dataset_filename}'
 
     spark_context = SparkContext(appName = "Ensemble-of-Trees-dataset-UC13")
 
@@ -123,6 +129,12 @@ if __name__ == "__main__":
     def csv_line_to_labeled_point(line):
         parts = line.split(';')
         return LabeledPoint(label_mapping[int(parts[1])], numpy.array([float(x) for x in parts[2:]]))
+
+    def csv_line_to_labeled_points(line):
+        parts = line.split(';')
+        label = label_mapping[int(parts[1])]
+        sample = numpy.array([float(x) for x in parts[2:]]).reshape(21, -1)
+        return [LabeledPoint(label, x) for x in sample]
 
     os.makedirs(log_dir,    exist_ok = True)
     #os.makedirs(models_dir, exist_ok = True)
@@ -150,17 +162,18 @@ if __name__ == "__main__":
     '''
     # RDD object conversion
     data = csv_lines.map(csv_line_to_labeled_point)
+    samples = csv_lines.flatMap(csv_line_to_labeled_points)
     # Retrives basic info from the RDD object
-    num_samples = data.count()
-    x = data.take(1)
+    num_samples = samples.count()
+    x = samples.take(1)
     dim = x[0].features.shape[0]
 
-    print(f'loaded {num_samples} {dim}-dimensional samples into {data.getNumPartitions()} partitions')
+    print(f'loaded {num_samples} {dim}-dimensional samples into {samples.getNumPartitions()} partitions')
 
 
     if do_training:
         if ensemble_type == 'random-forest':
-            model = RandomForest.trainClassifier(data,
+            model = RandomForest.trainClassifier(samples,
                                                 numClasses = len(numpy.unique(label_mapping)),
                                                 categoricalFeaturesInfo = {}, # nothing to use here
                                                 numTrees = num_trees,
@@ -171,7 +184,7 @@ if __name__ == "__main__":
             model.save(spark_context, model_filename)
 
         elif ensemble_type == 'gradient-boosted-trees':
-            model = GradientBoostedTrees.trainClassifier(data,
+            model = GradientBoostedTrees.trainClassifier(samples,
                                                         categoricalFeaturesInfo = {}, # nothing to use here
                                                         loss = 'logLoss',
                                                         learningRate = learning_rate,
@@ -182,7 +195,7 @@ if __name__ == "__main__":
 
         elif ensemble_type == 'extra-trees':
             # Retrieves all the dataset in the RDD to a local list
-            local_data = data.collect()
+            local_data = samples.collect()
             X = numpy.array([item.features for item in local_data]) # get features
             y = numpy.array([item.label    for item in local_data]) # get labels
             del local_data # free memory, just in case
@@ -199,21 +212,21 @@ if __name__ == "__main__":
 
             
     if do_classification:
-        if ensemble_type == 'random-forest':
+        if ensemble_type in ['random-forest', 'gradient-boosted-trees']:
             # Loads the model
-            model = RandomForestModel.load(spark_context, model_filename)
+            if ensemble_type == 'random-forest':
+                model = RandomForestModel.load(spark_context, model_filename)
+            else:
+                model = GradientBoostedTreesModel.load(spark_context, model_filename)
+            #
             # Classifies the samples
-            y_pred = model.predict(data.map(lambda x: x.features))
-            # Merge ground-truth with predictions
-            y_true_and_pred = data.map(lambda x: x.label).zip(y_pred).collect()
-            y_true = numpy.array([x[0] for x in y_true_and_pred])
-            y_pred = numpy.array([x[1] for x in y_true_and_pred])
-
-        elif ensemble_type == 'gradient-boosted-trees':
-            # Loads the model
-            model = GradientBoostedTreesModel.load(spark_context, model_filename)
-            # Classifies the samples
-            y_pred = model.predict(data.map(lambda x: x.features))
+            y_pred = model.predict(data.map(lambda x: x.features.reshape(num_channels, -1)[0])).map(lambda p: numpy.eye(10)[int(p)])
+            for ch in range(1, num_channels):
+                pred = model.predict(data.map(lambda x: x.features.reshape(num_channels, -1)[ch])).map(lambda p: numpy.eye(10)[int(p)])
+                y_pred = y_pred.zip(pred).map(lambda x: x[0] + x[1])
+            #
+            y_pred = y_pred.map(lambda x: x.argmax())
+            # 
             # Merge ground-truth with predictions
             y_true_and_pred = data.map(lambda x: x.label).zip(y_pred).collect()
             y_true = numpy.array([x[0] for x in y_true_and_pred])
@@ -230,7 +243,10 @@ if __name__ == "__main__":
             y_true = numpy.array([item.label for item in local_data])
             del local_data
             # Classifies the samples
-            y_pred = model.predict(X)
+            y_pred = model.predict(X.reshape(-1, 20)).astype(int)
+            print(sum(y_pred == 0), sum(y_pred == 1))
+            y_pred = numpy.eye(10)[y_pred]
+            y_pred = y_pred.reshape(-1, num_channels, 10).sum(axis = 1).argmax(axis = 1)
         else:
             raise Exception(f'{ensemble_type} is no a valid ensemble type')
 
