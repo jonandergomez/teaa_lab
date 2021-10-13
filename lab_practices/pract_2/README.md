@@ -174,6 +174,6 @@ Lab practice 2 is about two use cases:
     because the _Extra-Trees_ do not work in Apache Spark, the only work in local.
     But do not worry, _Extra-Trees_  are fast.
 
-12. Do the same using `grradient-boosted-trees` instead of `random-forest` or `extra-trees` 
+12. Do the same using `gradient-boosted-trees` instead of `random-forest` or `extra-trees` 
 
     Be careful, `gradient-boosted-trees` are much slower (i.e., computationally expensive) than previous ones.
