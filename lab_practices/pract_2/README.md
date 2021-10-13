@@ -137,9 +137,9 @@ Lab practice 2 is about two use cases:
     >
     >    `cd teaa/examples`
     >
-    >    `scripts/run-python.sh python/tree_ensembles_uc13_21x20.py --patient chb03 --max-depth 5 --num-trees 100 --train --classify --ensemble-type random-forest  
+    >    `scripts/run-python.sh python/tree_ensembles_uc13_21x20.py --patient chb03 --max-depth 5 --num-trees 100 --train --classify --ensemble-type random-forest`
     >
-    >    `scripts/run-python.sh python/tree_ensembles_uc13_21x20.py --patient chb03 --max-depth 5 --num-trees 100 --classify --ensemble-type random-forest  
+    >    `scripts/run-python.sh python/tree_ensembles_uc13_21x20.py --patient chb03 --max-depth 5 --num-trees 100 --classify --ensemble-type random-forest`
     >
 
 10. See where the models and the results have been stored:
