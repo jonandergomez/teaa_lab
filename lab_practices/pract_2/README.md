@@ -129,7 +129,7 @@ Lab practice 2 is about two use cases:
     To see the files with data run:
 
     >
-    > `hdfs dfs -ls -h data/uc13`
+    > `hdfs dfs -ls -h /user/ubuntu/data/uc13`
     >
 
     Then for training and evaluating you can run:
@@ -137,9 +137,9 @@ Lab practice 2 is about two use cases:
     >
     >    `cd teaa/examples`
     >
-    >    `scripts/run-python.sh python/tree_ensembles_uc13_21x20.py --patient chb03 --max-depth 5 --num-trees 100 --train --classify --ensemble-type random-forest  --dataset /user/ubuntu/data/uc13-pca-train.csv`
+    >    `scripts/run-python.sh python/tree_ensembles_uc13_21x20.py --patient chb03 --max-depth 5 --num-trees 100 --train --classify --ensemble-type random-forest  
     >
-    >    `scripts/run-python.sh python/tree_ensembles_uc13_21x20.py --patient chb03 --max-depth 5 --num-trees 100 --classify --ensemble-type random-forest  --dataset /user/ubuntu/data/uc13-pca-test.csv`
+    >    `scripts/run-python.sh python/tree_ensembles_uc13_21x20.py --patient chb03 --max-depth 5 --num-trees 100 --classify --ensemble-type random-forest  
     >
 
 10. See where the models and the results have been stored:
