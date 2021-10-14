@@ -43,7 +43,7 @@ class KernelClassifier:
                                  # current implementation of MyKernel.py doesn't allow a
                                  # different kernel type.
     # ------------------------------------------------------------------------------
-    def __del__(self):
+    def unpersist(self):
         for label, rdd in self.samples.items():
             rdd.unpersist()
 

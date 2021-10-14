@@ -109,6 +109,8 @@ if __name__ == "__main__":
     y_test_pred  = model.predict(X_test)
     y_test_pred = numpy.array(y_test_pred)
 
+    model.unpersist() # because subsets of samples per target class are persisted RDD
+
     # Save results in text and graphically represented confusion matrices
     filename_prefix = f'kde-classification-results-pca-{pca_components}-bd-%.3f' % band_width
     save_results(f'{results_dir}.train', filename_prefix, y_train, y_train_pred)

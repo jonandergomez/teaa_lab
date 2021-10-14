@@ -10,6 +10,8 @@
 
 import os
 import sys
+import time
+import math
 import numpy
 import pickle
 
@@ -25,6 +27,7 @@ from sklearn.decomposition import PCA
 from sklearn.preprocessing import PolynomialFeatures
 from load_mnist import load_mnist
 from utils_for_results import save_results
+from machine_learning import KMeans
 
 
 if __name__ == "__main__":
@@ -49,11 +52,17 @@ if __name__ == "__main__":
     pca_components = 30
     pf_degree = 1
     K = 7
+    use_kmeans = False
+    codebook_size = 200
+    use_probs = False
                                                    
     for i in range(len(sys.argv)):
         if   sys.argv[i] == "--verbosity"     :           verbose = int(sys.argv[i + 1])
         elif sys.argv[i] == "--num-partitions":    num_partitions = int(sys.argv[i + 1])
-        elif sys.argv[i] == "--band-width"    :        band_width = float(sys.argv[i + 1])
+        elif sys.argv[i] == "--k"             :                 K = int(sys.argv[i + 1])
+        elif sys.argv[i] == "--codebook-size" :     codebook_size = int(sys.argv[i + 1])
+        elif sys.argv[i] == "--use-kmeans"    :        use_kmeans = True
+        elif sys.argv[i] == "--use-probs"     :         use_probs = True
         elif sys.argv[i] == "--model"         :    model_filename = sys.argv[i + 1]
         elif sys.argv[i] == "--train"         :       do_training = True
         elif sys.argv[i] == "--classify"      : do_classification = True
@@ -85,7 +94,21 @@ if __name__ == "__main__":
     print(X_train.shape, y_train.shape)
     print(X_test.shape, y_test.shape)
 
-    rdd_train = spark_context.parallelize([(y, x.copy()) for x, y in zip(X_train, y_train)], numSlices = num_partitions)
+    if use_kmeans:
+        #############################################################################################################################
+        codebooks = list()
+        starting_time = time.time()
+        for k in range(10):
+            kmodel = KMeans(n_clusters = 200, verbosity = 1, modality = 'Lloyd', init = 'KMeans++')
+            kmodel.epsilon = 1.0e-8
+            kmodel.fit(X_train[y_train == k])
+            for i in range(kmodel.n_clusters):
+                codebooks.append((k, kmodel.cluster_centers_[i].copy()))
+        print('processing time lapse for', kmodel.n_clusters, 'clusters per class', time.time() - starting_time, 'seconds')
+        rdd_train = spark_context.parallelize(codebooks, numSlices = num_partitions)
+        #############################################################################################################################
+    else:
+        rdd_train = spark_context.parallelize([(y, x.copy()) for x, y in zip(X_train, y_train)], numSlices = num_partitions)
     rdd_test  = spark_context.parallelize([(y, x.copy()) for x, y in zip(X_test,  y_test)],  numSlices = num_partitions)
 
     num_samples = rdd_train.count()
@@ -150,17 +173,21 @@ if __name__ == "__main__":
         y = [0] * len(labels)
         for k in knn: y[k[0]] += 1
         y = numpy.array(y)
-        y = y / (1.0e-5 + y.sum())
+        return y / (1.0e-5 + y.sum())
         
     # Classifies the samples from the training subset
     knn = rdd_train.map(lambda x: compute_distances_for_numpy(x, X_train)).reduce(natural_merge)
-    y_train_pred = [get_prediction(y) for y in knn]
-    y_train_pred = numpy.array(y_train_pred)
+    if use_probs:
+        y_train_pred = numpy.array([get_probs(y) for y in knn]).argmax(axis = 1)
+    else:
+        y_train_pred = numpy.array([get_prediction(y) for y in knn])
 
     # Classifies the samples from the testing subset
     knn = rdd_train.map(lambda x: compute_distances_for_numpy(x, X_test)).reduce(natural_merge)
-    y_test_pred = [get_prediction(y) for y in knn]
-    y_test_pred = numpy.array(y_test_pred)
+    if use_probs:
+        y_test_pred = numpy.array([get_probs(y) for y in knn]).argmax(axis = 1)
+    else:
+        y_test_pred = numpy.array([get_prediction(y) for y in knn])
 
     # Save results in text and graphically represented confusion matrices
     filename_prefix = f'knn-classification-results-pca-{pca_components}-k-%d' % K
