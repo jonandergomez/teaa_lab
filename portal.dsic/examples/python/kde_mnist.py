@@ -88,6 +88,16 @@ if __name__ == "__main__":
     print(X_train.shape, y_train.shape)
     print(X_test.shape, y_test.shape)
 
+    '''
+    from sklearn.utils import shuffle
+    X_train, y_train = shuffle(X_train, y_train)
+    X_test, y_test = shuffle(X_train, y_train)
+    X_train = X_train[:100]
+    y_train = y_train[:100]
+    X_test = X_test[:100]
+    y_test = y_test[:100]
+    '''
+
     rdd_train = spark_context.parallelize([(y, x.copy()) for x, y in zip(X_train, y_train)], numSlices = num_partitions)
     rdd_test  = spark_context.parallelize([(y, x.copy()) for x, y in zip(X_test,  y_test)],  numSlices = num_partitions)
 
@@ -103,11 +113,17 @@ if __name__ == "__main__":
     band_width = model.band_width
 
     # Classifies the samples from the training subset
-    y_train_pred = model.predict(X_train)
-    y_train_pred = numpy.array(y_train_pred)
+    y_true_pred  = model.predict(rdd_train).collect()
+    y_train      = numpy.array([t[0] for t in y_true_pred])
+    y_train_pred = numpy.array([t[1] for t in y_true_pred])
+    #y_train_pred = model.predict(X_train)
+    #y_train_pred = numpy.array(y_train_pred)
     # Classifies the samples from the testing subset
-    y_test_pred  = model.predict(X_test)
-    y_test_pred = numpy.array(y_test_pred)
+    y_true_pred = model.predict(rdd_test).collect()
+    y_test      = numpy.array([t[0] for t in y_true_pred])
+    y_test_pred = numpy.array([t[1] for t in y_true_pred])
+    #y_test_pred  = model.predict(X_test)
+    #y_test_pred = numpy.array(y_test_pred)
 
     model.unpersist() # because subsets of samples per target class are persisted RDD
 

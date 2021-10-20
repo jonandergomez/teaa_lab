@@ -18,6 +18,6 @@ shift
 
 time \
 spark-submit --master ${master} \
-             --py-files ${PYTHONPATH}/mypythonlib.tgz,python/KernelClassifier.py \
+             --py-files ${PYTHONPATH}/mypythonlib.tgz,python/KernelClassifier.py,python/KNN_Classifier.py,python/BallTree.py \
              --deploy-mode client \
              ${program}  $*

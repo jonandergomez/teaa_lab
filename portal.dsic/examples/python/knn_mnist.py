@@ -15,19 +15,19 @@ import math
 import numpy
 import pickle
 
-from sklearn.base import BaseEstimator
-from sklearn.metrics import confusion_matrix, classification_report, plot_confusion_matrix
-from matplotlib import pyplot
-
-#from pyspark.mllib.stat import KernelDensity # generate errors when working with arrays instead of real values 
-
-from pyspark import SparkContext
+try:
+    from pyspark import SparkContext, SparkConf
+except:
+    SparkContext = None
+    SparkConf = None
 
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import PolynomialFeatures
 from load_mnist import load_mnist
 from utils_for_results import save_results
 from machine_learning import KMeans
+
+from KNN_Classifier import KNN_Classifier
 
 
 if __name__ == "__main__":
@@ -72,7 +72,10 @@ if __name__ == "__main__":
         elif sys.argv[i] == "--pca"           :    pca_components = float(sys.argv[i + 1])
         elif sys.argv[i] == "--pf-degree"     :         pf_degree = int(sys.argv[i + 1])
 
-    spark_context = SparkContext(appName = "KernelDensityEstimation-with-dataset-MNIST")
+
+    if SparkConf is not None:
+        spark_conf = SparkConf().set("spark.driver.maxResultSize", "24g").set("spark.app.name", "K-NearestNeighbors-with-dataset-MNIST")
+        spark_context = SparkContext(conf = spark_conf)
 
     X, y = load_mnist()
     X /= 255.0
@@ -94,6 +97,13 @@ if __name__ == "__main__":
     print(X_train.shape, y_train.shape)
     print(X_test.shape, y_test.shape)
 
+    if model_filename is None:
+        model_filename = f'knn-pca-{pca_components}'
+        if use_kmeans:
+            model_filename += f'-codebook-size-{codebook_size}'
+        else:
+            model_filename += '-no-kmeans'
+
     if use_kmeans:
         #############################################################################################################################
         codebooks = list()
@@ -105,16 +115,30 @@ if __name__ == "__main__":
             for i in range(kmodel.n_clusters):
                 codebooks.append((k, kmodel.cluster_centers_[i].copy()))
         print('processing time lapse for', kmodel.n_clusters, 'clusters per class', time.time() - starting_time, 'seconds')
-        rdd_train = spark_context.parallelize(codebooks, numSlices = num_partitions)
+        if spark_context is not None:
+            rdd_train = spark_context.parallelize(codebooks, numSlices = num_partitions)
+        else:
+            y = list()
+            X = list()
+            for t in codebooks:
+                y.append(t[0])
+                X.append(t[1])
+            rdd_train = (numpy.array(y), numpy.array(X))
         #############################################################################################################################
     else:
-        rdd_train = spark_context.parallelize([(y, x.copy()) for x, y in zip(X_train, y_train)], numSlices = num_partitions)
-    rdd_test  = spark_context.parallelize([(y, x.copy()) for x, y in zip(X_test,  y_test)],  numSlices = num_partitions)
-
-    num_samples = rdd_train.count()
-
-    print(f'train subset with {num_samples} distributed into {rdd_train.getNumPartitions()} partitions')
-    print(f'test  subset with {rdd_test.count()} distributed into {rdd_test.getNumPartitions()} partitions')
+        if spark_context is not None:
+            rdd_train = spark_context.parallelize([(y, x.copy()) for x, y in zip(X_train, y_train)], numSlices = num_partitions)
+        else:
+            rdd_train = (y_train, X_train)
+    if spark_context is not None:
+        rdd_test = spark_context.parallelize([(y, x.copy()) for x, y in zip(X_test,  y_test)],  numSlices = num_partitions)
+        num_samples = rdd_train.count()
+        print(f'train subset with {num_samples} distributed into {rdd_train.getNumPartitions()} partitions')
+        print(f'test  subset with {rdd_test.count()} distributed into {rdd_test.getNumPartitions()} partitions')
+    else:
+        rdd_test = (y_test, X_test)
+        print(f'train subset with {len(rdd_train[0])}')
+        print(f'test  subset with {len(rdd_test[0])}')
 
     labels = numpy.unique(y_train)
 
@@ -147,13 +171,19 @@ if __name__ == "__main__":
             c = list()
             #if type(a) is not list: raise Exception(type(a))
             #if type(b) is not list: raise Exception(type(b))
-            while len(c) < K and len(a) > 0 and len(b) > 0:
+            while len(c) < K and len(a) * len(b) > 0:
                 if a[0][1] <= b[0][1]:
                     c.append(a[0])
                     del a[0]
                 else: 
                     c.append(b[0])
                     del b[0]
+            while len(c) < K and len(a) > 0:
+                c.append(a[0])
+                del a[0]
+            while len(c) < K and len(b) > 0:
+                c.append(b[0])
+                del b[0]
             #del a, b
             '''
             Slower version using sort method from lists
@@ -161,6 +191,8 @@ if __name__ == "__main__":
             c.sort(key = lambda x: x[1])
             if len(c) > K: c = c[:K]
             '''
+            if len(c) > K:
+                raise Exception('Unexpected length of a merged list')
             lc.append(c)
         return lc
 
@@ -175,23 +207,45 @@ if __name__ == "__main__":
         y = numpy.array(y)
         return y / (1.0e-5 + y.sum())
         
-    # Classifies the samples from the training subset
-    knn = rdd_train.map(lambda x: compute_distances_for_numpy(x, X_train)).reduce(natural_merge)
-    if use_probs:
-        y_train_pred = numpy.array([get_probs(y) for y in knn]).argmax(axis = 1)
+    use_model = True
+    if use_model:
+        if os.path.exists(f'{models_dir}/{model_filename}'):
+            with open(f'{models_dir}/{model_filename}', 'rb') as f:
+                knn = pickle.load(f)
+                f.close()
+        else:
+            knn = KNN_Classifier(K = K, num_classes = 10)
+            knn.fit(rdd_train, min_samples_to_split = 100, max_bins = 32)
+            with open(f'{models_dir}/{model_filename}', 'wb') as f:
+                pickle.dump(knn, f)
+                f.close()
+        #
+        #y_train_pred = knn.predict(X_train)
+        y_test_pred  = knn.predict(X_test)
     else:
-        y_train_pred = numpy.array([get_prediction(y) for y in knn])
+        # Classifies the samples from the training subset
+        knn = rdd_train.map(lambda x: compute_distances_for_numpy(x, X_train)).reduce(natural_merge)
+        if use_probs:
+            y_train_pred = numpy.array([get_probs(y) for y in knn]).argmax(axis = 1)
+        else:
+            y_train_pred = numpy.array([get_prediction(y) for y in knn])
 
-    # Classifies the samples from the testing subset
-    knn = rdd_train.map(lambda x: compute_distances_for_numpy(x, X_test)).reduce(natural_merge)
-    if use_probs:
-        y_test_pred = numpy.array([get_probs(y) for y in knn]).argmax(axis = 1)
-    else:
-        y_test_pred = numpy.array([get_prediction(y) for y in knn])
+        # Classifies the samples from the testing subset
+        knn = rdd_train.map(lambda x: compute_distances_for_numpy(x, X_test)).reduce(natural_merge)
+        if use_probs:
+            y_test_pred = numpy.array([get_probs(y) for y in knn]).argmax(axis = 1)
+        else:
+            y_test_pred = numpy.array([get_prediction(y) for y in knn])
 
     # Save results in text and graphically represented confusion matrices
     filename_prefix = f'knn-classification-results-pca-{pca_components}-k-%d' % K
-    save_results(f'{results_dir}.train', filename_prefix, y_train, y_train_pred)
+    if use_kmeans:
+        filename_prefix += f'-codebook-size-{codebook_size}'
+    else:
+        filename_prefix += '-no-kmeans'
+
+    #save_results(f'{results_dir}.train', filename_prefix, y_train, y_train_pred)
     save_results(f'{results_dir}.test',  filename_prefix, y_test,  y_test_pred)
     #
-    spark_context.stop()
+    if spark_context is not None:
+        spark_context.stop()

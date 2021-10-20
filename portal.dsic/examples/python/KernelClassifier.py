@@ -8,6 +8,7 @@
 """
 
 import sys
+import time
 import math
 import numpy
 
@@ -22,6 +23,13 @@ def kernel_for_lists(x, sample, band_width):
 
 def kernel_for_one_sample(x, sample, band_width):
     return math.exp( - 0.5 * (((sample - x) / band_width) ** 2).sum())
+
+def kernel_for_cartesian_rdd(pair, band_width):
+    a = pair[0] # tuple: id, d-dimensional array
+    x = pair[1] # should be a d-dimensional array
+    xa = a[1] # d-dimensional array
+    density = math.exp(-0.5 * (((xa -x) / band_width) ** 2).sum()) # one float
+    return (a[0], density)
 
 class KernelClassifier:
     """
@@ -75,18 +83,18 @@ class KernelClassifier:
     # ------------------------------------------------------------------------------
     def predict(self, sample):
         #
-        bd = self.band_width
+        bw = self.band_width
         if type(sample) == list or type(sample) == numpy.ndarray and len(sample.shape) >= 2:
             densities = dict()
             if type(sample) == list:
                 for label in self.targets:
                     densities[label] = self.samples[label] \
-                            .map(lambda x: kernel_for_lists(x, sample, bd)) \
+                            .map(lambda x: kernel_for_lists(x, sample, bw)) \
                             .reduce(lambda x, y: x + y) / self.sizes[label]
             else:
                 for label in self.targets:
                     densities[label] = self.samples[label] \
-                            .map(lambda x: kernel_for_numpy(x, sample, bd)) \
+                            .map(lambda x: kernel_for_numpy(x, sample, bw)) \
                             .reduce(lambda x, y: x + y) / self.sizes[label]
 
             predicted_labels = list()
@@ -105,12 +113,81 @@ class KernelClassifier:
             predicted_label = None
             for label in self.targets:
                 density = self.samples[label] \
-                            .map(lambda x: kernel_for_one_sample(x, sample, bd)) \
+                            .map(lambda x: kernel_for_one_sample(x, sample, bw)) \
                             .reduce(lambda x, y: x + y) / self.sizes[label]
                 if density > max_density:
                     max_density = density
                     predicted_label = label
             return predicted_label
+
+        elif isinstance(sample, RDD):
+            
+            y_true, y_pred = self.predict_probs(sample)
+            y_pred = y_pred.map(lambda t: (t[0], t[1].argmax()))
+            return y_true.join(y_pred).map(lambda t: (t[1][0], t[1][1])) # the index (t[0]) is ignored
+
+        else:
+            raise Exception(f'Not accepted data type: {type(sample)}')
+    # ------------------------------------------------------------------------------
+    def predict_probs(self, sample):
+        #
+        bw = self.band_width
+        if type(sample) == list or type(sample) == numpy.ndarray and len(sample.shape) >= 2:
+            densities = list()
+            if type(sample) == list:
+                for label in range(len(self.targets)):
+                    densities.append(self.samples[label] \
+                            .map(lambda x: kernel_for_lists(x, sample, bw)) \
+                            .reduce(lambda x, y: x + y) / self.sizes[label])
+            else:
+                for label in range(len(self.targets)):
+                    densities.append(self.samples[label] \
+                            .map(lambda x: kernel_for_numpy(x, sample, bw)) \
+                            .reduce(lambda x, y: x + y) / self.sizes[label])
+
+            densities = numpy.array(densities).T
+            return densities / densities.sum(axis = 1).reshape(-1, 1)
+
+        elif type(sample) == numpy.ndarray and len(sample.shape) == 1:
+            max_density = 0.0
+            predicted_label = None
+            densities = list()
+            for label in range(len(self.targets)):
+                densities.append(self.samples[label] \
+                            .map(lambda x: kernel_for_one_sample(x, sample, bw)) \
+                            .reduce(lambda x, y: x + y) / self.sizes[label])
+            densities = numpy.array(densities)
+            return densities / densities.sum()
+
+        elif isinstance(sample, RDD):
+
+            num_partitions = sample.getNumPartitions()
+            temp = sample.zipWithIndex()
+            y_true = temp.map(lambda t: (t[1], t[0][0]))
+            data_with_ids = temp.map(lambda t: (t[1], t[0][1]))
+
+            densities = None
+            for label in self.targets:
+                last_time = time.time()
+                #
+                denominator = self.sizes[label]
+                _ = data_with_ids.cartesian(self.samples[label]) \
+                    .map(lambda pair: kernel_for_cartesian_rdd(pair, bw)) \
+                    .reduceByKey(lambda a, b: a + b, num_partitions) \
+                    .map(lambda t: (t[0], t[1] / denominator))
+
+                if densities is None:
+                    densities = _.map(lambda t: (t[0], [t[1]]))
+                else:
+                    densities = densities.join(_).map(lambda t: (t[0], t[1][0] + [t[1][1]]), num_partitions)
+                #
+                print('preparation of the computation of densities for label', label, 'in', time.time() - last_time, 'seconds')
+            #
+            def normalize(x):
+                x = numpy.array(x)
+                return x / x.sum()
+            # two RDD objects are returned, first one with true labels, second one with probs, both with sample index
+            return y_true, densities.map(lambda t: (t[0], normalize(t[1])))
 
         else:
             raise Exception(f'Not accepted data type: {type(sample)}')
