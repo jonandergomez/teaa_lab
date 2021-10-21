@@ -215,13 +215,20 @@ if __name__ == "__main__":
                 f.close()
         else:
             knn = KNN_Classifier(K = K, num_classes = 10)
-            knn.fit(rdd_train, min_samples_to_split = 100, max_bins = 32)
+            knn.fit(X_train, y_train, min_samples_to_split = 100)
             with open(f'{models_dir}/{model_filename}', 'wb') as f:
                 pickle.dump(knn, f)
                 f.close()
         #
-        #y_train_pred = knn.predict(X_train)
-        y_test_pred  = knn.predict(X_test)
+        if spark_context is not None:
+            y_train_true_pred = knn.predict(rdd_train)
+            y_test_true_pred = knn.predict(rdd_test)
+            #
+            y_train_pred = numpy.array([t[1] for t in y_train_true_pred])
+            y_test_pred  = numpy.array([t[1] for t in y_test_true_pred])
+        else:
+            y_train_pred = knn.predict(X_train)
+            y_test_pred  = knn.predict(X_test)
     else:
         # Classifies the samples from the training subset
         knn = rdd_train.map(lambda x: compute_distances_for_numpy(x, X_train)).reduce(natural_merge)
@@ -244,7 +251,7 @@ if __name__ == "__main__":
     else:
         filename_prefix += '-no-kmeans'
 
-    #save_results(f'{results_dir}.train', filename_prefix, y_train, y_train_pred)
+    save_results(f'{results_dir}.train', filename_prefix, y_train, y_train_pred)
     save_results(f'{results_dir}.test',  filename_prefix, y_test,  y_test_pred)
     #
     if spark_context is not None:

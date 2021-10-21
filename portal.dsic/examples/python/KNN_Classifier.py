@@ -33,16 +33,12 @@ class KNN_Classifier:
         self.balltree = None
     # ------------------------------------------------------------------------------
 
-    def unpersist(self):
-        #self.balltree.unpersist()
-    # ------------------------------------------------------------------------------
-
-    def fit(self, Xy, min_samples_to_split = 100, max_bins = 32):
-        #if not isinstance(Xy, RDD):
-        #    raise Exception('An RDD object must be provided')
+    def fit(self, X, y, min_samples_to_split = 100):
+        if isinstance(X, RDD) or isinstance(y, RDD):
+            raise Exception('RDD objects not supported for training')
 
         self.balltree = BallTree(min_samples_to_split = min_samples_to_split)
-        self.balltree.fit(Xy)
+        self.balltree.fit(X, y)
         #
         return self
     # ------------------------------------------------------------------------------
@@ -59,7 +55,8 @@ class KNN_Classifier:
             return probs.argmax()
 
         elif RDD is not None and isinstance(sample, RDD):
-            raise Exception('Not supported yet!')
+            probs = sample.map(lambda t: (t[0], self.compute_probs_one_sample(t[1])))
+            return probs.map(lambda t: (t[0], t[1].argmax())).collect()
 
         else:
             raise Exception(f'Not accepted data type: {type(sample)}')
@@ -67,10 +64,17 @@ class KNN_Classifier:
 
     def compute_probs_one_sample(self, x):
         if self.balltree is not None:
-            knn = self.balltree.get_knn(x, self.K)
-            if len(knn) > self.K: knn = knn[:self.K]
-            y = numpy.zeros(self.num_classes)
-            for t in knn: y[t[0]] += 1
+            if len(x.shape) == 2:
+                y = numpy.zeros(self.num_classes)
+                for n in len(x):
+                    knn = self.balltree.get_knn(x[n], self.K)
+                    if len(knn) > self.K: knn = knn[:self.K]
+                    for t in knn: y[t[0]] += 1
+            else:
+                knn = self.balltree.get_knn(x, self.K)
+                if len(knn) > self.K: knn = knn[:self.K]
+                y = numpy.zeros(self.num_classes)
+                for t in knn: y[t[0]] += 1
             return y / (1.0e-6 + y.sum())
 
     def predict_probs(self, sample):
@@ -89,7 +93,7 @@ class KNN_Classifier:
             return self.compute_probs_one_sample(sample)
 
         elif RDD is not None and isinstance(sample, RDD):
-            raise Exception('Not supported yet!')
+            return sample.map(lambda t: (t[0], self.compute_probs_one_sample(t[1]))).collect()
 
         else:
             raise Exception(f'Not accepted data type: {type(sample)}')

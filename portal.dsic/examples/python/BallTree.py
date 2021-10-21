@@ -42,8 +42,8 @@ class BallTree:
         self.dim = None
     # ------------------------------------------------------------------------------
 
-    def fit(self, Xy):
-        if RDD is not None and isinstance(Xy, RDD):
+    def fit(self, X, y):
+        if RDD is not None and (isinstance(X, RDD) or isinstance(y, RDD)):
             # it is assumed each item in Xy is a tuple, (y, x), where y is the label or the real value to be predicted
             t = Xy.first()
             assert type(t) == tuple
@@ -52,13 +52,11 @@ class BallTree:
             assert len(x.shape) == 1
             self.dim = x.shape[0]
             self.root_split = self.do_split(Xy)
-        elif type(Xy) in [tuple, list]:
-            # it is assumed that Xy is a tuple, (y, x), where y is the array with the labels or the real values to be predicted
-            y, X = Xy
+        else:
             assert type(X) == numpy.ndarray
             assert len(X.shape) == 2
             self.dim = X.shape[1]
-            self.root_split = self.do_split(Xy)
+            self.root_split = self.do_split((y, X))
         #
         return self
     # ------------------------------------------------------------------------------
@@ -130,17 +128,33 @@ class BallTree:
         if d > d_pq:
             return None
         elif split.S_n is not None:
-            zz = ((split.S_n[1] - x) ** 2).sum(axis = 1)
+            distances = ((split.S_n[1] - x) ** 2).sum(axis = 1)
             for i in range(len(split.S_n[0])):
-                if zz[i] < d_pq:
+                if distances[i] < d_pq:
                     y = split.S_n[0][i]
                     z = split.S_n[1][i]
-                    item = (-zz[i], y, z)
+                    item = (-distances[i], y, z)
                     if len(pq) >= K:
                         heapq.heapreplace(pq, item)
                     else:
                         heapq.heappush(pq, item)
                     d_pq = BallTree.squared_distance(x, pq[0][2]) if len(pq) > 0 else numpy.inf
+            '''
+            zzz = [(i, distances[i]) for i in range(len(distances))]
+            zzz.sort(key = lambda t: t[1])
+            for i, d in zzz:
+                if d < d_pq:
+                    y = split.S_n[0][i]
+                    z = split.S_n[1][i]
+                    item = (-d, y, z)
+                    if len(pq) >= K:
+                        heapq.heapreplace(pq, item)
+                    else:
+                        heapq.heappush(pq, item)
+                    d_pq = BallTree.squared_distance(x, pq[0][2]) if len(pq) > 0 else numpy.inf
+                else:
+                    break
+            '''
         else:
             dl = numpy.inf
             dr = numpy.inf

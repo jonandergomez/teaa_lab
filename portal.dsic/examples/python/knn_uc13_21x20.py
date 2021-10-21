@@ -5,7 +5,7 @@
     Universitat Politecnica de Valencia
     Technical University of Valencia TU.VLC
 
-    Using Kernel Density Estimation for classification
+    Using k-Nearest Neighbours for classification 
 """
 
 import os
@@ -19,7 +19,7 @@ from sklearn.metrics import confusion_matrix, classification_report, plot_confus
 from matplotlib import pyplot
 
 from utils_for_results import save_results
-from KernelClassifier import KernelClassifier
+from KNN_Classifier import KNN_Classifier
 
 from pyspark import SparkContext
 
@@ -38,10 +38,8 @@ if __name__ == "__main__":
     f.close()
     if hostname is not None and hostname.find('eibds01') >= 0:
         hdfs_home_dir = '/user/cluster'
-        local_home_dir = '/home/cluster'
     else:
         hdfs_home_dir = '/user/ubuntu'
-        local_home_dir = '/home/ubuntu'
     
     verbose = 0
     spark_context = None
@@ -50,9 +48,8 @@ if __name__ == "__main__":
     global_patient = 'chb01'
     do_classification = False
     do_prediction = False
-    band_width = None
+    K = 7
     label_mapping = [i for i in range(10)]
-    version = 3
                                                    
     for i in range(len(sys.argv)):
         #if   sys.argv[i] == "--dataset"       :  dataset_filename = sys.argv[i + 1]
@@ -68,7 +65,7 @@ if __name__ == "__main__":
         elif sys.argv[i] == "--patient"       :    global_patient = sys.argv[i + 1]
         elif sys.argv[i] == "--verbosity"     :           verbose = int(sys.argv[i + 1])
         elif sys.argv[i] == "--num-partitions":    num_partitions = int(sys.argv[i + 1])
-        elif sys.argv[i] == "--band-width"    :        band_width = float(sys.argv[i + 1])
+        elif sys.argv[i] == "--k"             :                 K = int(sys.argv[i + 1])
         elif sys.argv[i] == "--classify"      : do_classification = True
         elif sys.argv[i] == "--predict"       :     do_prediction = True
         elif sys.argv[i] == "--reduce-labels" :
@@ -82,11 +79,10 @@ if __name__ == "__main__":
             label_mapping[7] = 0
             label_mapping[8] = 0
             label_mapping[9] = 0
-            version = 4
 
-    results_dir = f'{home_dir}/uc13-21x20/{global_patient}/results.{version}'
-    models_dir = f'uc13-21x20/{global_patient}/models.{version}'
-    log_dir = f'{home_dir}/uc13-21x20/{global_patient}/log.{version}'
+    results_dir = f'{home_dir}/uc13-21x20/{global_patient}/results.3'
+    models_dir = f'uc13-21x20/{global_patient}/models.3'
+    log_dir = f'{home_dir}/uc13-21x20/{global_patient}/log.3'
     train_dataset_filename = f'{hdfs_home_dir}/data/uc13/uc13-{global_patient}-21x20-train.csv'
     test_dataset_filename = f'{hdfs_home_dir}/data/uc13/uc13-{global_patient}-21x20-test.csv'
 
@@ -137,60 +133,26 @@ if __name__ == "__main__":
     num_test_samples = rdd_test_samples.count()
 
     print(f'loaded {num_train_samples} {dim}-dimensional samples for training into {rdd_train_samples.getNumPartitions()} partitions')
-    print(f'loaded {num_test_samples} {dim}-dimensional samples for testing into {rdd_test_samples.getNumPartitions()} partitions')
+    print(f'loaded {num_test_samples} {dim}-dimensional samples for testing  into {rdd_test_samples.getNumPartitions()} partitions')
  
 
     y_train = numpy.array(rdd_train_samples.map(lambda t: t[0]).collect())
     X_train = numpy.array(rdd_train_samples.map(lambda t: t[1]).collect())
 
-    model = KernelClassifier(band_width = band_width)
-
-    use_kmeans = True
-    n_clusters = 4000
-    if use_kmeans:
-        #############################################################################################################################
-        from machine_learning import KMeans, kmeans_load
-        codebooks_y = list()
-        codebooks_X = list()
-        starting_time = time.time()
-        for label in numpy.unique(y_train):
-            print('computing k-means for label', label)
-            _X_train = X_train[y_train == label]
-            if len(_X_train) <= n_clusters:
-                for i in range(len(_X_train)):
-                    codebooks_y.append(label)
-                    codebooks_X.append(_X_train[i].copy())
-            else:
-                os.makedirs(f'{local_home_dir}/{models_dir}', exist_ok = True)
-                kmodel_filename = f'{local_home_dir}/{models_dir}/kmeans-%05d-%03d.pkl' % (n_clusters, label)
-                kmodel = kmeans_load(kmodel_filename)
-                if kmodel is None:
-                    kmodel = KMeans(n_clusters = n_clusters, verbosity = 1, modality = 'Lloyd', init = 'random') # 'KMeans++')
-                    kmodel.epsilon = 1.0e-8
-                    kmodel.fit(_X_train)
-                    kmodel.save(kmodel_filename)
-                #
-                for i in range(kmodel.n_clusters):
-                    codebooks_y.append(label)
-                    codebooks_X.append(kmodel.cluster_centers_[i].copy())
-        print('processing time lapse for', len(codebooks_X), 'clusters in total', time.time() - starting_time, 'seconds')
-        codebooks_X = numpy.array(codebooks_X)
-        codebooks_y = numpy.array(codebooks_y)
-        model.fit(codebooks_X, codebooks_y)
-        #############################################################################################################################
-    else:            
-        model.fit(X_train, y_train)
-    #
-    band_width = model.band_width
+    knn = KNN_Classifier(K = K, num_classes = len(numpy.unique(y_train)))
+    model.fit(X_train, y_train, min_samples_to_split = 1000)
 
     for subset, rdd_data in zip(['train', 'test'], [rdd_train_data, rdd_test_data]):
         print(subset, rdd_data.count(), rdd_data.getNumPartitions())
-        y_true, y_pred = model.predict(rdd_data)
+        #
+        y_true_pred = knn.predict(rdd_data)
+        y_true = numpy.array([t[0] for t in y_true_pred])
+        y_pred = numpy.array([t[1] for t in y_true_pred])
         #
         print(confusion_matrix(y_true, y_pred))
         print(classification_report(y_true, y_pred))
         # Save results in text and graphically represented confusion matrices
-        filename_prefix = f'kde-classification-results-bw-%.3f' % band_width
+        filename_prefix = f'knn-classification-results-k-%d' % K
         save_results(f'{results_dir}-{subset}', filename_prefix, y_true, y_pred)
-
+    #
     spark_context.stop()

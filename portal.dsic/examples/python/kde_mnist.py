@@ -19,7 +19,10 @@ from matplotlib import pyplot
 
 #from pyspark.mllib.stat import KernelDensity # generate errors when working with arrays instead of real values 
 
-from pyspark import SparkContext
+try:
+    from pyspark import SparkContext
+except:
+    SparkContext = None
 
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import PolynomialFeatures
@@ -66,7 +69,8 @@ if __name__ == "__main__":
     #if model_filename is None:
     #    model_filename = f'{models_dir}/kde-bd-{band_width}'
 
-    spark_context = SparkContext(appName = "KernelDensityEstimation-with-dataset-MNIST")
+    if SparkContext is not None:
+        spark_context = SparkContext(appName = "KernelDensityEstimation-with-dataset-MNIST")
 
     X, y = load_mnist()
     X /= 255.0
@@ -98,38 +102,31 @@ if __name__ == "__main__":
     y_test = y_test[:100]
     '''
 
-    rdd_train = spark_context.parallelize([(y, x.copy()) for x, y in zip(X_train, y_train)], numSlices = num_partitions)
-    rdd_test  = spark_context.parallelize([(y, x.copy()) for x, y in zip(X_test,  y_test)],  numSlices = num_partitions)
+    print(f'train subset with {len(X_train)} samples')
+    print(f'test  subset with {len(X_test)} samples')
 
-    num_samples = rdd_train.count()
-
-    print(f'train subset with {num_samples} distributed into {rdd_train.getNumPartitions()} partitions')
-    print(f'test  subset with {rdd_test.count()} distributed into {rdd_test.getNumPartitions()} partitions')
-
-    labels = numpy.unique(y_train)
-
-    model = KernelClassifier(spark_context, band_width = band_width)
-    model.fit(rdd_train)
+    model = KernelClassifier(band_width = band_width)
+    model.fit(X_train, y_train)
     band_width = model.band_width
 
-    # Classifies the samples from the training subset
-    y_true_pred  = model.predict(rdd_train).collect()
-    y_train      = numpy.array([t[0] for t in y_true_pred])
-    y_train_pred = numpy.array([t[1] for t in y_true_pred])
-    #y_train_pred = model.predict(X_train)
-    #y_train_pred = numpy.array(y_train_pred)
-    # Classifies the samples from the testing subset
-    y_true_pred = model.predict(rdd_test).collect()
-    y_test      = numpy.array([t[0] for t in y_true_pred])
-    y_test_pred = numpy.array([t[1] for t in y_true_pred])
-    #y_test_pred  = model.predict(X_test)
-    #y_test_pred = numpy.array(y_test_pred)
-
-    model.unpersist() # because subsets of samples per target class are persisted RDD
+    if spark_context is not None:
+        rdd_train = spark_context.parallelize([(y, x.copy()) for x, y in zip(X_train, y_train)], numSlices = num_partitions)
+        rdd_test  = spark_context.parallelize([(y, x.copy()) for x, y in zip(X_test,  y_test)],  numSlices = num_partitions)
+        num_samples = rdd_train.count()
+        y_train_true, y_train_pred = model.predict(rdd_train)
+        y_test_true,  y_test_pred  = model.predict(rdd_test)
+    else:
+        # Classifies the samples from the training subset
+        y_train_true = y_train
+        y_train_pred = model.predict(X_train)
+        # Classifies the samples from the testing subset
+        y_test_true = y_test
+        y_test_pred = model.predict(X_test)
 
     # Save results in text and graphically represented confusion matrices
     filename_prefix = f'kde-classification-results-pca-{pca_components}-bd-%.3f' % band_width
-    save_results(f'{results_dir}.train', filename_prefix, y_train, y_train_pred)
-    save_results(f'{results_dir}.test',  filename_prefix, y_test,  y_test_pred)
+    save_results(f'{results_dir}.train', filename_prefix, y_train_true, y_train_pred)
+    save_results(f'{results_dir}.test',  filename_prefix, y_test_true,  y_test_pred)
     #
-    spark_context.stop()
+    if spark_context is not None:
+        spark_context.stop()
