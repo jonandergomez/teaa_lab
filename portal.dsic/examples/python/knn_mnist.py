@@ -42,9 +42,9 @@ if __name__ == "__main__":
     verbose = 0
     spark_context = None
     num_partitions = 80
-    models_dir = f'{home_dir}/models.digits.3'
-    log_dir = f'{home_dir}/log.digits.3'
-    results_dir = f'{home_dir}/results.digits.3'
+    models_dir = f'{home_dir}/digits/models.3'
+    log_dir = f'{home_dir}/digits/log.3'
+    results_dir = f'{home_dir}/digits/results.3'
     do_training = False
     do_classification = False
     model_filename = None
@@ -214,6 +214,7 @@ if __name__ == "__main__":
                 knn = pickle.load(f)
                 f.close()
         else:
+            os.makedirs(models_dir, exist_ok = True)
             knn = KNN_Classifier(K = K, num_classes = 10)
             knn.fit(X_train, y_train, min_samples_to_split = 100)
             with open(f'{models_dir}/{model_filename}', 'wb') as f:

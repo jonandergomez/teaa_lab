@@ -5,7 +5,7 @@
     Universitat Politecnica de Valencia
     Technical University of Valencia TU.VLC
 
-    Using k-Nearest Neighbours for classification 
+    Using K-Nearest Neighbours for classification 
 """
 
 import os
@@ -87,7 +87,7 @@ if __name__ == "__main__":
     test_dataset_filename = f'{hdfs_home_dir}/data/uc13/uc13-{global_patient}-21x20-test.csv'
 
 
-    spark_context = SparkContext(appName = "Kernel-Density-Estimation-dataset-UC13")
+    spark_context = SparkContext(appName = "K-Nearest-Neighbours-dataset-UC13")
 
     os.makedirs(log_dir,    exist_ok = True)
     #os.makedirs(models_dir, exist_ok = True)
@@ -140,7 +140,7 @@ if __name__ == "__main__":
     X_train = numpy.array(rdd_train_samples.map(lambda t: t[1]).collect())
 
     knn = KNN_Classifier(K = K, num_classes = len(numpy.unique(y_train)))
-    model.fit(X_train, y_train, min_samples_to_split = 1000)
+    knn.fit(X_train, y_train, min_samples_to_split = 1000)
 
     for subset, rdd_data in zip(['train', 'test'], [rdd_train_data, rdd_test_data]):
         print(subset, rdd_data.count(), rdd_data.getNumPartitions())

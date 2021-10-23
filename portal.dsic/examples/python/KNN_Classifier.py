@@ -34,7 +34,7 @@ class KNN_Classifier:
     # ------------------------------------------------------------------------------
 
     def fit(self, X, y, min_samples_to_split = 100):
-        if isinstance(X, RDD) or isinstance(y, RDD):
+        if RDD is not None and (isinstance(X, RDD) or isinstance(y, RDD)):
             raise Exception('RDD objects not supported for training')
 
         self.balltree = BallTree(min_samples_to_split = min_samples_to_split)
@@ -66,7 +66,7 @@ class KNN_Classifier:
         if self.balltree is not None:
             if len(x.shape) == 2:
                 y = numpy.zeros(self.num_classes)
-                for n in len(x):
+                for n in range(len(x)):
                     knn = self.balltree.get_knn(x[n], self.K)
                     if len(knn) > self.K: knn = knn[:self.K]
                     for t in knn: y[t[0]] += 1

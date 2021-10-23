@@ -5,7 +5,7 @@
     Universitat Politecnica de Valencia
     Technical University of Valencia TU.VLC
 
-    Using Kernel Density Estimation for classification
+    Using K-Nearest Neighbours for classification 
 """
 
 import os
@@ -19,7 +19,7 @@ from sklearn.metrics import confusion_matrix, classification_report, plot_confus
 from matplotlib import pyplot
 
 from utils_for_results import save_results
-from KernelClassifier import KernelClassifier
+from KNN_Classifier import KNN_Classifier
 
 try:
     from pyspark import SparkContext
@@ -30,7 +30,7 @@ except:
 
 if __name__ == "__main__":
     """
-    Usage: spark-submit --master local[4]  python/kde_uc13.py --band-width <bw>
+    Usage: spark-submit --master local[4]  python/knn_uc13.py --k <k>
     """
 
     home_dir = os.getenv('HOME')
@@ -50,14 +50,12 @@ if __name__ == "__main__":
     verbose = 0
     spark_context = None
     num_partitions = 80
-    num_channels = 21
     global_patient = 'chb01'
     do_classification = False
     do_prediction = False
-    band_width = None
+    K = 7
     label_mapping = [i for i in range(10)]
     version = 3
-    n_clusters = 0
                                                    
     for i in range(len(sys.argv)):
         #if   sys.argv[i] == "--dataset"       :  dataset_filename = sys.argv[i + 1]
@@ -73,8 +71,7 @@ if __name__ == "__main__":
         elif sys.argv[i] == "--patient"       :    global_patient = sys.argv[i + 1]
         elif sys.argv[i] == "--verbosity"     :           verbose = int(sys.argv[i + 1])
         elif sys.argv[i] == "--num-partitions":    num_partitions = int(sys.argv[i + 1])
-        elif sys.argv[i] == "--band-width"    :        band_width = float(sys.argv[i + 1])
-        elif sys.argv[i] == "--kmeans"        :        n_clusters = int(sys.argv[i + 1])
+        elif sys.argv[i] == "--k"             :                 K = int(sys.argv[i + 1])
         elif sys.argv[i] == "--classify"      : do_classification = True
         elif sys.argv[i] == "--predict"       :     do_prediction = True
         elif sys.argv[i] == "--reduce-labels" :
@@ -97,7 +94,7 @@ if __name__ == "__main__":
     test_dataset_filename = f'{hdfs_home_dir}/data/uc13-pca-test.csv'
 
     if SparkContext is not None:
-        spark_context = SparkContext(appName = "Kernel-Density-Estimation-dataset-UC13")
+        spark_context = SparkContext(appName = "K-Nearest-Neighbours-dataset-UC13")
 
     os.makedirs(log_dir,    exist_ok = True)
     #os.makedirs(models_dir, exist_ok = True)
@@ -152,67 +149,27 @@ if __name__ == "__main__":
     y_test  = numpy.array([t[0] for t in data[cut_point:]])
     X_test  = numpy.array([t[1] for t in data[cut_point:]])
 
-    model = KernelClassifier(band_width = band_width)
-
-    if n_clusters > 0:
-        #############################################################################################################################
-        from machine_learning import KMeans as JonKMeans, kmeans_load
-        codebooks_y = list()
-        codebooks_X = list()
-        starting_time = time.time()
-        for label in numpy.unique(y_train):
-            print('computing k-means for label', label)
-            _X_train = X_train[y_train == label]
-            if len(_X_train) <= n_clusters:
-                for i in range(len(_X_train)):
-                    codebooks_y.append(label)
-                    codebooks_X.append(_X_train[i].copy())
-            else:
-                os.makedirs(f'{home_dir}/{models_dir}', exist_ok = True)
-                kmodel_filename = f'{home_dir}/{models_dir}/kmeans-%05d-%03d.pkl' % (n_clusters, label)
-                kmodel = kmeans_load(kmodel_filename)
-                if kmodel is None:
-                    kmodel = JonKMeans(n_clusters = n_clusters, verbosity = 1, modality = 'original-k-Means')
-                    kmodel.epsilon = 1.0e-8
-                    kmodel.fit(_X_train)
-                    kmodel.modality = 'Lloyd'
-                    kmodel.fit(_X_train)
-                    #kmeans_model = KMeans.train(rdd_train_samples.map(lambda t: t[1]), k = n_clusters, maxIterations = 2000, initializationMode = "kmeans||", initializationSteps = 5, epsilon = 1.0e-9)
-                    #kmodel.cluster_centers_ = numpy.array(kmeans_model.centers)
-                    #kmodel.n_clusters = len(kmodel.cluster_centers_)
-                    kmodel.save(kmodel_filename)
-                #
-                for i in range(kmodel.n_clusters):
-                    codebooks_y.append(label)
-                    codebooks_X.append(kmodel.cluster_centers_[i].copy())
-        print('processing time lapse for', len(codebooks_X), 'clusters in total', time.time() - starting_time, 'seconds')
-        codebooks_X = numpy.array(codebooks_X)
-        codebooks_y = numpy.array(codebooks_y)
-        model.fit(codebooks_X, codebooks_y)
-        #############################################################################################################################
-    else:            
-        model.fit(X_train, y_train)
-    #
-    band_width = model.band_width
+    knn = KNN_Classifier(K = K, num_classes = len(numpy.unique(label_mapping)))
+    knn.fit(X_train, y_train, min_samples_to_split = 5000)
 
     if spark_context is not None:
         for subset, rdd_data in zip(['train', 'test'], [rdd_train_data, rdd_test_data]):
             print(subset, rdd_data.count(), rdd_data.getNumPartitions())
-            y_true, y_pred = model.predict(rdd_data)
+            y_true, y_pred = knn.predict(rdd_data)
             #
             print(confusion_matrix(y_true, y_pred))
             print(classification_report(y_true, y_pred))
             # Save results in text and graphically represented confusion matrices
-            filename_prefix = f'kde-classification-results-bw-%.3f' % band_width
+            filename_prefix = f'knn-classification-results-k-%d' % K
             save_results(f'{results_dir}-{subset}', filename_prefix, y_true, y_pred)
     else:
         for subset, X, y_true in zip(['train', 'test'], [X_train, X_test], [y_train, y_test]):
             print(subset, X.shape, y_true.shape)
-            y_pred = model.predict(X)
+            y_pred = knn.predict(X)
             print(confusion_matrix(y_true, y_pred))
             print(classification_report(y_true, y_pred))
             # Save results in text and graphically represented confusion matrices
-            filename_prefix = f'kde-classification-results-bw-%.3f' % band_width
+            filename_prefix = f'knn-classification-results-k-%d' % K
             save_results(f'{results_dir}-{subset}', filename_prefix, y_true, y_pred)
 
     if spark_context is not None:

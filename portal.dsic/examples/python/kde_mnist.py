@@ -5,7 +5,7 @@
     Universitat Politecnica de Valencia
     Technical University of Valencia TU.VLC
 
-    Using kernel density estimation for classification 
+    Using Kernel Density Estimation for classification 
 """
 
 import os
@@ -42,9 +42,9 @@ if __name__ == "__main__":
     verbose = 0
     spark_context = None
     num_partitions = 80
-    models_dir = f'{home_dir}/models.digits.3'
-    log_dir = f'{home_dir}/log.digits.3'
-    results_dir = f'{home_dir}/results.digits.3'
+    models_dir = f'{home_dir}/digits/models.3'
+    log_dir = f'{home_dir}/digits/log.3'
+    results_dir = f'{home_dir}/digits/results.3'
     do_training = False
     do_classification = False
     model_filename = None
@@ -67,7 +67,7 @@ if __name__ == "__main__":
 
 
     #if model_filename is None:
-    #    model_filename = f'{models_dir}/kde-bd-{band_width}'
+    #    model_filename = f'{models_dir}/kde-bw-{band_width}'
 
     if SparkContext is not None:
         spark_context = SparkContext(appName = "KernelDensityEstimation-with-dataset-MNIST")
@@ -124,7 +124,7 @@ if __name__ == "__main__":
         y_test_pred = model.predict(X_test)
 
     # Save results in text and graphically represented confusion matrices
-    filename_prefix = f'kde-classification-results-pca-{pca_components}-bd-%.3f' % band_width
+    filename_prefix = f'kde-classification-results-pca-{pca_components}-bw-%.3f' % band_width
     save_results(f'{results_dir}.train', filename_prefix, y_train_true, y_train_pred)
     save_results(f'{results_dir}.test',  filename_prefix, y_test_true,  y_test_pred)
     #

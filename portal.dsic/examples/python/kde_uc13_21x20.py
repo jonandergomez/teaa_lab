@@ -21,7 +21,11 @@ from matplotlib import pyplot
 from utils_for_results import save_results
 from KernelClassifier import KernelClassifier
 
-from pyspark import SparkContext
+try:
+    from pyspark import SparkContext
+    #from pyspark.mllib.clustering import KMeans, KMeansModel
+except:
+    SparkContext = None
 
 
 if __name__ == "__main__":
@@ -90,8 +94,8 @@ if __name__ == "__main__":
     train_dataset_filename = f'{hdfs_home_dir}/data/uc13/uc13-{global_patient}-21x20-train.csv'
     test_dataset_filename = f'{hdfs_home_dir}/data/uc13/uc13-{global_patient}-21x20-test.csv'
 
-
-    spark_context = SparkContext(appName = "Kernel-Density-Estimation-dataset-UC13")
+    if SparkContext is not None:
+        spark_context = SparkContext(appName = "Kernel-Density-Estimation-dataset-UC13")
 
     os.makedirs(log_dir,    exist_ok = True)
     #os.makedirs(models_dir, exist_ok = True)
@@ -104,14 +108,6 @@ if __name__ == "__main__":
         - All the lines **must** contain the same number of values.
         - All the values **must** be numeric, i.e., integers or real values.
     '''
-    # Data loading and parsing
-    train_csv_lines = spark_context.textFile(train_dataset_filename)
-    test_csv_lines  = spark_context.textFile(test_dataset_filename)
-    print("file(s) loaded ")
-    # RDD repartitioning
-    train_csv_lines = train_csv_lines.repartition(num_partitions)
-    test_csv_lines  =  test_csv_lines.repartition(num_partitions)
-
     # RDD object conversion
     def csv_line_to_tuple(line):
         parts = line.split(';')
@@ -125,23 +121,45 @@ if __name__ == "__main__":
         sample = numpy.array([float(x) for x in parts[2:]]).reshape(num_channels, -1)
         return [(label, x) for x in sample]
 
-    rdd_train_data    = train_csv_lines.map(csv_line_to_tuple)#.sample(False, 0.01)
-    rdd_train_samples = train_csv_lines.flatMap(csv_line_to_list_of_tuples)
-    rdd_test_data     = test_csv_lines.map(csv_line_to_tuple)#.sample(False, 0.01)
-    rdd_test_samples  = test_csv_lines.flatMap(csv_line_to_list_of_tuples)
+    if spark_context is not None:
+        # Data loading and parsing
+        train_csv_lines = spark_context.textFile(train_dataset_filename)
+        test_csv_lines  = spark_context.textFile(test_dataset_filename)
+        print("file(s) loaded ")
+        # RDD repartitioning
+        train_csv_lines = train_csv_lines.repartition(num_partitions)
+        test_csv_lines  =  test_csv_lines.repartition(num_partitions)
 
-    # Retrives basic info from the RDD object
-    num_train_samples = rdd_train_samples.count()
-    x = rdd_train_samples.take(1)
-    dim = x[0][1].shape[0]
-    num_test_samples = rdd_test_samples.count()
+        rdd_train_data    = train_csv_lines.map(csv_line_to_tuple)#.sample(False, 0.01)
+        rdd_train_samples = train_csv_lines.flatMap(csv_line_to_list_of_tuples)
+        rdd_test_data     = test_csv_lines.map(csv_line_to_tuple)#.sample(False, 0.01)
+        rdd_test_samples  = test_csv_lines.flatMap(csv_line_to_list_of_tuples)
 
-    print(f'loaded {num_train_samples} {dim}-dimensional samples for training into {rdd_train_samples.getNumPartitions()} partitions')
-    print(f'loaded {num_test_samples} {dim}-dimensional samples for testing into {rdd_test_samples.getNumPartitions()} partitions')
+        # Retrives basic info from the RDD object
+        num_train_samples = rdd_train_samples.count()
+        x = rdd_train_samples.take(1)
+        dim = x[0][1].shape[0]
+        num_test_samples = rdd_test_samples.count()
+
+        print(f'loaded {num_train_samples} {dim}-dimensional samples for training into {rdd_train_samples.getNumPartitions()} partitions')
+        print(f'loaded {num_test_samples} {dim}-dimensional samples for testing into {rdd_test_samples.getNumPartitions()} partitions')
  
+        y_train = numpy.array(rdd_train_samples.map(lambda t: t[0]).collect())
+        X_train = numpy.array(rdd_train_samples.map(lambda t: t[1]).collect())
+    else:
+        with os.popen(f'hdfs dfs -cat {train_dataset_filename}') as f:
+            train_csv_lines = f.readlines()
+            f.close()
+        with os.popen(f'hdfs dfs -cat {test_dataset_filename}') as f:
+            test_csv_lines = f.readlines()
+            f.close()
 
-    y_train = numpy.array(rdd_train_samples.map(lambda t: t[0]).collect())
-    X_train = numpy.array(rdd_train_samples.map(lambda t: t[1]).collect())
+        train_samples = list()
+        for csv_line in train_csv_lines:
+            train_samples += csv_line_to_list_of_tuples(csv_line)
+
+        y_train = numpy.array([t[0] for t in train_samples])
+        X_train = numpy.array([t[1] for t in train_samples])
 
     model = KernelClassifier(band_width = band_width)
 
@@ -149,7 +167,7 @@ if __name__ == "__main__":
     n_clusters = 4000
     if use_kmeans:
         #############################################################################################################################
-        from machine_learning import KMeans, kmeans_load
+        from machine_learning import KMeans as JonKMeans, kmeans_load
         codebooks_y = list()
         codebooks_X = list()
         starting_time = time.time()
@@ -165,9 +183,15 @@ if __name__ == "__main__":
                 kmodel_filename = f'{local_home_dir}/{models_dir}/kmeans-%05d-%03d.pkl' % (n_clusters, label)
                 kmodel = kmeans_load(kmodel_filename)
                 if kmodel is None:
-                    kmodel = KMeans(n_clusters = n_clusters, verbosity = 1, modality = 'Lloyd', init = 'random') # 'KMeans++')
+                    #kmodel = JonKMeans(n_clusters = n_clusters, verbosity = 1, modality = 'original-k-Means')
+                    kmodel = JonKMeans(n_clusters = n_clusters, verbosity = 1, modality = 'Lloyd', init = 'random')
                     kmodel.epsilon = 1.0e-8
+                    #kmodel.fit(_X_train)
+                    #kmodel.modality = 'Lloyd'
                     kmodel.fit(_X_train)
+                    #kmeans_model = KMeans.train(rdd_train_samples.map(lambda t: t[1]), k = n_clusters, maxIterations = 2000, initializationMode = "kmeans||", initializationSteps = 5, epsilon = 1.0e-9)
+                    #kmodel.cluster_centers_ = numpy.array(kmeans_model.centers)
+                    #kmodel.n_clusters = len(kmodel.cluster_centers_)
                     kmodel.save(kmodel_filename)
                 #
                 for i in range(kmodel.n_clusters):
@@ -183,14 +207,15 @@ if __name__ == "__main__":
     #
     band_width = model.band_width
 
-    for subset, rdd_data in zip(['train', 'test'], [rdd_train_data, rdd_test_data]):
-        print(subset, rdd_data.count(), rdd_data.getNumPartitions())
-        y_true, y_pred = model.predict(rdd_data)
+    if spark_context is not None:
+        for subset, rdd_data in zip(['train', 'test'], [rdd_train_data, rdd_test_data]):
+            print(subset, rdd_data.count(), rdd_data.getNumPartitions())
+            y_true, y_pred = model.predict(rdd_data)
+            #
+            print(confusion_matrix(y_true, y_pred))
+            print(classification_report(y_true, y_pred))
+            # Save results in text and graphically represented confusion matrices
+            filename_prefix = f'kde-classification-results-bw-%.3f' % band_width
+            save_results(f'{results_dir}-{subset}', filename_prefix, y_true, y_pred)
         #
-        print(confusion_matrix(y_true, y_pred))
-        print(classification_report(y_true, y_pred))
-        # Save results in text and graphically represented confusion matrices
-        filename_prefix = f'kde-classification-results-bw-%.3f' % band_width
-        save_results(f'{results_dir}-{subset}', filename_prefix, y_true, y_pred)
-
-    spark_context.stop()
+        spark_context.stop()

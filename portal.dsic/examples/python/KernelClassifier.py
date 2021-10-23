@@ -12,6 +12,8 @@ import time
 import math
 import numpy
 
+from sklearn.metrics.pairwise import euclidean_distances
+
 try:
     from pyspark.rdd import RDD
 except:
@@ -54,25 +56,33 @@ class KernelClassifier:
         self.samples = list()
         self.labels = list()
         self.sizes = list()
+        self.samples_norm_squared = list()
         for k in range(self.num_classes):
             self.samples.append(X[y == self.targets[k]])
             self.labels.append(y[y == self.targets[k]])
             self.sizes.append(len(self.samples[-1]))
+            self.samples_norm_squared.append((self.samples[-1] ** 2).sum(axis = 1))
         #
         return self
     # ------------------------------------------------------------------------------
 
     def kernel_for_probs(self, sample):
+        alpha = -0.5 / (self.band_width ** 2)
         if len(sample.shape) == 2:
             densities = list()
-            for n in range(len(sample)):
-                densities.append([numpy.exp(- 0.5 * ((sample[n] - self.samples[i]) ** 2).sum(axis = 1) / self.band_width ** 2).sum() / self.sizes[i] for i in range(self.num_classes)])
-            densities = numpy.array(densities)
-            densities = densities.sum(axis = 0)
+            X_norm_squared = (sample ** 2).sum(axis = 1).reshape(-1, 1)
+            for i in range(self.num_classes):
+                distances = euclidean_distances(sample, self.samples[i], squared = True, Y_norm_squared = self.samples_norm_squared[i], X_norm_squared = X_norm_squared) # -> shape (len(sample), len(self.samples[i]))
+                densities.append(numpy.exp(alpha * distances).sum(axis = 1) / self.sizes[i]) # -> shape(len(sample), )
+            densities = numpy.array(densities) # -> shape(len(labels), len(samples))
+            densities = densities.sum(axis = 1) # -> shape(len(labels), )
         else:
-            densities = [numpy.exp(- 0.5 * ((sample - self.samples[i]) ** 2).sum(axis = 1) / self.band_width ** 2).sum() / self.sizes[i] for i in range(self.num_classes)]
-            densities = numpy.array(densities)
-        probs = densities / max(1.0e-3, densities.sum())
+            densities = list()
+            for i in range(self.num_classes):
+                distances = euclidean_distances(sample.reshape(1, -1), self.samples[i], squared = True, Y_norm_squared = self.samples_norm_squared[i]) # -> shape (1, len(self.samples[i]))
+                densities.append(numpy.exp(alpha * distances).sum() / self.sizes[i]) # -> shape (1, )
+            densities = numpy.array(densities) # -> shape(len(labels), )
+        probs = densities / max(1.0e-3, densities.sum()) # -> shape(len(labels), )
         return probs
     # ------------------------------------------------------------------------------
 
