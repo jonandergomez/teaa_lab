@@ -12,7 +12,7 @@ do
 			#echo "Nothing to do!"
 			;;
 		*)
-			#ssh ${wn} mkdir .ssh
+			#ssh ${wn} mkdir -p .ssh
 			#scp ${HOME}/.ssh/authorized_keys ${wn}:.ssh/authorized_keys
 			#ssh -oStrictHostKeyChecking=no ${wn} chsh -s /bin/bash
 			;;
@@ -23,8 +23,8 @@ do
 	#scp ${HOME}/.bashrc  ${wn}:.bashrc  # &
 
 	#ssh -oStrictHostKeyChecking=no ${wn} mkdir -p "${cluster_base_dir}/logs"
-	ssh -oStrictHostKeyChecking=no ${wn} mkdir -p "${cluster_base_dir}/hdfs/namenode"
-	ssh -oStrictHostKeyChecking=no ${wn} mkdir -p "${cluster_base_dir}/hdfs/datanode"
+#	ssh -oStrictHostKeyChecking=no ${wn} mkdir -p "${cluster_base_dir}/hdfs/namenode"
+#	ssh -oStrictHostKeyChecking=no ${wn} mkdir -p "${cluster_base_dir}/hdfs/datanode"
 	#ssh -oStrictHostKeyChecking=no ${wn} mkdir -p "${cluster_base_dir}/dirs/local" 
 	#ssh -oStrictHostKeyChecking=no ${wn} mkdir -p "${cluster_base_dir}/dirs/logs"
 	#ssh -oStrictHostKeyChecking=no ${wn} mkdir -p "${cluster_base_dir}/dirs/mr-history/tmp"

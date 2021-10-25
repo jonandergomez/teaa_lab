@@ -150,12 +150,14 @@ if __name__ == "__main__":
     X_test  = numpy.array([t[1] for t in data[cut_point:]])
 
     knn = KNN_Classifier(K = K, num_classes = len(numpy.unique(label_mapping)))
-    knn.fit(X_train, y_train, min_samples_to_split = 5000)
+    knn.fit(X_train, y_train, min_samples_to_split = None)
 
     if spark_context is not None:
         for subset, rdd_data in zip(['train', 'test'], [rdd_train_data, rdd_test_data]):
             print(subset, rdd_data.count(), rdd_data.getNumPartitions())
-            y_true, y_pred = knn.predict(rdd_data)
+            y_true_pred = knn.predict(rdd_data)
+            y_true = numpy.array([t[0] for t in y_true_pred])
+            y_pred = numpy.array([t[1] for t in y_true_pred])
             #
             print(confusion_matrix(y_true, y_pred))
             print(classification_report(y_true, y_pred))

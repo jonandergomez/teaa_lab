@@ -33,7 +33,7 @@ class KNN_Classifier:
         self.balltree = None
     # ------------------------------------------------------------------------------
 
-    def fit(self, X, y, min_samples_to_split = 100):
+    def fit(self, X, y, min_samples_to_split = None):
         if RDD is not None and (isinstance(X, RDD) or isinstance(y, RDD)):
             raise Exception('RDD objects not supported for training')
 

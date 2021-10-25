@@ -26,7 +26,7 @@ class BallTreeNode:
         if RDD is not None and isinstance(S_n, RDD):
             pass
         else:
-            self.center = S_n[1].mean()
+            self.center = S_n[1].mean(axis = 0)
             #self.radius = math.sqrt(max(((S_n[1] - self.center) ** 2).sum(axis = 1)))
             self.radius = max(((S_n[1] - self.center) ** 2).sum(axis = 1))
         self.left = None
@@ -37,7 +37,7 @@ class BallTree:
     This class implements generates a BallTree with non-disjoint subsets at each split.
     """
     
-    def __init__(self, min_samples_to_split = 100):
+    def __init__(self, min_samples_to_split = None):
         self.min_samples_to_split = min_samples_to_split
         self.dim = None
     # ------------------------------------------------------------------------------
@@ -55,6 +55,9 @@ class BallTree:
         else:
             assert type(X) == numpy.ndarray
             assert len(X.shape) == 2
+            if self.min_samples_to_split is None:
+                #self.min_samples_to_split = 10 * int(math.ceil(math.sqrt(len(X))))
+                self.min_samples_to_split = max(100, len(X) // (2 ** 6))
             self.dim = X.shape[1]
             self.root_split = self.do_split((y, X))
         #

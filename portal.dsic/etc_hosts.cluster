@@ -22,6 +22,16 @@
 172.23.180.92 teaa-worker18-cluster ds-teaa-020 ds-teaa-020.dsicv.upv.es teaa-worker18-cluster.dsicv.upv.es
 172.23.180.93 teaa-worker19-cluster ds-teaa-021 ds-teaa-021.dsicv.upv.es teaa-worker19-cluster.dsicv.upv.es
 172.23.180.94 teaa-worker20-cluster ds-teaa-022 ds-teaa-022.dsicv.upv.es teaa-worker20-cluster.dsicv.upv.es
+172.23.182.168 teaa-worker21-cluster ds-teaa-024 ds-teaa-024.dsicv.upv.es teaa-worker21-cluster.dsicv.upv.es
+172.23.182.169 teaa-worker22-cluster ds-teaa-025 ds-teaa-025.dsicv.upv.es teaa-worker22-cluster.dsicv.upv.es
+172.23.182.170 teaa-worker23-cluster ds-teaa-026 ds-teaa-026.dsicv.upv.es teaa-worker23-cluster.dsicv.upv.es
+172.23.182.171 teaa-worker24-cluster ds-teaa-027 ds-teaa-027.dsicv.upv.es teaa-worker24-cluster.dsicv.upv.es
+172.23.182.172 teaa-worker25-cluster ds-teaa-028 ds-teaa-028.dsicv.upv.es teaa-worker25-cluster.dsicv.upv.es
+172.23.182.173 teaa-worker26-cluster ds-teaa-029 ds-teaa-029.dsicv.upv.es teaa-worker26-cluster.dsicv.upv.es
+172.23.182.174 teaa-worker27-cluster ds-teaa-030 ds-teaa-030.dsicv.upv.es teaa-worker27-cluster.dsicv.upv.es
+172.23.182.175 teaa-worker28-cluster ds-teaa-031 ds-teaa-031.dsicv.upv.es teaa-worker28-cluster.dsicv.upv.es
+172.23.182.176 teaa-worker29-cluster ds-teaa-032 ds-teaa-032.dsicv.upv.es teaa-worker29-cluster.dsicv.upv.es
+172.23.182.177 teaa-worker30-cluster ds-teaa-033 ds-teaa-033.dsicv.upv.es teaa-worker30-cluster.dsicv.upv.es
 
 # The following lines are desirable for IPv6 capable hosts
 ::1     ip6-localhost ip6-loopback

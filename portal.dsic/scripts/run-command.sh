@@ -7,10 +7,19 @@ for wn in ${workers}
 do
 	echo "${wn}"
 
-	#ssh -oStrictHostKeyChecking=no root@${wn} apt install -y libkryo-java libkryo-serializers-java 
-	#ssh -oStrictHostKeyChecking=no root@${wn} apt install -y python3  python3-numpy
+	ssh -oStrictHostKeyChecking=no root@${wn} apt install -y libkryo-java libkryo-serializers-java 
+	ssh -oStrictHostKeyChecking=no root@${wn} apt install -y python3  python3-numpy
 	ssh -oStrictHostKeyChecking=no root@${wn} apt install -y python3-sklearn python3-sklearn-lib python3-sklearn-pandas
+    #scp etc_hosts.cluster root@${wn}:/etc/hosts
+
+	#ssh ubuntu@${wn} echo $PATH # sanity check
+	#ssh ubuntu@${wn} which python3 # sanity check
+	#ssh ubuntu@${wn} which pip3 # sanity check
+	#ssh ubuntu@${wn} ls -l /home/ubuntu/anaconda3/bin/pip3 # sanity check
+
 	#ssh -oStrictHostKeyChecking=no ubuntu@${wn} pip3 install numpy
-    #scp ~/.profile ubuntu@${wn}:.profile
 	#ssh -oStrictHostKeyChecking=no ubuntu@${wn} conda update --all 
+
+    #scp ~/.profile ubuntu@${wn}:.profile
+    #scp ~/.bashrc ubuntu@${wn}:.bashrc
 done

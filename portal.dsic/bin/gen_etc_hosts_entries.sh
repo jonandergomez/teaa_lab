@@ -1,6 +1,6 @@
 #!/bin/bash
 
-for n in {0..20}
+for n in {0..30}
 do
     if [ $n -eq 0 ]
     then
