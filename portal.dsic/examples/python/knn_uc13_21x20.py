@@ -26,7 +26,7 @@ from pyspark import SparkContext
 
 if __name__ == "__main__":
     """
-    Usage: spark-submit --master local[4]  python/kde_uc13_21x20.py --band-width <bw>
+    Usage: spark-submit --master local[4]  python/knn_uc13_21x20.py --k <k>
     """
 
     home_dir = os.getenv('HOME')
