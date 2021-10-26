@@ -1,3 +1,4 @@
+Group Id;Command line to execute
 group 01;scripts/run-python-2.sh python/kde_mnist.py --num-partitions 60 --pca 15 --band-width 0.3
 group 01;scripts/run-python-2.sh python/kde_mnist.py --num-partitions 60 --pca 30 --band-width 0.2
 group 01;scripts/run-python-2.sh python/kde_mnist.py --num-partitions 60 --pca 45 --band-width 1.0
