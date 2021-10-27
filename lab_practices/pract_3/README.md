@@ -98,7 +98,7 @@ Lab practice 3 is about two use cases:
         Set of experiments similar to the one done previously with this dataset using KDE with no PCA and working with each channel independently,
         but in this case no KMeans is used and `K`, the number of nearest neighbours,
         must be varied, instead of the `bandwidth`.
-        [Here](experiments/knn-uc13.csv) you can find the list of experiments and the assigment to each group.
+        [Here](experiments/knn-uc13-21x20.csv) you can find the list of experiments and the assigment to each group.
 
 
 6. What the execution of the different sets of experiments has created
