@@ -163,6 +163,8 @@ if __name__ == "__main__":
 
     model = KernelClassifier(band_width = band_width)
 
+    elapsed_time = {'train' : 0, 'test' : 0}
+
     use_kmeans = True
     n_clusters = 4000
     if use_kmeans:
@@ -210,12 +212,14 @@ if __name__ == "__main__":
     if spark_context is not None:
         for subset, rdd_data in zip(['train', 'test'], [rdd_train_data, rdd_test_data]):
             print(subset, rdd_data.count(), rdd_data.getNumPartitions())
+            reference_time = time.time()
             y_true, y_pred = model.predict(rdd_data)
+            elapsed_time[subset] += time.time() - reference_time
             #
             print(confusion_matrix(y_true, y_pred))
             print(classification_report(y_true, y_pred))
             # Save results in text and graphically represented confusion matrices
             filename_prefix = f'kde-classification-results-bw-%.3f' % band_width
-            save_results(f'{results_dir}-{subset}', filename_prefix, y_true, y_pred)
+            save_results(f'{results_dir}-{subset}', filename_prefix, y_true, y_pred, elapsed_time = elapsed_time[subset])
         #
         spark_context.stop()

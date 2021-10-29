@@ -11,6 +11,7 @@
 import os
 import sys
 import time
+import math
 import numpy
 import pickle
 
@@ -139,13 +140,17 @@ if __name__ == "__main__":
     y_train = numpy.array(rdd_train_samples.map(lambda t: t[0]).collect())
     X_train = numpy.array(rdd_train_samples.map(lambda t: t[1]).collect())
 
+    elapsed_time = {'train' : 0, 'test' : 0}
+
     knn = KNN_Classifier(K = K, num_classes = len(numpy.unique(y_train)))
-    knn.fit(X_train, y_train, min_samples_to_split = 1000)
+    knn.fit(X_train, y_train, min_samples_to_split = max(100, 10 * int(math.sqrt(len(X_train)))))
 
     for subset, rdd_data in zip(['train', 'test'], [rdd_train_data, rdd_test_data]):
         print(subset, rdd_data.count(), rdd_data.getNumPartitions())
         #
+        reference_time = time.time()
         y_true_pred = knn.predict(rdd_data)
+        elapsed_time[subset] += time.time() - reference_time
         y_true = numpy.array([t[0] for t in y_true_pred])
         y_pred = numpy.array([t[1] for t in y_true_pred])
         #
@@ -153,6 +158,6 @@ if __name__ == "__main__":
         print(classification_report(y_true, y_pred))
         # Save results in text and graphically represented confusion matrices
         filename_prefix = f'knn-classification-results-k-%d' % K
-        save_results(f'{results_dir}-{subset}', filename_prefix, y_true, y_pred)
+        save_results(f'{results_dir}-{subset}', filename_prefix, y_true, y_pred, elapsed_time = elapsed_time[subset])
     #
     spark_context.stop()

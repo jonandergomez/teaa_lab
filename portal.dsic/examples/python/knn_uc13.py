@@ -149,13 +149,17 @@ if __name__ == "__main__":
     y_test  = numpy.array([t[0] for t in data[cut_point:]])
     X_test  = numpy.array([t[1] for t in data[cut_point:]])
 
+    elapsed_time = {'train' : 0, 'test' : 0}
+
     knn = KNN_Classifier(K = K, num_classes = len(numpy.unique(label_mapping)))
     knn.fit(X_train, y_train, min_samples_to_split = None)
 
     if spark_context is not None:
         for subset, rdd_data in zip(['train', 'test'], [rdd_train_data, rdd_test_data]):
             print(subset, rdd_data.count(), rdd_data.getNumPartitions())
+            reference_time = time.time()
             y_true_pred = knn.predict(rdd_data)
+            elapsed_time[subset] += time.time() - reference_time
             y_true = numpy.array([t[0] for t in y_true_pred])
             y_pred = numpy.array([t[1] for t in y_true_pred])
             #
@@ -163,16 +167,18 @@ if __name__ == "__main__":
             print(classification_report(y_true, y_pred))
             # Save results in text and graphically represented confusion matrices
             filename_prefix = f'knn-classification-results-k-%d' % K
-            save_results(f'{results_dir}-{subset}', filename_prefix, y_true, y_pred)
+            save_results(f'{results_dir}-{subset}', filename_prefix, y_true, y_pred, elapsed_time = elapsed_time[subset])
     else:
         for subset, X, y_true in zip(['train', 'test'], [X_train, X_test], [y_train, y_test]):
             print(subset, X.shape, y_true.shape)
+            reference_time = time.time()
             y_pred = knn.predict(X)
+            elapsed_time[subset] += time.time() - reference_time
             print(confusion_matrix(y_true, y_pred))
             print(classification_report(y_true, y_pred))
             # Save results in text and graphically represented confusion matrices
             filename_prefix = f'knn-classification-results-k-%d' % K
-            save_results(f'{results_dir}-{subset}', filename_prefix, y_true, y_pred)
+            save_results(f'{results_dir}-{subset}', filename_prefix, y_true, y_pred, elapsed_time = elapsed_time[subset])
 
     if spark_context is not None:
         spark_context.stop()

@@ -63,9 +63,9 @@ if __name__ == "__main__":
     spark_context = None
     num_partitions = 80
     num_channels = 21
-    results_dir = f'{home_dir}/uc13.1/results.ensembles'
-    models_dir = 'uc13.1/models.ensembles'
-    log_dir = f'{home_dir}/uc13.1/log.ensembles'
+    results_dir = f'{home_dir}/uc13.1/results.2'
+    models_dir = 'uc13.1/models.2'
+    log_dir = f'{home_dir}/uc13.1/log.2'
     do_training = False
     do_classification = False
     do_prediction = False

@@ -14,6 +14,7 @@
 
 import os
 import sys
+import time
 import numpy
 import pickle
 
@@ -50,9 +51,9 @@ if __name__ == "__main__":
 
     spark_context = None
     num_partitions = 80
-    models_dir = 'models.digits.2'
-    log_dir = 'log.digits.2'
-    results_dir = 'results.digits.2'
+    models_dir = 'digits/models.2'
+    log_dir = 'digits/log.2'
+    results_dir = 'digits/results.2'
     do_training = False
     do_classification = False
     model_filename = None
@@ -180,6 +181,7 @@ if __name__ == "__main__":
         else:
             raise Exception(f'{ensemble_type} is no a valid ensemble type')
 
+    elapsed_time = {'train': 0, 'test': 0}
             
     if do_classification:
         if ensemble_type in ['random-forest', 'gradient-boosted-trees']:
@@ -191,8 +193,12 @@ if __name__ == "__main__":
                 model = GradientBoostedTreesModel.load(spark_context, model_filename)
             #
             # Classifies the samples
+            reference_time = time.time()
             y_train_pred = model.predict(rdd_train.map(lambda x: x.features)).map(undo_remap_label)
+            elapsed_time['train'] += time.time() - reference_time
+            reference_time = time.time()
             y_test_pred  = model.predict(rdd_test.map(lambda x: x.features)).map(undo_remap_label)
+            elapsed_time['test'] += time.time() - reference_time
             # Merge ground-truth with predictions
             y_true_and_pred = rdd_train.map(lambda x: undo_remap_label(x.label)).zip(y_train_pred).collect()
             y_train_true = numpy.array([x[0] for x in y_true_and_pred])
@@ -208,16 +214,21 @@ if __name__ == "__main__":
                 model = pickle.load(f)
                 f.close()
             # Classifies the samples
+            reference_time = time.time()
             y_train_true = y_train
             y_train_pred = model.predict(X_train)
+            elapsed_time['train'] += time.time() - reference_time
+            #
+            reference_time = time.time()
             y_test_true = y_test
             y_test_pred  = model.predict(X_test)
+            elapsed_time['test'] += time.time() - reference_time
         else:
             raise Exception(f'{ensemble_type} is no a valid ensemble type')
 
         # Save results in text and graphically represented confusion matrices
         filename_prefix = f'{ensemble_type}-classification-results-{num_trees}-{impurity}-{max_depth}-{pca_components}'
-        save_results(f'{results_dir}.train', filename_prefix, y_train_true, y_train_pred)
-        save_results(f'{results_dir}.test',  filename_prefix, y_test_true, y_test_pred)
+        save_results(f'{results_dir}.train', filename_prefix, y_train_true, y_train_pred, elapsed_time = elapsed_time['train'])
+        save_results(f'{results_dir}.test',  filename_prefix, y_test_true, y_test_pred, elapsed_time = elapsed_time['test'])
     #
     spark_context.stop()

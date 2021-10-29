@@ -10,6 +10,7 @@
 
 import os
 import sys
+import time
 import numpy
 import pickle
 
@@ -105,28 +106,42 @@ if __name__ == "__main__":
     print(f'train subset with {len(X_train)} samples')
     print(f'test  subset with {len(X_test)} samples')
 
+    train_elapsed_time = 0
+    test_elapsed_time = 0
+    reference_timestamp = time.time()
+
     model = KernelClassifier(band_width = band_width)
     model.fit(X_train, y_train)
     band_width = model.band_width
+
+    train_elapsed_time += time.time() - reference_timestamp
 
     if spark_context is not None:
         rdd_train = spark_context.parallelize([(y, x.copy()) for x, y in zip(X_train, y_train)], numSlices = num_partitions)
         rdd_test  = spark_context.parallelize([(y, x.copy()) for x, y in zip(X_test,  y_test)],  numSlices = num_partitions)
         num_samples = rdd_train.count()
+        reference_timestamp = time.time()
         y_train_true, y_train_pred = model.predict(rdd_train)
+        train_elapsed_time += time.time() - reference_timestamp
+        reference_timestamp = time.time()
         y_test_true,  y_test_pred  = model.predict(rdd_test)
+        test_elapsed_time += time.time() - reference_timestamp
     else:
         # Classifies the samples from the training subset
+        reference_timestamp = time.time()
         y_train_true = y_train
         y_train_pred = model.predict(X_train)
+        train_elapsed_time += time.time() - reference_timestamp
         # Classifies the samples from the testing subset
+        reference_timestamp = time.time()
         y_test_true = y_test
         y_test_pred = model.predict(X_test)
+        test_elapsed_time += time.time() - reference_timestamp
 
     # Save results in text and graphically represented confusion matrices
     filename_prefix = f'kde-classification-results-pca-{pca_components}-bw-%.3f' % band_width
-    save_results(f'{results_dir}.train', filename_prefix, y_train_true, y_train_pred)
-    save_results(f'{results_dir}.test',  filename_prefix, y_test_true,  y_test_pred)
+    save_results(f'{results_dir}.train', filename_prefix, y_train_true, y_train_pred, train_elapsed_time)
+    save_results(f'{results_dir}.test',  filename_prefix, y_test_true,  y_test_pred, test_elapsed_time)
     #
     if spark_context is not None:
         spark_context.stop()

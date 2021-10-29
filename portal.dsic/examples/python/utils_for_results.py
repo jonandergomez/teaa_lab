@@ -24,7 +24,7 @@ class MyArgmaxForPredictedLabels(BaseEstimator):
 # ---------------------------------------------------------------------------------------------------
 
 # ---------------------------------------------------------------------------------------------------
-def save_results(results_dir, filename_prefix, y_true, y_pred):
+def save_results(results_dir, filename_prefix, y_true, y_pred, elapsed_time = None):
     os.makedirs(results_dir, exist_ok = True)
     f_results = open(f'{results_dir}/{filename_prefix}.txt', 'wt')
     _cm_ = confusion_matrix(y_true, y_pred)
@@ -34,6 +34,11 @@ def save_results(results_dir, filename_prefix, y_true, y_pred):
         f_results.write('\n')
     f_results.write('\n')
     print(classification_report(y_true, y_pred), file = f_results)
+    if elapsed_time is not None:
+        f_results.write('\n')
+        f_results.write('\n')
+        f_results.write('running time in seconds: %.3f\n' % elapsed_time)
+        f_results.write('\n')
     f_results.close()
     #
     fig, axes = pyplot.subplots(nrows = 1, ncols = 2, figsize = (16, 7))

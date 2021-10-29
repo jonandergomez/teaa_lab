@@ -108,9 +108,9 @@ if __name__ == "__main__":
             label_mapping[8] = 0
             label_mapping[9] = 0
 
-    results_dir = f'{home_dir}/uc13-21x20/{global_patient}/results.ensembles'
-    models_dir = f'uc13-21x20/{global_patient}/models.ensembles'
-    log_dir = f'{home_dir}/uc13-21x20/{global_patient}/log.ensembles'
+    results_dir = f'{home_dir}/uc13-21x20/{global_patient}/results.2'
+    models_dir = f'uc13-21x20/{global_patient}/models.2'
+    log_dir = f'{home_dir}/uc13-21x20/{global_patient}/log.2'
     dataset_filename = f'{hdfs_home_dir}/data/uc13/uc13-{global_patient}-21x20-{subset}.csv'
 
     if model_filename is None:

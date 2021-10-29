@@ -120,15 +120,21 @@ if __name__ == "__main__":
 
     data = list()
     if global_patient < 'chb15':
+        print(f'loading from {train_dataset_filename}')
         f = os.popen(f'hdfs dfs -cat {train_dataset_filename}')
     else:
+        print(f'loading from {test_dataset_filename}')
         f = os.popen(f'hdfs dfs -cat {test_dataset_filename}')
     for line in f:
         t = csv_line_to_tuple(line)
         if t[0] == global_patient:
             data.append((t[1], t[2])) # patient is removed
     f.close()
-    print(f"data has been loaded: {len(data)} samples")
+    print(f"data has been loaded: {len(data)} samples from patient {global_patient}")
+    if len(data) == 0:
+        print()
+        print(f'No data available for patient {global_patient}. Existing the program ...')
+        sys.exit(1)
 
     cut_point = int(0.7 * len(data))
     num_train_samples = cut_point
@@ -152,14 +158,17 @@ if __name__ == "__main__":
     y_test  = numpy.array([t[0] for t in data[cut_point:]])
     X_test  = numpy.array([t[1] for t in data[cut_point:]])
 
+
+    elapsed_time = {'train' : 0, 'test' : 0}
+
     model = KernelClassifier(band_width = band_width)
 
+    reference_time = time.time()
     if n_clusters > 0:
         #############################################################################################################################
         from machine_learning import KMeans as JonKMeans, kmeans_load
         codebooks_y = list()
         codebooks_X = list()
-        starting_time = time.time()
         for label in numpy.unique(y_train):
             print('computing k-means for label', label)
             _X_train = X_train[y_train == label]
@@ -185,35 +194,43 @@ if __name__ == "__main__":
                 for i in range(kmodel.n_clusters):
                     codebooks_y.append(label)
                     codebooks_X.append(kmodel.cluster_centers_[i].copy())
-        print('processing time lapse for', len(codebooks_X), 'clusters in total', time.time() - starting_time, 'seconds')
+        elapsed_time['train'] += time.time() - reference_time
+        print('processing time lapse for', len(codebooks_X), 'clusters in total', elapsed_time['train'], 'seconds')
         codebooks_X = numpy.array(codebooks_X)
         codebooks_y = numpy.array(codebooks_y)
         model.fit(codebooks_X, codebooks_y)
         #############################################################################################################################
     else:            
         model.fit(X_train, y_train)
+        elapsed_time['train'] += time.time() - reference_time
     #
     band_width = model.band_width
+
+    elapsed_time['train'] = 0 # reset this time counter to only reflect the time required to classify samples from the training set
 
     if spark_context is not None:
         for subset, rdd_data in zip(['train', 'test'], [rdd_train_data, rdd_test_data]):
             print(subset, rdd_data.count(), rdd_data.getNumPartitions())
+            reference_time = time.time()
             y_true, y_pred = model.predict(rdd_data)
+            elapsed_time[subset] += time.time() - reference_time
             #
             print(confusion_matrix(y_true, y_pred))
             print(classification_report(y_true, y_pred))
             # Save results in text and graphically represented confusion matrices
             filename_prefix = f'kde-classification-results-bw-%.3f' % band_width
-            save_results(f'{results_dir}-{subset}', filename_prefix, y_true, y_pred)
+            save_results(f'{results_dir}-{subset}', filename_prefix, y_true, y_pred, elapsed_time[subset])
     else:
         for subset, X, y_true in zip(['train', 'test'], [X_train, X_test], [y_train, y_test]):
             print(subset, X.shape, y_true.shape)
+            reference_time = time.time()
             y_pred = model.predict(X)
+            elapsed_time[subset] += time.time() - reference_time
             print(confusion_matrix(y_true, y_pred))
             print(classification_report(y_true, y_pred))
             # Save results in text and graphically represented confusion matrices
             filename_prefix = f'kde-classification-results-bw-%.3f' % band_width
-            save_results(f'{results_dir}-{subset}', filename_prefix, y_true, y_pred)
+            save_results(f'{results_dir}-{subset}', filename_prefix, y_true, y_pred, elapsed_time[subset])
 
     if spark_context is not None:
         spark_context.stop()

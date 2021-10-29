@@ -55,6 +55,8 @@ if __name__ == "__main__":
     use_kmeans = False
     codebook_size = 200
     use_probs = False
+
+    elapsed_time = {'train': 0, 'test': 0}
                                                    
     for i in range(len(sys.argv)):
         if   sys.argv[i] == "--verbosity"     :           verbose = int(sys.argv[i + 1])
@@ -222,28 +224,40 @@ if __name__ == "__main__":
                 f.close()
         #
         if spark_context is not None:
+            reference_time = time.time()
             y_train_true_pred = knn.predict(rdd_train)
+            elapsed_time['train'] += time.time() - reference_time
+            reference_time = time.time()
             y_test_true_pred = knn.predict(rdd_test)
+            elapsed_time['test'] += time.time() - reference_time
             #
             y_train_pred = numpy.array([t[1] for t in y_train_true_pred])
             y_test_pred  = numpy.array([t[1] for t in y_test_true_pred])
         else:
+            reference_time = time.time()
             y_train_pred = knn.predict(X_train)
+            elapsed_time['train'] += time.time() - reference_time
+            reference_time = time.time()
             y_test_pred  = knn.predict(X_test)
+            elapsed_time['test'] += time.time() - reference_time
     else:
         # Classifies the samples from the training subset
+        reference_time = time.time()
         knn = rdd_train.map(lambda x: compute_distances_for_numpy(x, X_train)).reduce(natural_merge)
         if use_probs:
             y_train_pred = numpy.array([get_probs(y) for y in knn]).argmax(axis = 1)
         else:
             y_train_pred = numpy.array([get_prediction(y) for y in knn])
+        elapsed_time['train'] += time.time() - reference_time
 
         # Classifies the samples from the testing subset
+        reference_time = time.time()
         knn = rdd_train.map(lambda x: compute_distances_for_numpy(x, X_test)).reduce(natural_merge)
         if use_probs:
             y_test_pred = numpy.array([get_probs(y) for y in knn]).argmax(axis = 1)
         else:
             y_test_pred = numpy.array([get_prediction(y) for y in knn])
+        elapsed_time['test'] += time.time() - reference_time
 
     # Save results in text and graphically represented confusion matrices
     filename_prefix = f'knn-classification-results-pca-{pca_components}-k-%d' % K
@@ -252,8 +266,8 @@ if __name__ == "__main__":
     else:
         filename_prefix += '-no-kmeans'
 
-    save_results(f'{results_dir}.train', filename_prefix, y_train, y_train_pred)
-    save_results(f'{results_dir}.test',  filename_prefix, y_test,  y_test_pred)
+    save_results(f'{results_dir}.train', filename_prefix, y_train, y_train_pred, elapsed_time = elapsed_time['train'])
+    save_results(f'{results_dir}.test',  filename_prefix, y_test,  y_test_pred, elapsed_time = elapsed_time['test'])
     #
     if spark_context is not None:
         spark_context.stop()
