@@ -3,8 +3,8 @@ import sys
 import random
 
 generate_for_mnist = False
-generate_for_uc13_1 = True
-generate_for_uc13_21x20 = False
+generate_for_uc13_1 = False
+generate_for_uc13_21x20 = True
 
 
 
@@ -33,9 +33,8 @@ if generate_for_mnist:
             for md in max_depths_b:
                 for imp in impurities:
                     print(command_line % (et, nt, nt, imp, md))
-    sys.exit(0)
 
-if generate_for_uc13_1:
+elif generate_for_uc13_1:
 
     command_line_train = 'scripts/run-python-2.sh python/tree_ensembles_uc13.py --num-partitions 80 --ensemble-type %s --num-trees %d --num-iterations %d --impurity %s --max-depth %d --subset train --train --classify --reduce-labels'
     command_line_test  = 'scripts/run-python-2.sh python/tree_ensembles_uc13.py --num-partitions 80 --ensemble-type %s --num-trees %d --num-iterations %d --impurity %s --max-depth %d --subset test          --classify --reduce-labels'
@@ -55,15 +54,14 @@ if generate_for_uc13_1:
                 for imp in impurities:
                     #print(command_line_train % (et, nt, nt, imp, md))
                     print(command_line_test % (et, nt, nt, imp, md))
-    sys.exit(0)
 
 
-
-if generate_for_uc13_21x20:
+elif generate_for_uc13_21x20:
 
     patients = ['chb03', 'chb07', 'chb10']
 
-    command_line = 'scripts/run-python-2.sh python/tree_ensembles_uc13_21x20.py --num-partitions 80 --patient %s --ensemble-type %s --num-trees %d --num-iterations %d --impurity %s --max-depth %d --train --classify --reduce-labels'
+    command_line_train = 'scripts/run-python-2.sh python/tree_ensembles_uc13_21x20.py --num-partitions 80 --patient %s --ensemble-type %s --num-trees %d --num-iterations %d --impurity %s --max-depth %d --subset train --train --classify --reduce-labels'
+    command_line_test  = 'scripts/run-python-2.sh python/tree_ensembles_uc13_21x20.py --num-partitions 80 --patient %s --ensemble-type %s --num-trees %d --num-iterations %d --impurity %s --max-depth %d --subset test          --classify --reduce-labels'
 
     print("#!/bin/bash")
 
@@ -72,12 +70,13 @@ if generate_for_uc13_21x20:
             for nt in num_trees_a:
                 for md in max_depths_a:
                     for imp in impurities:
-                        print(command_line % (patient, et, nt, nt, imp, md))
+                        print(command_line_train % (patient, et, nt, nt, imp, md))
+                        print(command_line_test  % (patient, et, nt, nt, imp, md))
 
     for patient in patients:
         for et in ensemble_types_b:
             for nt in num_trees_b:
                 for md in max_depths_b:
                     for imp in impurities:
-                        print(command_line % (patient, et, nt, nt, imp, md))
-    sys.exit(0)
+                        print(command_line_train % (patient, et, nt, nt, imp, md))
+                        print(command_line_test  % (patient, et, nt, nt, imp, md))

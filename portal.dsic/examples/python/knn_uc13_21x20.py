@@ -51,6 +51,7 @@ if __name__ == "__main__":
     do_prediction = False
     K = 7
     label_mapping = [i for i in range(10)]
+    version = 3
                                                    
     for i in range(len(sys.argv)):
         #if   sys.argv[i] == "--dataset"       :  dataset_filename = sys.argv[i + 1]
@@ -80,10 +81,11 @@ if __name__ == "__main__":
             label_mapping[7] = 0
             label_mapping[8] = 0
             label_mapping[9] = 0
+            version = 4
 
-    results_dir = f'{home_dir}/uc13-21x20/{global_patient}/results.3'
-    models_dir = f'uc13-21x20/{global_patient}/models.3'
-    log_dir = f'{home_dir}/uc13-21x20/{global_patient}/log.3'
+    results_dir = f'{home_dir}/uc13-21x20/{global_patient}/results.{version}'
+    models_dir = f'uc13-21x20/{global_patient}/models.{version}'
+    log_dir = f'{home_dir}/uc13-21x20/{global_patient}/log.{version}'
     train_dataset_filename = f'{hdfs_home_dir}/data/uc13/uc13-{global_patient}-21x20-train.csv'
     test_dataset_filename = f'{hdfs_home_dir}/data/uc13/uc13-{global_patient}-21x20-test.csv'
 

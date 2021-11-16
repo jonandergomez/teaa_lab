@@ -117,30 +117,26 @@ if __name__ == "__main__":
             for i in range(kmodel.n_clusters):
                 codebooks.append((k, kmodel.cluster_centers_[i].copy()))
         print('processing time lapse for', kmodel.n_clusters, 'clusters per class', time.time() - starting_time, 'seconds')
-        if spark_context is not None:
-            rdd_train = spark_context.parallelize(codebooks, numSlices = num_partitions)
-        else:
-            y = list()
-            X = list()
-            for t in codebooks:
-                y.append(t[0])
-                X.append(t[1])
-            rdd_train = (numpy.array(y), numpy.array(X))
+        y = list()
+        X = list()
+        for t in codebooks:
+            y.append(t[0])
+            X.append(t[1])
+        y_train_for_training = numpy.array(y)
+        X_train_for_training = numpy.array(X)
         #############################################################################################################################
     else:
-        if spark_context is not None:
-            rdd_train = spark_context.parallelize([(y, x.copy()) for x, y in zip(X_train, y_train)], numSlices = num_partitions)
-        else:
-            rdd_train = (y_train, X_train)
+        y_train_for_training = y_train
+        X_train_for_training = X_train
+
     if spark_context is not None:
-        rdd_test = spark_context.parallelize([(y, x.copy()) for x, y in zip(X_test,  y_test)],  numSlices = num_partitions)
-        num_samples = rdd_train.count()
-        print(f'train subset with {num_samples} distributed into {rdd_train.getNumPartitions()} partitions')
-        print(f'test  subset with {rdd_test.count()} distributed into {rdd_test.getNumPartitions()} partitions')
+        rdd_train = spark_context.parallelize([(y, x.copy()) for x, y in zip(X_train, y_train)], numSlices = num_partitions)
+        rdd_test  = spark_context.parallelize([(y, x.copy()) for x, y in zip(X_test,  y_test)],  numSlices = num_partitions)
+        print(f'train subset with {rdd_train.count()} samples distributed into {rdd_train.getNumPartitions()} partitions')
+        print(f'test  subset with {rdd_test.count()} samples distributed into {rdd_test.getNumPartitions()} partitions')
     else:
-        rdd_test = (y_test, X_test)
-        print(f'train subset with {len(rdd_train[0])}')
-        print(f'test  subset with {len(rdd_test[0])}')
+        print(f'train subset with {X_train.shape[0]} samples')
+        print(f'test  subset with {X_test.shape[0]} samples')
 
     labels = numpy.unique(y_train)
 
@@ -209,54 +205,34 @@ if __name__ == "__main__":
         y = numpy.array(y)
         return y / (1.0e-5 + y.sum())
         
-    use_model = True
-    if use_model:
-        if os.path.exists(f'{models_dir}/{model_filename}'):
-            with open(f'{models_dir}/{model_filename}', 'rb') as f:
-                knn = pickle.load(f)
-                f.close()
-        else:
-            os.makedirs(models_dir, exist_ok = True)
-            knn = KNN_Classifier(K = K, num_classes = 10)
-            knn.fit(X_train, y_train, min_samples_to_split = 100)
-            with open(f'{models_dir}/{model_filename}', 'wb') as f:
-                pickle.dump(knn, f)
-                f.close()
-        #
-        if spark_context is not None:
-            reference_time = time.time()
-            y_train_true_pred = knn.predict(rdd_train)
-            elapsed_time['train'] += time.time() - reference_time
-            reference_time = time.time()
-            y_test_true_pred = knn.predict(rdd_test)
-            elapsed_time['test'] += time.time() - reference_time
-            #
-            y_train_pred = numpy.array([t[1] for t in y_train_true_pred])
-            y_test_pred  = numpy.array([t[1] for t in y_test_true_pred])
-        else:
-            reference_time = time.time()
-            y_train_pred = knn.predict(X_train)
-            elapsed_time['train'] += time.time() - reference_time
-            reference_time = time.time()
-            y_test_pred  = knn.predict(X_test)
-            elapsed_time['test'] += time.time() - reference_time
+    if os.path.exists(f'{models_dir}/{model_filename}'):
+        with open(f'{models_dir}/{model_filename}', 'rb') as f:
+            knn = pickle.load(f)
+            f.close()
     else:
-        # Classifies the samples from the training subset
+        os.makedirs(models_dir, exist_ok = True)
+        knn = KNN_Classifier(K = K, num_classes = 10)
+        knn.fit(X_train_for_training, y_train_for_training, min_samples_to_split = 100)
+        with open(f'{models_dir}/{model_filename}', 'wb') as f:
+            pickle.dump(knn, f)
+            f.close()
+    #
+    if spark_context is not None:
         reference_time = time.time()
-        knn = rdd_train.map(lambda x: compute_distances_for_numpy(x, X_train)).reduce(natural_merge)
-        if use_probs:
-            y_train_pred = numpy.array([get_probs(y) for y in knn]).argmax(axis = 1)
-        else:
-            y_train_pred = numpy.array([get_prediction(y) for y in knn])
+        y_train_true_pred = knn.predict(rdd_train)
         elapsed_time['train'] += time.time() - reference_time
-
-        # Classifies the samples from the testing subset
         reference_time = time.time()
-        knn = rdd_train.map(lambda x: compute_distances_for_numpy(x, X_test)).reduce(natural_merge)
-        if use_probs:
-            y_test_pred = numpy.array([get_probs(y) for y in knn]).argmax(axis = 1)
-        else:
-            y_test_pred = numpy.array([get_prediction(y) for y in knn])
+        y_test_true_pred = knn.predict(rdd_test)
+        elapsed_time['test'] += time.time() - reference_time
+        #
+        y_train_pred = numpy.array([t[1] for t in y_train_true_pred])
+        y_test_pred  = numpy.array([t[1] for t in y_test_true_pred])
+    else:
+        reference_time = time.time()
+        y_train_pred = knn.predict(X_train)
+        elapsed_time['train'] += time.time() - reference_time
+        reference_time = time.time()
+        y_test_pred  = knn.predict(X_test)
         elapsed_time['test'] += time.time() - reference_time
 
     # Save results in text and graphically represented confusion matrices

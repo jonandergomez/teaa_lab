@@ -9,8 +9,9 @@ from sklearn.metrics import confusion_matrix, classification_report, plot_confus
 
 # ---------------------------------------------------------------------------------------------------
 class MyArgmaxForPredictedLabels(BaseEstimator):
-    def __init__(self, threshold = 0.5):
+    def __init__(self, threshold = 0.5, classes_ = None):
         self.threshold = threshold
+        self.classes_ = classes_
         self._estimator_type = 'classifier'
 
     def fit(self, X, y):
@@ -44,13 +45,15 @@ def save_results(results_dir, filename_prefix, y_true, y_pred, elapsed_time = No
     fig, axes = pyplot.subplots(nrows = 1, ncols = 2, figsize = (16, 7))
     #fig.suptitle(title)
     #
-    plot_confusion_matrix(estimator = MyArgmaxForPredictedLabels(),
+    plot_confusion_matrix(estimator = MyArgmaxForPredictedLabels(classes_ = numpy.unique(y_true)),
                           X = y_pred, y_true = y_true,
-                          normalize = 'true', ax = axes[0], cmap = 'Blues', colorbar = False)
+                          normalize = 'true', ax = axes[0],
+                          cmap = 'Blues') #, colorbar = False)
     #
-    plot_confusion_matrix(estimator = MyArgmaxForPredictedLabels(),
+    plot_confusion_matrix(estimator = MyArgmaxForPredictedLabels(classes_ = numpy.unique(y_true)),
                           X = y_pred, y_true = y_true,
-                          normalize = 'pred', ax = axes[1], cmap = 'Oranges', colorbar = False)
+                          normalize = 'pred', ax = axes[1],
+                          cmap = 'Oranges') #, colorbar = False)
     #
     pyplot.tight_layout()
     pyplot.savefig(f'{results_dir}/{filename_prefix}.svg', format = 'svg')

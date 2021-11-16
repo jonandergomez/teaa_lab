@@ -57,7 +57,7 @@ if __name__ == "__main__":
     ensemble_type = 'random-forest'
 
     verbose = 0
-    dataset_filename = f'{hdfs_home_dir}/data/uc13-pca-train.csv'
+    dataset_filename = None # f'{hdfs_home_dir}/data/uc13-pca-train.csv'
     model_filename = None
 
     spark_context = None
@@ -107,8 +107,9 @@ if __name__ == "__main__":
     if model_filename is None:
         model_filename = f'{models_dir}/{ensemble_type}-{num_trees}-{impurity}-{max_depth}'
 
-    if dataset_filename[0] != '/':
-        dataset_filename = f'{hdfs_home_dir}/{dataset_filename}'
+    if dataset_filename is None or dataset_filename[0] != '/':
+        #dataset_filename = f'{hdfs_home_dir}/{dataset_filename}'
+        dataset_filename = f'{hdfs_home_dir}/data/uc13-pca-{subset}.csv'
 
     spark_context = SparkContext(appName = "Ensemble-of-Trees-dataset-UC13")
 
