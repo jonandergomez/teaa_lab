@@ -70,11 +70,13 @@ class KNN_Classifier:
                     knn = self.balltree.get_knn(x[n], self.K)
                     if len(knn) > self.K: knn = knn[:self.K]
                     for t in knn: y[t[0]] += 1
-            else:
+            elif len(x.shape) == 1:
                 knn = self.balltree.get_knn(x, self.K)
                 if len(knn) > self.K: knn = knn[:self.K]
                 y = numpy.zeros(self.num_classes)
                 for t in knn: y[t[0]] += 1
+            else:
+                raise Exception(f'Unexpected shape of a sample {x.shape}')
             return y / (1.0e-6 + y.sum())
 
     def predict_probs(self, sample):

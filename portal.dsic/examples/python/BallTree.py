@@ -132,6 +132,8 @@ class BallTree:
             return None
         elif split.S_n is not None:
             distances = ((split.S_n[1] - x) ** 2).sum(axis = 1)
+            if len(distances.shape) != 1:
+                raise Exception(f'incorrect shape {distances.shape}')
             for i in range(len(split.S_n[0])):
                 if distances[i] < d_pq:
                     y = split.S_n[0][i]

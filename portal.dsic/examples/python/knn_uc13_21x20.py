@@ -52,6 +52,7 @@ if __name__ == "__main__":
     K = 7
     label_mapping = [i for i in range(10)]
     version = 3
+    num_classes = 10
                                                    
     for i in range(len(sys.argv)):
         #if   sys.argv[i] == "--dataset"       :  dataset_filename = sys.argv[i + 1]
@@ -82,6 +83,7 @@ if __name__ == "__main__":
             label_mapping[8] = 0
             label_mapping[9] = 0
             version = 4
+            num_classes = 2
 
     results_dir = f'{home_dir}/uc13-21x20/{global_patient}/results.{version}'
     models_dir = f'uc13-21x20/{global_patient}/models.{version}'
@@ -144,7 +146,7 @@ if __name__ == "__main__":
 
     elapsed_time = {'train' : 0, 'test' : 0}
 
-    knn = KNN_Classifier(K = K, num_classes = len(numpy.unique(y_train)))
+    knn = KNN_Classifier(K = K, num_classes = len(numpy.unique(label_mapping)))
     knn.fit(X_train, y_train, min_samples_to_split = max(100, 10 * int(math.sqrt(len(X_train)))))
 
     for subset, rdd_data in zip(['train', 'test'], [rdd_train_data, rdd_test_data]):
