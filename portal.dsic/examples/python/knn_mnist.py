@@ -111,7 +111,7 @@ if __name__ == "__main__":
         codebooks = list()
         starting_time = time.time()
         for k in range(10):
-            kmodel = KMeans(n_clusters = 200, verbosity = 1, modality = 'Lloyd', init = 'KMeans++')
+            kmodel = KMeans(n_clusters = codebook_size, verbosity = 1, modality = 'Lloyd', init = 'KMeans++')
             kmodel.epsilon = 1.0e-8
             kmodel.fit(X_train[y_train == k])
             for i in range(kmodel.n_clusters):
