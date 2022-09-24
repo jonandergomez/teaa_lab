@@ -30,6 +30,7 @@ import time
 from operator import add
 
 from pyspark.sql import SparkSession
+from pyspark.sql import DataFrameWriter
 
 starting_time = time.time()
 
@@ -43,9 +44,11 @@ def measure_time(msg = None):
     starting_time = t
 
 
+do_the_collect_into_the_driver = False
+
 if __name__ == "__main__":
     if len(sys.argv) != 2:
-        print("Usage: word_count_1 <file>", file=sys.stderr)
+        print("Usage: word_count_2 <file>", file=sys.stderr)
         sys.exit(-1)
 
     measure_time('excution starts')
@@ -91,25 +94,31 @@ if __name__ == "__main__":
                 o += ' '
         return o
 
-    # transformation, returns an RDD of the same data type
+    # transformation, returns an RDD of the after using only the first colum of each row
     review_lines = review_lines.rdd.flatMap(lambda row: row[0].split(' ')) # use row[0] to access the text
-    # transformation, returns an RDD of the same data type
+
+    # transformation, returns an RDD of the same data type by removing None objects and empty strings
     review_lines = review_lines.filter(lambda x: x is not None and len(x.strip()) > 0)
+
+    # transformation, returns an RDD of the same data type by splitting with the ' as delimiter
     review_lines = review_lines.flatMap(lambda x: x.split("'"))
+
     # data cleasing
-    #review_lines = review_lines.map(lambda x: x.replace(',', ''))
-    #review_lines = review_lines.map(lambda x: x.replace('"', ''))
-    #review_lines = review_lines.map(lambda x: x.replace('(', ''))
-    #review_lines = review_lines.map(lambda x: x.replace(')', ''))
-    #review_lines = review_lines.map(lambda x: x.replace('?', ''))
-    #review_lines = review_lines.map(lambda x: x.lower())
     review_lines = review_lines.map(clean_strings)
+
+    # transformation, returns an RDD of the same data type by splitting with the white space as delimiter
     review_lines = review_lines.flatMap(lambda x: x.split(' '))
+
+    # transformation, returns an RDD of the same data type by removing None objects and empty strings
     review_lines = review_lines.filter(lambda x: x is not None and len(x.strip()) > 0)
-    # transformation, returns an RDD of the same data type
+
+    # transformation, returns an RDD of where each word is paired with an integer equal to 1
     review_lines = review_lines.map(lambda x: (x, 1))
+
     # transformation, accumulate by key and returns a new RDD with tuples (key, counter)
     counts = review_lines.reduceByKey(lambda x, y: x + y) #(add)
+
+    # transformation, returns an RDD of the same data type by removing less frequent words
     counts = counts.filter(lambda x: x[1] >= 10) # comment this line to get all the words
 
     measure_time('couting word occurences')
@@ -119,17 +128,22 @@ if __name__ == "__main__":
     # all the previous transformations, so the time measurement when working
     # with Spark RDD must be considered appropriately
 
-    output = counts.collect()
-    measure_time('retrieving counts from cluster to the driver program')
-    output.sort(key = lambda x: x[0], reverse = False) # sort alphabetically
-    measure_time('sorting 1')
-    output.sort(key = lambda x: x[1], reverse = True) #  sort by counter in descending order
-    measure_time('sorting 2')
+    if do_the_collect_into_the_driver:
+        output = counts.collect()
+        measure_time('retrieving counts from cluster to the driver program')
+        output.sort(key = lambda x: x[0], reverse = False) # sort alphabetically
+        measure_time('sorting 1')
+        output.sort(key = lambda x: x[1], reverse = True) #  sort by counter in descending order
+        measure_time('sorting 2')
 
-    with open('word_count_2.out', 'wt') as f:
-        for (word, count) in output:
-            print("%s: %i" % (word, count), file = f)
-        f.close()
+        with open('word_count_2.out', 'wt') as f:
+            for (word, count) in output:
+                print("%s: %i" % (word, count), file = f)
+            f.close()
+    else:
+        df = counts.toDF()
+        measure_time('converting to DataFrame')
+        df.write.csv(path = 'word_count_2.csv', mode = 'overwrite', sep = ';')
 
     measure_time('saving')
 

@@ -62,9 +62,15 @@ if __name__ == "__main__":
                   .reduceByKey(add)
 
     output = counts.collect()
+    output.sort(key = lambda x: x[0], reverse = False)
     output.sort(key = lambda x: x[1], reverse = True)
 
+    f = open('word_count_1.out', 'w')
     for (word, count) in output:
-        print("%s: %i" % (word, count))
+        print("%s: %i" % (word, count), file=f)
+    f.close()
+    print()
+    print('You can find the result of this word count in the file word_count_1.out')
+    print()
 
     spark.stop()
