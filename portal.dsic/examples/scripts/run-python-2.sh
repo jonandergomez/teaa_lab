@@ -13,11 +13,23 @@ case $(hostname) in
         ;;
 esac
 
+deploy_mode="client"
+
+case $0 in
+    *launch-python*.sh)
+        deploy_mode="cluster"
+        ;;
+    *)
+        deploy_mode="client"
+        ;;
+esac
+
 program="$1"
 shift
+
 
 time \
 spark-submit --master ${master} \
              --py-files ${PYTHONPATH}/mypythonlib.tgz,python/KernelClassifier.py,python/KNN_Classifier.py,python/BallTree.py \
-             --deploy-mode client \
+             --deploy-mode ${deploy_mode} \
              ${program}  $*

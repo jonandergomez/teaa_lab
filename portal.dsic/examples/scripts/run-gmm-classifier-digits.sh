@@ -2,7 +2,7 @@
 
 case $(hostname) in
     teaa-*-cluster*)
-        num_partitions=40
+        num_partitions=60
         ;;
     *)
         num_partitions=80

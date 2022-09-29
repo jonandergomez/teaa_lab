@@ -69,7 +69,7 @@ if __name__ == "__main__":
     patient = 'chb01'
     min_num_clusters = 10
     max_num_clusters = 150
-    num_partitions = 80
+    num_partitions = 60
     do_train = False
     do_classify = False
 

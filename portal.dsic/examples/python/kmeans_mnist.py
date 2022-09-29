@@ -70,7 +70,7 @@ if __name__ == "__main__":
     for k in range( 500, 1000, 100): list_of_num_clusters.append(k) # comment this line to skip these clustering sizes
     list_of_num_clusters.append(1000)
 
-    num_partitions = 80
+    num_partitions = 60
 
     for i in range(1, len(sys.argv)):
         if sys.argv[i] == '--models-dir':
@@ -118,7 +118,11 @@ if __name__ == "__main__":
 
         else: # Build the model (cluster the data)
             starting_time = time.time()
-            kmeans_model = KMeans.train(rdd_train, k = num_clusters, maxIterations = 2000, initializationMode = "kmeans||", initializationSteps = 5, epsilon = 1.0e-9)
+            kmeans_model = KMeans.train(rdd_train,  k = num_clusters,
+                                                    maxIterations = 2000,
+                                                    initializationMode = "kmeans||",
+                                                    initializationSteps = 5,
+                                                    epsilon = 1.0e-9)
             ending_time = time.time()
             print('processing time lapse for', num_clusters, 'clusters', ending_time - starting_time, 'seconds')
 
@@ -186,7 +190,7 @@ if __name__ == "__main__":
             return (label, x)
         # --------------------------------------------------------------------------------------
         train_data = sc.parallelize([(y, x.copy()) for x, y in zip(X_train, y_train)], numSlices = num_partitions)
-        test_data = sc.parallelize([(y, x.copy()) for x, y in zip(X_test, y_test)], numSlices = num_partitions)
+        test_data  = sc.parallelize([(y, x.copy()) for x, y in zip(X_test,  y_test)],  numSlices = num_partitions)
         data = train_data.map(assign_sample_to_cluster)
         #
         matrix = data.reduceByKey(lambda x, y: x + y).collect()
