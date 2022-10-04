@@ -5,7 +5,7 @@ import numpy
 from matplotlib import pyplot
 
 from sklearn.base import BaseEstimator
-from sklearn.metrics import confusion_matrix, classification_report, plot_confusion_matrix
+from sklearn.metrics import confusion_matrix, classification_report, ConfusionMatrixDisplay
 
 # ---------------------------------------------------------------------------------------------------
 class MyArgmaxForPredictedLabels(BaseEstimator):
@@ -25,10 +25,23 @@ class MyArgmaxForPredictedLabels(BaseEstimator):
 # ---------------------------------------------------------------------------------------------------
 
 # ---------------------------------------------------------------------------------------------------
-def save_results(results_dir, filename_prefix, y_true, y_pred, elapsed_time = None):
+def save_results(results_dir, filename_prefix, y_true, y_pred, elapsed_time = None, labels = None):
+    #
+    if labels is None:
+        labels = [x for x in numpy.unique(y_true)]
+        print(labels)
+    #
     os.makedirs(results_dir, exist_ok = True)
     f_results = open(f'{results_dir}/{filename_prefix}.txt', 'wt')
-    _cm_ = confusion_matrix(y_true, y_pred)
+    try:
+        _cm_ = confusion_matrix(y_true, y_pred, labels = labels)
+    except:
+        print(numpy.unique(y_true))
+        print(numpy.unique(y_pred))
+        f_results.write('Impossible to compute the results because all samples are in one class\n')
+        f_results.close()
+        return
+        
     for i in range(_cm_.shape[0]):
         for j in range(_cm_.shape[1]):
             f_results.write(' %10d' % _cm_[i, j])
@@ -45,13 +58,13 @@ def save_results(results_dir, filename_prefix, y_true, y_pred, elapsed_time = No
     fig, axes = pyplot.subplots(nrows = 1, ncols = 2, figsize = (16, 7))
     #fig.suptitle(title)
     #
-    plot_confusion_matrix(estimator = MyArgmaxForPredictedLabels(classes_ = numpy.unique(y_true)),
-                          X = y_pred, y_true = y_true,
+    ConfusionMatrixDisplay.from_estimator(estimator = MyArgmaxForPredictedLabels(classes_ = labels),
+                          X = y_pred, y = y_true, # display_labels = labels,
                           normalize = 'true', ax = axes[0],
-                          cmap = 'Blues') #, colorbar = False)
+                          cmap = pyplot.cm.Blues) #, colorbar = False)
     #
-    plot_confusion_matrix(estimator = MyArgmaxForPredictedLabels(classes_ = numpy.unique(y_true)),
-                          X = y_pred, y_true = y_true,
+    ConfusionMatrixDisplay.from_estimator(estimator = MyArgmaxForPredictedLabels(classes_ = labels),
+                          X = y_pred, y = y_true, # display_labels = labels,
                           normalize = 'pred', ax = axes[1],
                           cmap = 'Oranges') #, colorbar = False)
     #

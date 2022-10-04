@@ -54,6 +54,7 @@ done
 
 pushd examples
 
+dir="examples"
 #for dir in python scripts \
 #            models models.pca \
 #            log log.pca \
