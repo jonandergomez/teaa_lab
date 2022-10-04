@@ -219,8 +219,25 @@ if it is possible, before 30 minutes of the seizure.
    corresponding to one cluster with respect to each digit. For instance:
    [conditional-probabilities-kmeans-10-0010.png](../../portal.dsic/examples/results.digits.train/conditional-probabilities-kmeans-10-0010.png)
 
+   You can see the evolution of the criteria 
+   [Calinski-Harabasz](https://scikit-learn.org/stable/modules/clustering.html#calinski-harabasz-index)
+   and
+   [Davies-Bouldin](https://scikit-learn.org/stable/modules/clustering.html#davies-bouldin-index)
+   to determine the (sub-)optimal number of clusters for a given data set in the file:
+   [kmeans-kpis.txt](../../portal.dsic/examples/log.digits/kmeans-kpis.txt)
+
+
    Are you able to obtain some preliminary conclusions about the similarities between some digits whih are reflected,
    somehow, in the conditional probabilities?
+
+   You can obtain the evolution of the accuracy versus the size of the clustering by executing the script:
+
+   >
+   > cd ~/teaa/examples
+   > scripts/mnist-see-accuracy-evolution-kmeans.sh 
+   >
+
+   The result is a CSV file whose absolute path in the filesystem of the master is **/tmp/mnist-kmeans-accuracy-evolution.csv**
 
 
 2. KMeans on UC13 dataset (applied to each patient individually):
@@ -256,6 +273,16 @@ if it is possible, before 30 minutes of the seizure.
 
    _In these directories, you will also find the results using GMMs which will be commented later, now you can ignore them._
 
+   You can see the evolution of the criteria 
+   [Calinski-Harabasz](https://scikit-learn.org/stable/modules/clustering.html#calinski-harabasz-index)
+   and
+   [Davies-Bouldin](https://scikit-learn.org/stable/modules/clustering.html#davies-bouldin-index)
+   to determine the (sub-)optimal number of clusters for a given data set in the file
+   [kmeans-kpis-chb01.txt](../../portal.dsic/examples/uc13-21x20/chb01/log/kmeans-kpis-chb01.txt)
+   for patient **chb01**. The files for the others patients are in the corresponding directory, you only
+   have to change the patient identifier in the path.
+
+
    Additionally, in 
    [the directory of the models corresponding to patient **chb01**](../../portal.dsic/examples/uc13-21x20/chb01/models/)
    you can find CSV files with the cluster distribution with respect to each target class, for instance
@@ -264,40 +291,49 @@ if it is possible, before 30 minutes of the seizure.
    [see_conditional_probabilities.py](../../portal.dsic/examples/python/see_conditional_probabilities.py)
 
 
-3. Compute the confusion matrix between target classes and a given number of clusters so
-   that we can construct a naive classifier based on [this formulation](docs/formulas_kmeans.pdf)
+3. Gaussian Mixture Models on MNIST Digits database (one GMM per target class):
 
-   Use the Python code
-   [kmeans_uc13_compute_confusion_matrix_spark.py](../../portal.dsic/examples/python/kmeans_uc13_compute_confusion_matrix_spark.py)
+   A grid search varying different configuration parameters have been done using the Python code
+   [gmm_mnist_2022.py](../../portal.dsic/examples/python/gmm_mnist_2022.py)
+
+   The results can be found in [results.l1.digits.2022.test/](../../portal.dsic/examples/results.l1.digits.2022.test/),
+   where the name of the files with the results contain the values of the configuration parameters.
+
+   - The value for the number of componente of the GMM of each target class varies from 3 to 70, you will see
+     that small values of this configuration parameter are enough to obtain good results.
+
+   - The number of PCA components to reduce the dimensionality of the input space to more manegeable dimensions.
+     Again, you will see that once reached a sufficient value no improvements are observed by increasing it.
+
+   - Both **full** and **diagonal** convariance matrix types are used.
+     For the **full** covariance matrices it is important to change the minimum value allowed for variances.
+
+   - Minimum value for the variances. Using **diagonal** covariance matrices this value can be 1.0e-5 or smaller,
+     but if the training fails due to the lack of precision on arithmetic operations, then use a higher value.
+     In the case of **full** covariance matrices, this problem arises earier, so a value of 1.0 is enough for
+     many configurations, you can try smaller values, 0.5 for instance.
+
+   Students have to run the code with different configurations in order to see how this task is solved.
+   An example is:
+
+   >
+   >  scripts/run-python.sh python/gmm_mnist_2022.py 13 --pca 31 --convergenceTol 1.0e-3 --covarType full --minVar 1.0
+   >
+
+   The script used to execute the grid search can be found in [run-mnist-gmm-grid.sh](../../portal.dsic/examples/scripts/run-mnist-gmm-grid.sh)
 
 
+4. Gaussian Mixture Models on UC13 dataset (applied to each patient individually, one GMM per target class):
 
-    **K-Means models are provided** [here](../../portal.dsic/examples/models),
-    **do not compute a K-Means codebook for different sizes, just test the
-    algorithm and measure times**
+   [gmm_uc13_21x20.py](../../portal.dsic/examples/python/gmm_uc13_21x20.py)
 
-3. Carry out several tests to evaluate the performance (KPI accuracy) of the naive classifier
-   according to the number of clusters, and compare with both
-   [Calinski-Harabasz](https://scikit-learn.org/stable/modules/clustering.html#calinski-harabasz-index)
-   and
-   [Davies-Bouldin](https://scikit-learn.org/stable/modules/clustering.html#davies-bouldin-index)
-   criteria to determine the (sub-)optimal number of clusters for a given data set.
 
-    Use the Python code [kmeans_uc13_classifier.py](../../portal.dsic/examples/python/kmeans_uc13_classifier.py)
-    to obtain the results of the classifier.
-
-4. Obtain several **Gaussian Mixture Models (GMM)** using the Python code
-   [gmm_uc13.py](../../portal.dsic/examples/python/gmm_uc13.py)
-
-5. Compute a confusion matrix between target classes and the components of the GMM for different number
-   of components in order to construct a classifier based on [this formulation](docs/formulas_gmm.pdf)
-
-6. Carry out several tests to evaluate the performance (KPI accuracy) of the classifier 
-based on GMMs according to the J, the number of Gaussian components in the GMM, and
-compare with both
-the [Akaike Information Criterion (AIC)](https://en.wikipedia.org/wiki/Akaike_information_criterion)
-and 
-the [Bayesian Information Criterion (BIC)](https://en.wikipedia.org/wiki/Bayesian_information_criterion)
-criteria.
+5. Carry out several tests to evaluate the performance (KPI accuracy) of the classifier 
+   based on GMMs according to the J, the number of Gaussian components in the GMM, and
+   compare with both
+   the [Akaike Information Criterion (AIC)](https://en.wikipedia.org/wiki/Akaike_information_criterion)
+   and 
+   the [Bayesian Information Criterion (BIC)](https://en.wikipedia.org/wiki/Bayesian_information_criterion)
+   criteria.
 
 
