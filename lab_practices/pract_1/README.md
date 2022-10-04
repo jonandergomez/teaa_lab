@@ -206,7 +206,7 @@ if it is possible, before 30 minutes of the seizure.
    is no time to execute all the runs by all the students. Anyway, the command to execute
    it, assuming you are in your home directory, is:_
 
-   ```
+   ```bash
     
        teaa/examples/scripts/run-python.sh teaa/examples/python/kmeans_mnist.py
     
@@ -234,7 +234,7 @@ if it is possible, before 30 minutes of the seizure.
 
    You can obtain the evolution of the accuracy versus the size of the clustering by executing the script:
 
-   ```
+   ```bash
        cd ~/teaa/examples
 
        scripts/mnist-see-accuracy-evolution-kmeans.sh 
@@ -252,7 +252,7 @@ if it is possible, before 30 minutes of the seizure.
    is no time to execute all the runs by all the students. Anyway, some examples of the
    command to execute it, assuming you are in your home directory, are:_
 
-   ```
+   ```bash
        teaa/examples/scripts/run-python.sh teaa/examples/python/kmeans_uc13_21x20.py --patient chb01 --do-binary-classification --train --classify
     
        teaa/examples/scripts/run-python.sh teaa/examples/python/kmeans_uc13_21x20.py --patient chb24 --train --classify
@@ -319,7 +319,7 @@ if it is possible, before 30 minutes of the seizure.
    Students have to run the code with different configurations in order to see how this task is solved.
    An example is:
 
-   ```
+   ```bash
    
        teaa/examples/scripts/run-python.sh teaa/examples/python/gmm_mnist_2022.py 13 --pca 31 --convergenceTol 1.0e-3 --covarType full --minVar 1.0
    
@@ -336,7 +336,7 @@ if it is possible, before 30 minutes of the seizure.
 
    The script to execute all the runs for all the patients using both binary and multi-class classifications is the following:
 
-   ```
+   ```bash
       for patient in {01..24}
       do
           scripts/run-python.sh python/gmm_uc13_21x20.py --patient chb${patient} --do-binary-classification
