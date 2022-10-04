@@ -355,7 +355,7 @@ if it is possible, before 30 minutes of the seizure.
    - [results.10-classes.test](../../portal.dsic/examples/uc13-21x20/chb01/results.10-classes.test)
 
    _These directories are the same where the results of the classifiers based on KMeans are stored,
-   in this case you have to inspect the files whose name starts by *gmm* and ignore the ones starting with *kmeans*._
+   in this case you have to inspect the files whose name starts by **gmm** and ignore the ones starting with **kmeans**._
 
    It has not been possible to carry out different runs varying the maximum number of components of each GMM 
    used for modelling the region in the *d*-dimensonal space where the samples of each target class are distributed.
