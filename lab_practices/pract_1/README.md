@@ -219,6 +219,9 @@ if it is possible, before 30 minutes of the seizure.
    corresponding to one cluster with respect to each digit. For instance:
    [conditional-probabilities-kmeans-10-0010.png](../../portal.dsic/examples/results.digits.train/conditional-probabilities-kmeans-10-0010.png)
 
+   Are you able to obtain some preliminary conclusions about the similarities between some digits whih are reflected,
+   somehow, in the conditional probabilities?
+
 
 2. KMeans on UC13 dataset (applied to each patient individually):
 
@@ -239,15 +242,26 @@ if it is possible, before 30 minutes of the seizure.
    [uc13-21x20](../../portal.dsic/examples/uc13-21x20), where you will find one directory per patient,
    and inside each patient one directory per run. Let us see the directories corresponding to patient __chb01__:
 
-   [results.02-classes.train](../../portal.dsic/examples/uc13-21x20/chb01/results.02-classes.train)
+   Binary classification:
 
-   [results.02-classes.test](../../portal.dsic/examples/uc13-21x20/chb01/results.02-classes.test)
+   - [results.02-classes.train](../../portal.dsic/examples/uc13-21x20/chb01/results.02-classes.train)
 
-   [results.10-classes.train](../../portal.dsic/examples/uc13-21x20/chb01/results.10-classes.train)
+   - [results.02-classes.test](../../portal.dsic/examples/uc13-21x20/chb01/results.02-classes.test)
 
-   [results.10-classes.test](../../portal.dsic/examples/uc13-21x20/chb01/results.10-classes.test)
+   Multiclass classification:
+
+   - [results.10-classes.train](../../portal.dsic/examples/uc13-21x20/chb01/results.10-classes.train)
+
+   - [results.10-classes.test](../../portal.dsic/examples/uc13-21x20/chb01/results.10-classes.test)
 
    _In these directories you will also find the results using GMMs, but they will be commented later, now you can ignore them._
+
+   Additionally, in 
+   [the directory of the models corresponding to patient **chb01**](../../portal.dsic/examples/uc13-21x20/chb01/models/)
+   you can find CSV files with the cluster distribution with respect to each target class, for instance
+   [cluster-disribution-0010.csv](../../portal.dsic/examples/uc13-21x20/chb01/models/cluster-distribution-0010.csv),
+   from which you can generate the matrix of conditional probabilities by modifying the Python code 
+   [see_conditional_probabilities.py](../../portal.dsic/examples/examples/python/see_conditional_probabilities.py)
 
 
 3. Compute the confusion matrix between target classes and a given number of clusters so
