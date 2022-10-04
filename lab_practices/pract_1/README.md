@@ -254,14 +254,14 @@ if it is possible, before 30 minutes of the seizure.
 
    - [results.10-classes.test](../../portal.dsic/examples/uc13-21x20/chb01/results.10-classes.test)
 
-   _In these directories you will also find the results using GMMs, but they will be commented later, now you can ignore them._
+   _In these directories, you will also find the results using GMMs which will be commented later, now you can ignore them._
 
    Additionally, in 
    [the directory of the models corresponding to patient **chb01**](../../portal.dsic/examples/uc13-21x20/chb01/models/)
    you can find CSV files with the cluster distribution with respect to each target class, for instance
    [cluster-disribution-0010.csv](../../portal.dsic/examples/uc13-21x20/chb01/models/cluster-distribution-0010.csv),
    from which you can generate the matrix of conditional probabilities by modifying the Python code 
-   [see_conditional_probabilities.py](../../portal.dsic/examples/examples/python/see_conditional_probabilities.py)
+   [see_conditional_probabilities.py](../../portal.dsic/examples/python/see_conditional_probabilities.py)
 
 
 3. Compute the confusion matrix between target classes and a given number of clusters so
