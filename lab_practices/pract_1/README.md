@@ -317,7 +317,7 @@ if it is possible, before 30 minutes of the seizure.
    An example is:
 
    >
-   >  scripts/run-python.sh python/gmm_mnist_2022.py 13 --pca 31 --convergenceTol 1.0e-3 --covarType full --minVar 1.0
+   >  teaa/examples/scripts/run-python.sh teaa/examples/python/gmm_mnist_2022.py 13 --pca 31 --convergenceTol 1.0e-3 --covarType full --minVar 1.0
    >
 
    The script used to execute the grid search can be found in [run-mnist-gmm-grid.sh](../../portal.dsic/examples/scripts/run-mnist-gmm-grid.sh)
@@ -325,15 +325,51 @@ if it is possible, before 30 minutes of the seizure.
 
 4. Gaussian Mixture Models on UC13 dataset (applied to each patient individually, one GMM per target class):
 
-   [gmm_uc13_21x20.py](../../portal.dsic/examples/python/gmm_uc13_21x20.py)
+   No grid search has been carried out for this dataset, not feasible in time with the available resources in the cluster.
+
+   The code used to generate the results is [gmm_uc13_21x20.py](../../portal.dsic/examples/python/gmm_uc13_21x20.py)
+
+   The script to execute all the runs for all the patients using both binary and multi-class classifications is the following:
+
+   > for patient in {01..24}
+   > do
+   >    scripts/run-python.sh python/gmm_uc13_21x20.py --patient chb${patient} --do-binary-classification
+   >    scripts/run-python.sh python/gmm_uc13_21x20.py --patient chb${patient}
+   > done
+
+   The results can be found in the directory
+   [uc13-21x20](../../portal.dsic/examples/uc13-21x20), where you will find one directory per patient,
+   and inside each patient one directory per run.
+   Let us see the directories corresponding to patient __chb01__:
+
+   Binary classification:
+
+   - [results.02-classes.train](../../portal.dsic/examples/uc13-21x20/chb01/results.02-classes.train)
+
+   - [results.02-classes.test](../../portal.dsic/examples/uc13-21x20/chb01/results.02-classes.test)
+
+   Multiclass classification:
+
+   - [results.10-classes.train](../../portal.dsic/examples/uc13-21x20/chb01/results.10-classes.train)
+
+   - [results.10-classes.test](../../portal.dsic/examples/uc13-21x20/chb01/results.10-classes.test)
+
+   _These directories are the same where the results of the classifiers based on KMeans are stored,
+   in this case you have to inspect the files whose name starts by *gmm* and ignore the ones starting with *kmeans*._
+
+   It has not been possible to carry out different runs varying the maximum number of components of each GMM 
+   used for modelling the region in the *d*-dimensonal space where the samples of each target class are distributed.
+   In our case, the maximum number of components of each GMM has been set to 30
+   and only the **diagonal** convariance matrix of each Gaussian component has been used.
+   However, as the strategy to estimate each GMM is automatic splitting starting from one single GMM component,
+   it could be possible that for some GMMs the number of components will lower than 30.
 
 
-5. Carry out several tests to evaluate the performance (KPI accuracy) of the classifier 
-   based on GMMs according to the J, the number of Gaussian components in the GMM, and
-   compare with both
+5. It would have been interesting to carry out several runs to evaluate the performance (KPI accuracy)
+   of the classifiers based on GMMs according to **J**, the number of Gaussian components in the GMM, and
+   compare it with both
    the [Akaike Information Criterion (AIC)](https://en.wikipedia.org/wiki/Akaike_information_criterion)
    and 
    the [Bayesian Information Criterion (BIC)](https://en.wikipedia.org/wiki/Bayesian_information_criterion)
    criteria.
-
-
+   But a larger set of runs is required.
