@@ -215,9 +215,9 @@ if it is possible, before 30 minutes of the seizure.
    and 
    [results.digits.test](../../portal.dsic/examples/results.digits.test)
 
-   Of interest the confusion matrices with the conditional probabilities of observing samples
+   Of interest the matrices with the conditional probabilities of observing samples
    corresponding to one cluster with respect to each digit. For instance:
-   [confusion-matrix-kmeans-10-0010.png/](../../portal.dsic/examples/results.digits.train/confusion-matrix-kmeans-10-0010.png)
+   [conditional-probabilities-kmeans-10-0010.png](../../portal.dsic/examples/results.digits.train/conditional-probabilities-kmeans-10-0010.png)
 
 
 2. KMeans on UC13 dataset (applied to each patient individually):
