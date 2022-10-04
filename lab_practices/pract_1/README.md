@@ -195,7 +195,7 @@ The **goal** is to predict seizures within the previous 60 minutes,
 if it is possible, before 30 minutes of the seizure.
 
 
-## Work to do in this lab practice (not in one single session)
+## Work to do in this lab practice (not in one single lab session)
 
 1. KMeans on MNIST Digits database:
 
@@ -331,11 +331,13 @@ if it is possible, before 30 minutes of the seizure.
 
    The script to execute all the runs for all the patients using both binary and multi-class classifications is the following:
 
-   > for patient in {01..24}
-   > do
-   >    scripts/run-python.sh python/gmm_uc13_21x20.py --patient chb${patient} --do-binary-classification
-   >    scripts/run-python.sh python/gmm_uc13_21x20.py --patient chb${patient}
-   > done
+   ```
+      for patient in {01..24}
+      do
+          scripts/run-python.sh python/gmm_uc13_21x20.py --patient chb${patient} --do-binary-classification
+          scripts/run-python.sh python/gmm_uc13_21x20.py --patient chb${patient}
+      done
+   ```
 
    The results can be found in the directory
    [uc13-21x20](../../portal.dsic/examples/uc13-21x20), where you will find one directory per patient,
