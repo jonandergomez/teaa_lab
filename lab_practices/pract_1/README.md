@@ -206,9 +206,11 @@ if it is possible, before 30 minutes of the seizure.
    is no time to execute all the runs by all the students. Anyway, the command to execute
    it, assuming you are in your home directory, is:_
 
-   > 
-   > teaa/examples/scripts/run-python.sh teaa/examples/python/kmeans_mnist.py
-   > 
+   ```
+    
+       teaa/examples/scripts/run-python.sh teaa/examples/python/kmeans_mnist.py
+    
+   ```
 
    Results for several clustering sizes ranging from 10 to 1000 can be found in
    [results.digits.train](../../portal.dsic/examples/results.digits.train)
@@ -232,10 +234,11 @@ if it is possible, before 30 minutes of the seizure.
 
    You can obtain the evolution of the accuracy versus the size of the clustering by executing the script:
 
-   >
-   > cd ~/teaa/examples
-   > scripts/mnist-see-accuracy-evolution-kmeans.sh 
-   >
+   ```
+       cd ~/teaa/examples
+
+       scripts/mnist-see-accuracy-evolution-kmeans.sh 
+   ```
 
    The result is a CSV file whose absolute path in the filesystem of the master is **/tmp/mnist-kmeans-accuracy-evolution.csv**
 
@@ -249,11 +252,11 @@ if it is possible, before 30 minutes of the seizure.
    is no time to execute all the runs by all the students. Anyway, some examples of the
    command to execute it, assuming you are in your home directory, are:_
 
-   > 
-   > teaa/examples/scripts/run-python.sh teaa/examples/python/kmeans_uc13_21x20.py --patient chb01 --do-binary-classification --train --classify
-   > 
-   > teaa/examples/scripts/run-python.sh teaa/examples/python/kmeans_uc13_21x20.py --patient chb24 --train --classify
-   > 
+   ```
+       teaa/examples/scripts/run-python.sh teaa/examples/python/kmeans_uc13_21x20.py --patient chb01 --do-binary-classification --train --classify
+    
+       teaa/examples/scripts/run-python.sh teaa/examples/python/kmeans_uc13_21x20.py --patient chb24 --train --classify
+   ```
 
    Results for several clustering sizes ranging from 10 to 150 per patient can be found in
    [uc13-21x20](../../portal.dsic/examples/uc13-21x20), where you will find one directory per patient,
@@ -316,9 +319,11 @@ if it is possible, before 30 minutes of the seizure.
    Students have to run the code with different configurations in order to see how this task is solved.
    An example is:
 
-   >
-   >  teaa/examples/scripts/run-python.sh teaa/examples/python/gmm_mnist_2022.py 13 --pca 31 --convergenceTol 1.0e-3 --covarType full --minVar 1.0
-   >
+   ```
+   
+       teaa/examples/scripts/run-python.sh teaa/examples/python/gmm_mnist_2022.py 13 --pca 31 --convergenceTol 1.0e-3 --covarType full --minVar 1.0
+   
+   ```
 
    The script used to execute the grid search can be found in [run-mnist-gmm-grid.sh](../../portal.dsic/examples/scripts/run-mnist-gmm-grid.sh)
 
