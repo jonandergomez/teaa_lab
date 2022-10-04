@@ -195,12 +195,62 @@ The **goal** is to predict seizures within the previous 60 minutes,
 if it is possible, before 30 minutes of the seizure.
 
 
-## Work to do in this lab practice
+## Work to do in this lab practice (not in one single session)
 
-1. Obtain several codebooks with the algorithm **Lloyd** of K-Means using the Spark cluster
-   with the Python code [kmeans_uc13.py](../../portal.dsic/examples/python/kmeans_uc13.py)
+1. KMeans on MNIST Digits database:
 
-2. Compute the confusion matrix between target classes and a given number of clusters so
+   Obtain several codebooks with the **Lloyd**'s algorithm of K-Means using the Spark cluster
+   with the Python code [kmeans_mnist.py](../../portal.dsic/examples/python/kmeans_mnist.py)
+
+   _In fact, you do not have to run it because the results are also available and there
+   is no time to execute all the runs by all the students. Anyway, the command to execute
+   it, assuming you are in your home directory, is:_
+
+   > 
+   > teaa/examples/scripts/run-python.sh teaa/examples/python/kmeans_mnist.py
+   > 
+
+   Results for several clustering sizes ranging from 10 to 1000 can be found in
+   [results.digits.train](../../portal.dsic/examples/results.digits.train)
+   and 
+   [results.digits.test](../../portal.dsic/examples/results.digits.test)
+
+   Of interest the confusion matrices with the conditional probabilities of observing samples
+   corresponding to one cluster with respect to each digit. For instance:
+   [confusion-matrix-kmeans-10-0010.png/](../../portal.dsic/examples/results.digits.train/confusion-matrix-kmeans-10-0010.png)
+
+
+2. KMeans on UC13 dataset (applied to each patient individually):
+
+   Obtain several codebooks with the **Lloyd**'s algorithm of K-Means using the Spark cluster
+   with the Python code [kmeans_uc13_21x20.py](../../portal.dsic/examples/python/kmeans_uc13_21x20.py)
+
+   _In fact, you do not have to run it because the results are also available and there
+   is no time to execute all the runs by all the students. Anyway, some examples of the
+   command to execute it, assuming you are in your home directory, are:_
+
+   > 
+   > teaa/examples/scripts/run-python.sh teaa/examples/python/kmeans_uc13_21x20.py --patient chb01 --do-binary-classification --train --classify
+   > 
+   > teaa/examples/scripts/run-python.sh teaa/examples/python/kmeans_uc13_21x20.py --patient chb24 --train --classify
+   > 
+
+   Results for several clustering sizes ranging from 10 to 150 per patient can be found in
+   [uc13-21x20](../../portal.dsic/examples/uc13-21x20), where you will find one directory per patient,
+   and inside each patient one directory per run. Let us see the directories corresponding to patient __chb01__:
+
+   [results.02-classes.train](../../portal.dsic/examples/uc13-21x20/chb01/results.02-classes.train)
+
+   [results.02-classes.test](../../portal.dsic/examples/uc13-21x20/chb01/results.02-classes.test)
+
+   [results.10-classes.train](../../portal.dsic/examples/uc13-21x20/chb01/results.10-classes.train)
+
+   [results.10-classes.test](../../portal.dsic/examples/uc13-21x20/chb01/results.10-classes.test)
+
+   _In these directories you will also find the results using GMMs, but they will be commented later, now you can ignore them._
+
+
+3. Compute the confusion matrix between target classes and a given number of clusters so
    that we can construct a naive classifier based on [this formulation](docs/formulas_kmeans.pdf)
 
    Use the Python code
