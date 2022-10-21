@@ -330,7 +330,7 @@ if it is possible, before 30 minutes of the seizure.
    The script used to execute the grid search can be found in [run-mnist-gmm-grid.sh](../../portal.dsic/examples/scripts/run-mnist-gmm-grid.sh)
 
    Similar to the case when using K-Means, the evolution of the accuracy using GMMs depending on different
-   hyper-parameters is available [here](../../portal.dsic/examples/results.digits.test/mnist-gmm-accuracy-evolution.csv).
+   hyper-parameters is available [here](../../portal.dsic/examples/results.l1.digits.2022.test/mnist-gmm-accuracy-evolution.csv).
    You can do several representations of these data; for instance, the evolution of the accuracy versus the
    number of componentes in the GMM for different number of components of PCA.
 
