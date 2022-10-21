@@ -58,13 +58,17 @@ def save_results(results_dir, filename_prefix, y_true, y_pred, elapsed_time = No
     fig, axes = pyplot.subplots(nrows = 1, ncols = 2, figsize = (16, 7))
     #fig.suptitle(title)
     #
-    ConfusionMatrixDisplay.from_estimator(estimator = MyArgmaxForPredictedLabels(classes_ = labels),
-                          X = y_pred, y = y_true, # display_labels = labels,
+    #ConfusionMatrixDisplay.from_estimator(estimator = MyArgmaxForPredictedLabels(classes_ = labels),
+    #                     X = y_pred, y = y_true, # display_labels = labels,
+    ConfusionMatrixDisplay.from_predictions(
+                          y_true = y_true, y_pred = y_pred, # display_labels = labels,
                           normalize = 'true', ax = axes[0],
                           cmap = pyplot.cm.Blues) #, colorbar = False)
     #
-    ConfusionMatrixDisplay.from_estimator(estimator = MyArgmaxForPredictedLabels(classes_ = labels),
-                          X = y_pred, y = y_true, # display_labels = labels,
+    #ConfusionMatrixDisplay.from_estimator(estimator = MyArgmaxForPredictedLabels(classes_ = labels),
+    #                     X = y_pred, y = y_true, # display_labels = labels,
+    ConfusionMatrixDisplay.from_predictions(
+                          y_true = y_true, y_pred = y_pred, # display_labels = labels,
                           normalize = 'pred', ax = axes[1],
                           cmap = 'Oranges') #, colorbar = False)
     #

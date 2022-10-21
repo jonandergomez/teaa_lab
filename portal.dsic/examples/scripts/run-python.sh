@@ -18,5 +18,7 @@ shift
 
 time \
 spark-submit --master ${master} \
+             --executor-memory 4G \
+             --driver-memory 6G \
              --py-files ${PYTHONPATH}/mypythonlib.tgz \
              ${program}  $*
