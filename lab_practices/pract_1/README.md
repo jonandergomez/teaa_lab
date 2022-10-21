@@ -240,7 +240,9 @@ if it is possible, before 30 minutes of the seizure.
        scripts/mnist-see-accuracy-evolution-kmeans.sh 
    ```
 
-   The result is a CSV file whose absolute path in the filesystem of the master is **/tmp/mnist-kmeans-accuracy-evolution.csv**
+   The result is a CSV file whose absolute path in the filesystem of the master
+   is **/tmp/mnist-kmeans-accuracy-evolution.csv**,
+   but you can find it [here](../../portal.dsic/examples/results.digits.test/mnist-kmeans-accuracy-evolution.csv)
 
 
 2. KMeans on UC13 dataset (applied to each patient individually):
@@ -326,6 +328,11 @@ if it is possible, before 30 minutes of the seizure.
    ```
 
    The script used to execute the grid search can be found in [run-mnist-gmm-grid.sh](../../portal.dsic/examples/scripts/run-mnist-gmm-grid.sh)
+
+   Similar to the case when using K-Means, the evolution of the accuracy using GMMs depending on different
+   hyper-parameters is available [here](../../portal.dsic/examples/results.digits.test/mnist-gmm-accuracy-evolution.csv).
+   You can do several representations of these data; for instance, the evolution of the accuracy versus the
+   number of componentes in the GMM for different number of components of PCA.
 
 
 4. Gaussian Mixture Models on UC13 dataset (applied to each patient individually, one GMM per target class):
