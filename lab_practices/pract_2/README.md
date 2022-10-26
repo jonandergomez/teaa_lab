@@ -13,7 +13,12 @@ Lab practice 2 is about two use cases:
 
 1. Accessing to the cluster from a computer in the UPVNET domain or via Virtual Private Network (VPN) previously configured
 
-    >    `ssh -YC jon@teaa-master-cluster.dsicv.upv.es`
+   ```bash
+   ssh -YC username@teaa-master-cluster.dsicv.upv.es
+   ```
+
+   please, replace `username` with yours.
+
 
 2. Interaction with the Hadoop Distributed File System (HDFS)
 
@@ -23,157 +28,149 @@ Lab practice 2 is about two use cases:
 
    ![Here](figures/hdfs-01.png)
 
+   It is relevant to see the directory were data is stored:
+
+   ```bash
+   hdfs dfs -ls /user/ubuntu/data
+   ```
+
+   and
+
+   ```bash
+   hdfs dfs -ls /user/ubuntu/data/uc13
+   ```
+
 3. Creation of local dirs in user home directory
 
-   Before running some examples, as the output of the programs will be stored in the
-   local filesystem, we need to create some local dirs in advance.
+   The directories are created from the Python code automatically, but if required,
+   here some examples of how to create local directories in your home directory.
 
-   ![Here](figures/creating-local-dirs.png)
+   ```bash
+   cd ${HOME}
 
-4. Creation of the user directory in the HDFS
+   mkdir results.l2.mnist.train
+   mkdir results.l2.mnist.train/ert
+   mkdir results.l2.mnist.train/rf
+   mkdir results.l2.mnist.train/gbt
 
-   And as it will be necessary later, we have to create some directories in the HDFS.
-   In particular our own directory if it does not exist yet, and some another
-   directory as an example for discovering how directories are created.
+   mkdir -p results.l2.mnist.test/ert
+   mkdir -p results.l2.mnist.test/rf
+   mkdir -p results.l2.mnist.test/gbt
+   ```
 
-   ![Here](figures/hdfs-creating-user-dirs.png)
+   And how to see the contents of the tree structure.
 
-   In particular, when using the Spark implentation of some training algorithms, the
-   models are stored in the HDFS, each user should create the directory corresponding
-   to the use case. In the case of working with the 
-   [MNIST Digits database](https://en.wikipedia.org/wiki/MNIST_database)
-   we have to create `/user/jon/digits/models`, please, replace `jon` with your username.
+   ```bash
+   cd ${HOME}
 
-   ![Here](figures/hdfs-creating-models-dirs.png)
+   tree results.l2.mnist.test
+   ```
+
+#4. Creation of the user directory in the HDFS
+#
+#   And as it will be necessary later, we have to create some directories in the HDFS.
+#   In particular our own directory if it does not exist yet, and some another
+#   directory as an example for discovering how directories are created.
+#
+#   ![Here](figures/hdfs-creating-user-dirs.png)
+#
+#   In particular, when using the Spark implentation of some training algorithms, the
+#   models are stored in the HDFS, each user should create the directory corresponding
+#   to the use case. In the case of working with the 
+#   [MNIST Digits database](https://en.wikipedia.org/wiki/MNIST_database)
+#   we have to create `/user/jon/digits/models`, please, replace `jon` with your username.
+#
+#   ![Here](figures/hdfs-creating-models-dirs.png)
 
 
-5. Inspect the code [tree_ensembles_mnist.py](../../portal.dsic/examples/python/tree_ensembles_mnist.py)
+5. Inspect the code [rf_mnist.py](../../portal.dsic/examples/python/rf_mnist.py)
    to be used in this lab session for working with the
    [MNIST Digits database](https://en.wikipedia.org/wiki/MNIST_database),
 
-6. Run the code [tree_ensembles_mnist.py](../../portal.dsic/examples/python/tree_ensembles_mnist.py)
+6. Run the code [rf_mnist.py](../../portal.dsic/examples/python/rf_mnist.py)
    with different configuration options for [Random Forest](https://en.wikipedia.org/wiki/Random_forest):
     
 
-    - `num-trees`: typical values range from 100 till 1000, but other values can be valid, use 100 in the first experiments
-    - `max-depth`: this depends on the dataset and the task, but take into account that a binary tree with depth 10 could have till 1024 leaf nodes (bins)
-    - `max-bins`: another limit to the size of the tree is the total number of allowed bins, i.e., leaf nodes
-    - `ensemble-type`: by default is `random-forest`, other values are `extra-trees` and `gradient-boosted-trees`
-    - `impurity` : depends on the ensemble type, basically, allowed values are `gini` and `entropy`
+    - `numTrees`: typical values range from 100 till 1000, but other values can be valid, use 100 in the first experiments
+    - `maxDepth`: this depends on the dataset and the task, but take into account that a binary tree with depth 10 could have till 1024 leaf nodes (bins)
+    - `pcaComponents`: this depends on the dataset and the task, but take into account that a binary tree with depth 10 could have till 1024 leaf nodes (bins)
+    - `impurity` : depends on the ensemble type, basically, allowed values are `gini` and `entropy` **not changed, using the default one**
 
     Other command line options:
 
-    - `train`: to indicate the training procedure must be run
-    - `classify`: to indicate that the inference procedure must be run, this requires to provide a model filename if no `train` was indicated
-    - `model <filename>`: to provide the name of the file containing the previously trained model
-    - `results-dir <dirname>`: to indicate where to store the results, **important**: this must refer to a directory from your home directory
+    - `baseDir`: base directory from which create others
+    - `resultsDir`: directory relative to `baseDir` where to store results
+    - `modelsDir`: directory relative to `baseDir` where to store models, **not used in this case**
+    - `logDir`: directory relative to `baseDir` where to store logs of the execution, **not used in this case**
 
     Example of how to run the program:
 
-    >
-    >    `cd teaa/examples`
-    >
-    >    `scripts/run-python.sh python/tree_ensembles_mnist.py --max-depth 10 --num-trees 200 --train --classify --results-dir ${HOME}/digits/results --models-dir /user/jon/digits/models --log-dir ${HOME}/digits/log --ensemble-type random-forest`
-    >
+   ```bash
+   cd ${HOME}
 
-    Let see an example of executing this instruction:
-
-    ![Here](figures/run-example-001.png)
+   teaa/examples/scripts/run-python.sh teaa/examples/python/rf_mnist.py --numTrees 10 --maxDepth 7 --pcaComponents 40
+   ```
 
 7. What the program execution has created
 
-   The models have been stored in the HDFS, and the results in the local disk.
-   Next figure shows how to see where the models and the results are stored.
+   The models have not been stored in this example, and the results are stored in the local disk.
+   Next instructions show you how to see the files created.
 
-   ![Here](figures/run-example-002.png)
+   ```bash
+   cd ${HOME}
+
+   ls -l results.l2.mnist.train
+
+   ls -l results.l2.mnist.test
+   ```
 
 8. The results can be seen from the text file complementary to the figures
 
-   Here the results with the training subset:
+   ```bash
+   cd ${HOME}
 
-   ![Here](figures/run-example-003.png)
+   cat results.l2.mnist.train/rf_00010_pca_0040_maxdepth_007.txt
 
-   Here the results with the testing subset:
+   cat results.l2.mnist.test/rf_00010_pca_0040_maxdepth_007.txt
+   ```
 
-   ![Here](figures/run-example-004.png)
+   The images can be downloaded to your computer and then visualized, anyway all the results are available
+   in the repository exploring the following directories:
 
-   You can see the images with `viewnior`:
-
-    >
-    > `cd`
-    > 
-    > `cd digits`
-    >
-    > `viewnior results.train/random-forest-classification-results-200-gini-10.png`
-    >
-    > `viewnior results.train/random-forest-classification-results-200-gini-10.svg`
-    >
+   - [results.l2.mnist.train](../../portal.dsic/examples/results.l2.mnist.train)
+   - [results.l2.mnist.test](../../portal.dsic/examples/results.l2.mnist.test)
 
 9. Do similar steps for the use case based on the
    [CHB-MIT Scalp EEG Database](https://physionet.org/lightwave/?db=chbmit/1.0.0)
 
-    In this case the code available is
-    [tree_ensembles_uc13.py](../../portal.dsic/examples/python/tree_ensembles_uc13.py)
+   ```bash
+   cd ${HOME}
 
-    >
-    >    `cd teaa/examples`
-    >
-    >    `scripts/run-python.sh python/tree_ensembles_uc13.py --max-depth 5 --num-trees 100 --train --classify --ensemble-type random-forest  --dataset /user/ubuntu/data/uc13-pca-train.csv`
-    >
-    >    `scripts/run-python.sh python/tree_ensembles_uc13.py --max-depth 5 --num-trees 100 --classify --ensemble-type random-forest  --dataset /user/ubuntu/data/uc13-pca-test.csv`
-    >
+   teaa/examples/scripts/run-python.sh teaa/examples/python/rf_uc13.py chb03 --numTrees 50 --doBinaryClassification --usingPCA 
+   ```
 
-    An alternative to work with the data of each patient individually and with a different data preprocessing is 
-    [tree_ensembles_uc13_21x20.py](../../portal.dsic/examples/python/tree_ensembles_uc13_21x20.py)
-
-    To see the files with data run:
-
-    >
-    > `hdfs dfs -ls -h /user/ubuntu/data/uc13`
-    >
-
-    Then for training and evaluating you can run:
-
-    >
-    >    `cd teaa/examples`
-    >
-    >    `scripts/run-python.sh python/tree_ensembles_uc13_21x20.py --patient chb03 --max-depth 5 --num-trees 100 --train --classify --ensemble-type random-forest`
-    >
-    >    `scripts/run-python.sh python/tree_ensembles_uc13_21x20.py --patient chb03 --max-depth 5 --num-trees 100 --classify --ensemble-type random-forest`
-    >
 
 10. See where the models and the results have been stored:
 
-    >
-    > `hdfs dfs -ls uc13.1/models.ensembles`
-    >
-    > `hdfs dfs -ls uc13-21x20/chb03/models.ensembles`
-    >
-    > `cd`
-    >
-    > `cat uc13.1/results.ensembles-train/random-forest-classification-results-100-gini-5.txt`
-    >
-    > `cat uc13.1/results.ensembles-test/random-forest-classification-results-100-gini-5.txt`
-    >
-    > `viewnior uc13.1/results.ensembles-train/random-forest-classification-results-100-gini-5.png`
-    >
-    > `viewnior uc13.1/results.ensembles-test/random-forest-classification-results-100-gini-5.png`
-    >
-    > `cat uc13-21x20/chb03/results.ensembles-train/random-forest-classification-results-100-gini-5.txt`
-    >
-    > `cat uc13-21x20/chb03/results.ensembles-test/random-forest-classification-results-100-gini-5.txt`
-    >
-    > `viewnior uc13-21x20/chb03/results.ensembles-train/random-forest-classification-results-100-gini-5.png`
-    >
-    > `viewnior uc13-21x20/chb03/results.ensembles-test/random-forest-classification-results-100-gini-5.png`
-    >
+   ```bash
+   cd ${HOME}
+
+   cat results.l2.uc13.train/rf/rf_chb03_00050_pca_02_classes.txt
+
+   cat results.l2.uc13.test/rf/rf_chb03_00050_pca_02_classes.txt
+   ```
+
+   The images can be downloaded to your computer and then visualized, anyway all the results are available
+   in the repository exploring the following directories:
+
+   - [results.l2.uc13.train/rf](../../portal.dsic/examples/results.l2.uc13.train/rf)
+   - [results.l2.uc13.test/rf](../../portal.dsic/examples/results.l2.uc13.test/rf)
 
 11. Do the same using `extra-trees` instead of `random-forest`
 
-    In this case the `models-dir` option should refer to a directory in the local filesystem instead of the HDFS
-    because the _Extra-Trees_ do not work in Apache Spark, the only work in local.
-    But do not worry, _Extra-Trees_  are fast.
+    ***PENDING***
+
 
 12. Do the same using `gradient-boosted-trees` instead of `random-forest` or `extra-trees` 
 
-    Be careful, `gradient-boosted-trees` are much slower (i.e., computationally expensive) than previous ones.
+    ***PENDING***
