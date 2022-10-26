@@ -68,7 +68,7 @@ def main(args):
 
             print('numTrees', numTrees, 'maxDepth', maxDepth, 'impurity', args.impurity)
 
-            # Creating the RandomForest model
+            # Creating the ExtraTrees model
             ert = ExtraTreesClassifier(n_estimators = numTrees, criterion = args.impurity, max_depth = maxDepth, n_jobs = 1, verbose = 1)
 
             ert.fit(X_train, y_train)

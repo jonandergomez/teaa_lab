@@ -39,7 +39,8 @@ if __name__ == "__main__":
 
     data_rdds = dict()
     for subset in ['train', 'test']:
-        f = open(f'../21x20/uc13-{patient}-21x20-{subset}.csv')
+        #f = open(f'../21x20/uc13-{patient}-21x20-{subset}.csv')
+        f = open(f'../21x20/uc13-{patient}-21x20-time-to-seizure-{subset}.csv')
         data = list()
         for line in f:
             data.append(csv_line_to_patient_label_and_sample(line.strip()))
@@ -75,7 +76,8 @@ if __name__ == "__main__":
     for subset in ['train', 'test']:
         rdd = data_rdds[subset]
         x = X[subset]
-        f = open(f'../21x20/uc13-{patient}-21x20-{subset}-pca.csv', 'wt')
+        #f = open(f'../21x20/uc13-{patient}-21x20-{subset}-pca.csv', 'wt')
+        f = open(f'../21x20/uc13-{patient}-21x20-time-to-seizure-{subset}-pca.csv', 'wt')
         for i in range(len(rdd)):
             patient = rdd[i][0]        
             label = rdd[i][1]
