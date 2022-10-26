@@ -66,28 +66,11 @@ Lab practice 2 is about two use cases:
    tree results.l2.mnist.test
    ```
 
-#4. Creation of the user directory in the HDFS
-#
-#   And as it will be necessary later, we have to create some directories in the HDFS.
-#   In particular our own directory if it does not exist yet, and some another
-#   directory as an example for discovering how directories are created.
-#
-#   ![Here](figures/hdfs-creating-user-dirs.png)
-#
-#   In particular, when using the Spark implentation of some training algorithms, the
-#   models are stored in the HDFS, each user should create the directory corresponding
-#   to the use case. In the case of working with the 
-#   [MNIST Digits database](https://en.wikipedia.org/wiki/MNIST_database)
-#   we have to create `/user/jon/digits/models`, please, replace `jon` with your username.
-#
-#   ![Here](figures/hdfs-creating-models-dirs.png)
-
-
-5. Inspect the code [rf_mnist.py](../../portal.dsic/examples/python/rf_mnist.py)
+4. Inspect the code [rf_mnist.py](../../portal.dsic/examples/python/rf_mnist.py)
    to be used in this lab session for working with the
    [MNIST Digits database](https://en.wikipedia.org/wiki/MNIST_database),
 
-6. Run the code [rf_mnist.py](../../portal.dsic/examples/python/rf_mnist.py)
+5. Run the code [rf_mnist.py](../../portal.dsic/examples/python/rf_mnist.py)
    with different configuration options for [Random Forest](https://en.wikipedia.org/wiki/Random_forest):
     
 
@@ -111,7 +94,7 @@ Lab practice 2 is about two use cases:
    teaa/examples/scripts/run-python.sh teaa/examples/python/rf_mnist.py --numTrees 10 --maxDepth 7 --pcaComponents 40
    ```
 
-7. What the program execution has created
+6. What the program execution has created
 
    The models have not been stored in this example, and the results are stored in the local disk.
    Next instructions show you how to see the files created.
@@ -124,7 +107,7 @@ Lab practice 2 is about two use cases:
    ls -l results.l2.mnist.test
    ```
 
-8. The results can be seen from the text file complementary to the figures
+7. The results can be seen from the text file complementary to the figures
 
    ```bash
    cd ${HOME}
@@ -140,7 +123,7 @@ Lab practice 2 is about two use cases:
    - [results.l2.mnist.train](../../portal.dsic/examples/results.l2.mnist.train)
    - [results.l2.mnist.test](../../portal.dsic/examples/results.l2.mnist.test)
 
-9. Do similar steps for the use case based on the
+8. Do similar steps for the use case based on the
    [CHB-MIT Scalp EEG Database](https://physionet.org/lightwave/?db=chbmit/1.0.0)
 
    ```bash
@@ -150,7 +133,7 @@ Lab practice 2 is about two use cases:
    ```
 
 
-10. See where the models and the results have been stored:
+9. See where the models and the results have been stored:
 
    ```bash
    cd ${HOME}
@@ -166,11 +149,11 @@ Lab practice 2 is about two use cases:
    - [results.l2.uc13.train/rf](../../portal.dsic/examples/results.l2.uc13.train/rf)
    - [results.l2.uc13.test/rf](../../portal.dsic/examples/results.l2.uc13.test/rf)
 
-11. Do the same using `extra-trees` instead of `random-forest`
+10. Do the same using `extra-trees` instead of `random-forest`
 
     ***PENDING***
 
 
-12. Do the same using `gradient-boosted-trees` instead of `random-forest` or `extra-trees` 
+11. Do the same using `gradient-boosted-trees` instead of `random-forest` or `extra-trees` 
 
     ***PENDING***
