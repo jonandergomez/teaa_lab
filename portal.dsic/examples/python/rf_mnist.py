@@ -107,7 +107,7 @@ def main(args, sc):
             y_pred = [y[1] for y in y_true_pred]
 
             filename_prefix = 'rf_%05d_pca_%04d_maxdepth_%03d' % (numTrees, pcaComponents, maxDepth)
-            save_results(f'{results_dir}.train', filename_prefix = filename_prefix, y_true = y_true, y_pred = y_pred, elapsed_time = None, labels = labels)
+            save_results(f'{results_dir}.train/rf', filename_prefix = filename_prefix, y_true = y_true, y_pred = y_pred, elapsed_time = None, labels = labels)
 
 
             # TESTING SUBSET
@@ -128,7 +128,7 @@ def main(args, sc):
             y_pred = [y[1] for y in y_true_pred]
 
             filename_prefix = 'rf_%05d_pca_%04d_maxdepth_%03d' % (numTrees, pcaComponents, maxDepth)
-            save_results(f'{results_dir}.test', filename_prefix = filename_prefix, y_true = y_true, y_pred = y_pred, elapsed_time = None, labels = labels)
+            save_results(f'{results_dir}.test/rf', filename_prefix = filename_prefix, y_true = y_true, y_pred = y_pred, elapsed_time = None, labels = labels)
         # end for max depth
     # end for num trees
 

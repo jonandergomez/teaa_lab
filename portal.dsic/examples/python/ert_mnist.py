@@ -83,7 +83,7 @@ def main(args):
             elapsed_time['train'] += time.time() - reference_time
 
             filename_prefix = 'ert_%05d_pca_%04d_maxdepth_%03d' % (numTrees, pcaComponents, maxDepth)
-            save_results(f'{results_dir}.train', filename_prefix = filename_prefix, y_true = y_true, y_pred = y_pred, elapsed_time = None, labels = labels)
+            save_results(f'{results_dir}.train/ert', filename_prefix = filename_prefix, y_true = y_true, y_pred = y_pred, elapsed_time = None, labels = labels)
 
 
             # TESTING SUBSET
@@ -94,7 +94,7 @@ def main(args):
             elapsed_time['test'] += time.time() - reference_time
 
             filename_prefix = 'ert_%05d_pca_%04d_maxdepth_%03d' % (numTrees, pcaComponents, maxDepth)
-            save_results(f'{results_dir}.test', filename_prefix = filename_prefix, y_true = y_true, y_pred = y_pred, elapsed_time = None, labels = labels)
+            save_results(f'{results_dir}.test/ert', filename_prefix = filename_prefix, y_true = y_true, y_pred = y_pred, elapsed_time = None, labels = labels)
         # end for max depth
     # end for num trees
 

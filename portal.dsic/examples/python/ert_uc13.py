@@ -97,7 +97,7 @@ def main(args):
         filename_prefix += '_02_classes'
     else:
         filename_prefix += '_10_classes'
-    save_results(f'{results_dir}.train', filename_prefix = filename_prefix, y_true = y_true, y_pred = y_pred, elapsed_time = elapsed_time['inference_train'], labels = labels)
+    save_results(f'{results_dir}.train/ert/{args.patient}', filename_prefix = filename_prefix, y_true = y_true, y_pred = y_pred, elapsed_time = elapsed_time['inference_train'], labels = labels)
 
     # Compute the train error
     error = sum(y_true != y_pred) / len(y_true)
@@ -110,7 +110,7 @@ def main(args):
     y_pred = ert.predict(X_test)
     elapsed_time['inference_test'] += time.time() - reference_time
 
-    save_results(f'{results_dir}.test', filename_prefix = filename_prefix, y_true = y_true, y_pred = y_pred, elapsed_time = elapsed_time['inference_test'], labels = labels)
+    save_results(f'{results_dir}.test/ert/{args.patient}', filename_prefix = filename_prefix, y_true = y_true, y_pred = y_pred, elapsed_time = elapsed_time['inference_test'], labels = labels)
 
     # Compute the test error
     error = sum(y_true != y_pred) / len(y_true)

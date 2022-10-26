@@ -102,9 +102,9 @@ Lab practice 2 is about two use cases:
    ```bash
    cd ${HOME}
 
-   ls -l results.l2.mnist.train
+   ls -l results.l2.mnist.train/rf
 
-   ls -l results.l2.mnist.test
+   ls -l results.l2.mnist.test/rf
    ```
 
 7. The results can be seen from the text file complementary to the figures
@@ -112,16 +112,16 @@ Lab practice 2 is about two use cases:
    ```bash
    cd ${HOME}
 
-   cat results.l2.mnist.train/rf_00010_pca_0040_maxdepth_007.txt
+   cat results.l2.mnist.train/rf/rf_00010_pca_0040_maxdepth_007.txt
 
-   cat results.l2.mnist.test/rf_00010_pca_0040_maxdepth_007.txt
+   cat results.l2.mnist.test/rf/rf_00010_pca_0040_maxdepth_007.txt
    ```
 
    The images can be downloaded to your computer and then visualized, anyway all the results are available
    in the repository exploring the following directories:
 
-   - [results.l2.mnist.train](../../portal.dsic/examples/results.l2.mnist.train)
-   - [results.l2.mnist.test](../../portal.dsic/examples/results.l2.mnist.test)
+   - [results.l2.mnist.train/rf](../../portal.dsic/examples/results.l2.mnist.train/rf)
+   - [results.l2.mnist.test/rf](../../portal.dsic/examples/results.l2.mnist.test/rf)
 
 8. Do similar steps for the use case based on the
    [CHB-MIT Scalp EEG Database](https://physionet.org/lightwave/?db=chbmit/1.0.0)
@@ -146,14 +146,87 @@ Lab practice 2 is about two use cases:
    The images can be downloaded to your computer and then visualized, anyway all the results are available
    in the repository exploring the following directories:
 
-   - [results.l2.uc13.train/rf](../../portal.dsic/examples/results.l2.uc13.train/rf)
-   - [results.l2.uc13.test/rf](../../portal.dsic/examples/results.l2.uc13.test/rf)
-
-10. Do the same using `extra-trees` instead of `random-forest`
-
-    ***PENDING***
+   - [results.l2.uc13.train/rf/chb03](../../portal.dsic/examples/results.l2.uc13.train/rf/chb03)
+   - [results.l2.uc13.test/rf/chb03](../../portal.dsic/examples/results.l2.uc13.test/rf/chb03)
 
 
-11. Do the same using `gradient-boosted-trees` instead of `random-forest` or `extra-trees` 
+10. Do the same using `extra-trees` instead of `random-forest` for 
+   [MNIST Digits database](https://en.wikipedia.org/wiki/MNIST_database).
+   Inspect and run the code [ert_mnist.py](../../portal.dsic/examples/python/ert_mnist.py)
+
+   The command line options are the same used for Random Forest. See it above.
+   In this case the `impurity` is used.
+
+   ```bash
+   cd ${HOME}
+
+   teaa/examples/scripts/run-python.sh teaa/examples/python/ert_mnist.py --numTrees 10 --maxDepth 7 --pcaComponents 40
+   ```
+
+   The results can be found with the following commands:
+
+   ```bash
+   cd ${HOME}
+
+   ls -l results.l2.mnist.train/ert
+
+   ls -l results.l2.mnist.test/ert
+   ```
+
+   And visualizing the text results with the following commands:
+
+   ```bash
+   cd ${HOME}
+
+   cat results.l2.mnist.train/ert/ert_00010_pca_0040_maxdepth_007.txt
+
+   cat results.l2.mnist.test/ert/ert_00010_pca_0040_maxdepth_007.txt
+   ```
+
+   The images can be downloaded to your computer and then visualized, anyway all the results are available
+   in the repository exploring the following directories:
+
+   - [results.l2.mnist.train/ert](../../portal.dsic/examples/results.l2.mnist.train/ert)
+   - [results.l2.mnist.test/ert](../../portal.dsic/examples/results.l2.mnist.test/ert)
+
+
+11. Do the same using `extra-trees` instead of `random-forest` for 
+   [CHB-MIT Scalp EEG Database](https://physionet.org/lightwave/?db=chbmit/1.0.0)
+   Inspect and run the code [ert_uc13.py](../../portal.dsic/examples/python/ert_uc13.py)
+
+   ```bash
+   cd ${HOME}
+
+   teaa/examples/scripts/run-python.sh teaa/examples/python/ert_uc13.py chb03 --numTrees 50 --doBinaryClassification --usingPCA 
+   ```
+
+   The results can be found with the following commands:
+
+   ```bash
+   cd ${HOME}
+
+   ls -l results.l2.uc13.train/ert/chb03
+
+   ls -l results.l2.uc13.test/ert/chb03
+   ```
+
+   And visualizing the text results with the following commands:
+
+   ```bash
+   cd ${HOME}
+
+   cat results.l2.uc13.train/ert/ert_00010_pca_0050_maxdepth_007.txt
+
+   cat results.l2.uc13.test/ert/ert_00010_pca_0050_maxdepth_007.txt
+   ```
+
+   The images can be downloaded to your computer and then visualized, anyway all the results are available
+   in the repository exploring the following directories:
+
+   - [results.l2.uc13.train/ert](../../portal.dsic/examples/results.l2.uc13.train/ert)
+   - [results.l2.uc13.test/ert](../../portal.dsic/examples/results.l2.uc13.test/ert)
+
+
+12. Do the same using `gradient-boosted-trees` instead of `random-forest` or `extra-trees` 
 
     ***PENDING***

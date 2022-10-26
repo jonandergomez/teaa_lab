@@ -111,7 +111,7 @@ def main(args, sc):
             y_pred = [value_to_label(y[1]) for y in y_true_pred]
 
             filename_prefix = 'gbt_%s_%05d_%03d_%s' % (args.patient, numTrees, maxDepth, 'pca' if args.usingPCA else 'no_pca')
-            save_results(f'{results_dir}.train', filename_prefix = filename_prefix, y_true = y_true, y_pred = y_pred, elapsed_time = None, labels = None)
+            save_results(f'{results_dir}.train/gbt/{args.patient}', filename_prefix = filename_prefix, y_true = y_true, y_pred = y_pred, elapsed_time = None, labels = None)
 
 
             # TESTING SUBSET
@@ -131,7 +131,7 @@ def main(args, sc):
             y_true = [value_to_label(y[0]) for y in y_true_pred]
             y_pred = [value_to_label(y[1]) for y in y_true_pred]
 
-            save_results(f'{results_dir}.test', filename_prefix = filename_prefix, y_true = y_true, y_pred = y_pred, elapsed_time = None, labels = None)
+            save_results(f'{results_dir}.test/gbt/{args.patient}', filename_prefix = filename_prefix, y_true = y_true, y_pred = y_pred, elapsed_time = None, labels = None)
         # end for max depth
     # end for num trees
 
