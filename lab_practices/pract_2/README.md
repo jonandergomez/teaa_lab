@@ -191,122 +191,122 @@ Lab practice 2 is about two use cases:
 
 
 11. **Do the same using `extra-trees` instead of `random-forest` for**
-   [CHB-MIT Scalp EEG Database](https://physionet.org/lightwave/?db=chbmit/1.0.0)
-   **Inspect and run the code** [ert_uc13.py](../../portal.dsic/examples/python/ert_uc13.py)
+    [CHB-MIT Scalp EEG Database](https://physionet.org/lightwave/?db=chbmit/1.0.0)
+    **Inspect and run the code** [ert_uc13.py](../../portal.dsic/examples/python/ert_uc13.py)
 
-   ```bash
-   cd ${HOME}
+    ```bash
+    cd ${HOME}
 
-   teaa/examples/scripts/run-python.sh teaa/examples/python/ert_uc13.py chb03 --numTrees 50 --doBinaryClassification --usingPCA 
-   ```
+    teaa/examples/scripts/run-python.sh teaa/examples/python/ert_uc13.py chb03 --numTrees 50 --doBinaryClassification --usingPCA 
+    ```
 
-   The results can be found with the following commands:
+    The results can be found with the following commands:
 
-   ```bash
-   cd ${HOME}
+    ```bash
+    cd ${HOME}
 
-   ls -l results.l2.uc13.train/ert/chb03
+    ls -l results.l2.uc13.train/ert/chb03
 
-   ls -l results.l2.uc13.test/ert/chb03
-   ```
+    ls -l results.l2.uc13.test/ert/chb03
+    ```
 
-   And visualizing the text results with the following commands:
+    And visualizing the text results with the following commands:
 
-   ```bash
-   cd ${HOME}
+    ```bash
+    cd ${HOME}
 
-   cat results.l2.uc13.train/ert/ert_00010_pca_0050_maxdepth_007.txt
+    cat results.l2.uc13.train/ert/ert_00010_pca_0050_maxdepth_007.txt
 
-   cat results.l2.uc13.test/ert/ert_00010_pca_0050_maxdepth_007.txt
-   ```
+    cat results.l2.uc13.test/ert/ert_00010_pca_0050_maxdepth_007.txt
+    ```
 
-   The images can be downloaded to your computer and then visualized, anyway all the results are available
-   in the repository exploring the following directories:
+    The images can be downloaded to your computer and then visualized, anyway all the results are available
+    in the repository exploring the following directories:
 
-   - [results.l2.uc13.train/ert](../../portal.dsic/examples/results.l2.uc13.train/ert)
-   - [results.l2.uc13.test/ert](../../portal.dsic/examples/results.l2.uc13.test/ert)
+    - [results.l2.uc13.train/ert](../../portal.dsic/examples/results.l2.uc13.train/ert)
+    - [results.l2.uc13.test/ert](../../portal.dsic/examples/results.l2.uc13.test/ert)
 
 
 12. **Do the same using `gradient-boosted-trees` instead of `random-forest` or `extra-trees` for**
-   [MNIST Digits database](https://en.wikipedia.org/wiki/MNIST_database).
+    [MNIST Digits database](https://en.wikipedia.org/wiki/MNIST_database).
 
-   a. Using regressors then categorizing the predicted values.
-     Inspect and run the code [gbt_mnist.py](../../portal.dsic/examples/python/gbt_mnist.py)
+    a. Using regressors then categorizing the predicted values.
+       Inspect and run the code [gbt_mnist.py](../../portal.dsic/examples/python/gbt_mnist.py)
 
-     The command line options are the same used for Random Forest and Extremely Randomized Trees. See it above.
-     In this case the `impurity` is used but fixed to `variance`.
+        The command line options are the same used for Random Forest and Extremely Randomized Trees. See it above.
+        In this case the `impurity` is used but fixed to `variance`.
 
-     ```bash
-     cd ${HOME}
+         ```bash
+         cd ${HOME}
 
-     teaa/examples/scripts/run-python.sh teaa/examples/python/gbt_mnist.py \
-            --numTrees 10 --maxDepth 7 --pcaComponents 40
-     ```
+         teaa/examples/scripts/run-python.sh teaa/examples/python/gbt_mnist.py \
+                --numTrees 10 --maxDepth 7 --pcaComponents 40
+         ```
 
-     The results can be found with the following commands:
+         The results can be found with the following commands:
 
-     ```bash
-     cd ${HOME}
+         ```bash
+         cd ${HOME}
 
-     ls -l results.l2.mnist.train/gbt
+         ls -l results.l2.mnist.train/gbt
 
-     ls -l results.l2.mnist.test/gbt
-     ```
+         ls -l results.l2.mnist.test/gbt
+         ```
 
-     And visualizing the text results with the following commands:
+         And visualizing the text results with the following commands:
 
-     ```bash
-     cd ${HOME}
+         ```bash
+         cd ${HOME}
 
-     cat results.l2.mnist.train/gbt/gbt_00010_pca_0040_maxdepth_007.txt
+         cat results.l2.mnist.train/gbt/gbt_00010_pca_0040_maxdepth_007.txt
 
-     cat results.l2.mnist.test/gbt/gbt_00010_pca_0040_maxdepth_007.txt
-     ```
+         cat results.l2.mnist.test/gbt/gbt_00010_pca_0040_maxdepth_007.txt
+         ```
 
-     The images can be downloaded to your computer and then visualized, anyway all the results are available
-     in the repository exploring the following directories:
+         The images can be downloaded to your computer and then visualized, anyway all the results are available
+         in the repository exploring the following directories:
 
-     - [results.l2.mnist.train/gbt](../../portal.dsic/examples/results.l2.mnist.train/gbt)
-     - [results.l2.mnist.test/gbt](../../portal.dsic/examples/results.l2.mnist.test/gbt)
+         - [results.l2.mnist.train/gbt](../../portal.dsic/examples/results.l2.mnist.train/gbt)
+         - [results.l2.mnist.test/gbt](../../portal.dsic/examples/results.l2.mnist.test/gbt)
 
   
-   b. Using a cascade of binary classifiers.
-     Inspect and run the code [gbt_mnist_binary_trees.py](../../portal.dsic/examples/python/gbt_mnist_binary_trees.py)
+    b. Using a cascade of binary classifiers.
+       Inspect and run the code [gbt_mnist_binary_trees.py](../../portal.dsic/examples/python/gbt_mnist_binary_trees.py)
 
-     The command line options are the same used in previous examples. See it above.
+         The command line options are the same used in previous examples. See it above.
 
-     ```bash
-     cd ${HOME}
+         ```bash
+         cd ${HOME}
 
-     teaa/examples/scripts/run-python.sh teaa/examples/python/gbt_mnist_binary_trees.py \
-            --numTrees 10 --maxDepth 7 --pcaComponents 40
-     ```
+         teaa/examples/scripts/run-python.sh teaa/examples/python/gbt_mnist_binary_trees.py \
+                --numTrees 10 --maxDepth 7 --pcaComponents 40
+         ```
 
-     The results can be found with the following commands:
+         The results can be found with the following commands:
 
-     ```bash
-     cd ${HOME}
+         ```bash
+         cd ${HOME}
 
-     ls -l results.l2b.mnist.train/gbt
+         ls -l results.l2b.mnist.train/gbt
 
-     ls -l results.l2b.mnist.test/gbt
-     ```
+         ls -l results.l2b.mnist.test/gbt
+         ```
 
-     And visualizing the text results with the following commands:
+         And visualizing the text results with the following commands:
 
-     ```bash
-     cd ${HOME}
+         ```bash
+         cd ${HOME}
 
-     cat results.l2b.mnist.train/gbt/gbt_00010_pca_0040_maxdepth_007.txt
+         cat results.l2b.mnist.train/gbt/gbt_00010_pca_0040_maxdepth_007.txt
 
-     cat results.l2b.mnist.test/gbt/gbt_00010_pca_0040_maxdepth_007.txt
-     ```
+         cat results.l2b.mnist.test/gbt/gbt_00010_pca_0040_maxdepth_007.txt
+         ```
 
-     The images can be downloaded to your computer and then visualized, anyway all the results are available
-     in the repository exploring the following directories:
+         The images can be downloaded to your computer and then visualized, anyway all the results are available
+         in the repository exploring the following directories:
 
-     - [results.l2b.mnist.train/gbt](../../portal.dsic/examples/results.l2b.mnist.train/gbt)
-     - [results.l2b.mnist.test/gbt](../../portal.dsic/examples/results.l2b.mnist.test/gbt)
+         - [results.l2b.mnist.train/gbt](../../portal.dsic/examples/results.l2b.mnist.train/gbt)
+         - [results.l2b.mnist.test/gbt](../../portal.dsic/examples/results.l2b.mnist.test/gbt)
 
 
 13.  ***PENDING***
