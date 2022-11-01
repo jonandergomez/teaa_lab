@@ -20,7 +20,7 @@ Lab practice 2 is about two use cases:
    please, replace `username` with yours.
 
 
-2. **Interaction with the Hadoop Distributed File System (HDFS)**
+1. **Interaction with the Hadoop Distributed File System (HDFS)**
 
    Once in the system, the first step is to see what we can find in the HDFS.
    The datasets to be used are in the directory of the `ubuntu` user, so we have
@@ -40,7 +40,7 @@ Lab practice 2 is about two use cases:
    hdfs dfs -ls /user/ubuntu/data/uc13
    ```
 
-3. **Creation of local dirs in user home directory**
+1. **Creation of local dirs in user home directory**
 
    The directories are created from the Python code automatically, but if required,
    here some examples of how to create local directories in your home directory.
@@ -66,11 +66,11 @@ Lab practice 2 is about two use cases:
    tree results.l2.mnist.test
    ```
 
-4. **Inspect the code** [rf_mnist.py](../../portal.dsic/examples/python/rf_mnist.py)
+1. **Inspect the code** [rf_mnist.py](../../portal.dsic/examples/python/rf_mnist.py)
    **to be used in this lab session for working with the**
    [MNIST Digits database](https://en.wikipedia.org/wiki/MNIST_database),
 
-5. **Run the code** [rf_mnist.py](../../portal.dsic/examples/python/rf_mnist.py)
+1. **Run the code** [rf_mnist.py](../../portal.dsic/examples/python/rf_mnist.py)
    **with different configuration options for** [Random Forest](https://en.wikipedia.org/wiki/Random_forest):
     
 
@@ -95,7 +95,7 @@ Lab practice 2 is about two use cases:
             --numTrees 10 --maxDepth 7 --pcaComponents 40
    ```
 
-6. **What the program execution has created**
+1. **What the program execution has created**
 
    The models have not been stored in this example, and the results are stored in the local disk.
    Next instructions show you how to see the files created.
@@ -108,7 +108,7 @@ Lab practice 2 is about two use cases:
    ls -l results.l2.mnist.test/rf
    ```
 
-7. **The results can be seen from the text file complementary to the figures**
+1. **The results can be seen from the text file complementary to the figures**
 
    ```bash
    cd ${HOME}
@@ -124,7 +124,7 @@ Lab practice 2 is about two use cases:
    - [results.l2.mnist.train/rf](../../portal.dsic/examples/results.l2.mnist.train/rf)
    - [results.l2.mnist.test/rf](../../portal.dsic/examples/results.l2.mnist.test/rf)
 
-8. **Do similar steps for the use case based on the**
+1. **Do similar steps for the use case based on the**
    [CHB-MIT Scalp EEG Database](https://physionet.org/lightwave/?db=chbmit/1.0.0)
 
    ```bash
@@ -135,7 +135,7 @@ Lab practice 2 is about two use cases:
    ```
 
 
-9. **See where the models and the results have been stored:**
+1. **See where the models and the results have been stored:**
 
    ```bash
    cd ${HOME}
@@ -152,9 +152,9 @@ Lab practice 2 is about two use cases:
    - [results.l2.uc13.test/rf/chb03](../../portal.dsic/examples/results.l2.uc13.test/rf/chb03)
 
 
-10. **Do the same using `extra-trees` instead of `random-forest` for**
-    [MNIST Digits database](https://en.wikipedia.org/wiki/MNIST_database).
-    **Inspect and run the code** [ert_mnist.py](../../portal.dsic/examples/python/ert_mnist.py)
+1. **Do the same using `extra-trees` instead of `random-forest` for**
+   [MNIST Digits database](https://en.wikipedia.org/wiki/MNIST_database).
+   **Inspect and run the code** [ert_mnist.py](../../portal.dsic/examples/python/ert_mnist.py)
 
     The command line options are the same used for Random Forest. See it above.
     In this case the `impurity` is used.
@@ -193,9 +193,9 @@ Lab practice 2 is about two use cases:
     - [results.l2.mnist.test/ert](../../portal.dsic/examples/results.l2.mnist.test/ert)
 
 
-11. **Do the same using `extra-trees` instead of `random-forest` for**
-    [CHB-MIT Scalp EEG Database](https://physionet.org/lightwave/?db=chbmit/1.0.0)
-    **Inspect and run the code** [ert_uc13.py](../../portal.dsic/examples/python/ert_uc13.py)
+1. **Do the same using `extra-trees` instead of `random-forest` for**
+   [CHB-MIT Scalp EEG Database](https://physionet.org/lightwave/?db=chbmit/1.0.0)
+   **Inspect and run the code** [ert_uc13.py](../../portal.dsic/examples/python/ert_uc13.py)
 
     ```bash
     cd ${HOME}
@@ -231,11 +231,11 @@ Lab practice 2 is about two use cases:
     - [results.l2.uc13.test/ert](../../portal.dsic/examples/results.l2.uc13.test/ert)
 
 
-12. **Do the same using `gradient-boosted-trees` instead of `random-forest` or `extra-trees` for**
+1. **Do the same using `gradient-boosted-trees` instead of `random-forest` or `extra-trees` for**
     [MNIST Digits database](https://en.wikipedia.org/wiki/MNIST_database).
 
-	12.a. Using regressors then categorizing the predicted values.
-		Inspect and run the code [gbt_mnist.py](../../portal.dsic/examples/python/gbt_mnist.py)
+	1. Using regressors then categorizing the predicted values.
+	    Inspect and run the code [gbt_mnist.py](../../portal.dsic/examples/python/gbt_mnist.py)
 
 		The command line options are the same used for Random Forest and Extremely Randomized Trees. See it above.
 		In this case the `impurity` is used but fixed to `variance`.
@@ -274,7 +274,7 @@ Lab practice 2 is about two use cases:
         - [results.l2.mnist.test/gbt](../../portal.dsic/examples/results.l2.mnist.test/gbt)
 
   
-	12.b. Using a cascade of binary classifiers.
+	1. Using a cascade of binary classifiers.
 		Inspect and run the code [gbt_mnist_binary_trees.py](../../portal.dsic/examples/python/gbt_mnist_binary_trees.py)
 
         The command line options are the same used in previous examples. See it above.
@@ -313,4 +313,4 @@ Lab practice 2 is about two use cases:
         - [results.l2b.mnist.test/gbt](../../portal.dsic/examples/results.l2b.mnist.test/gbt)
 
 
-13.  ***PENDING***
+1.  ***PENDING***
