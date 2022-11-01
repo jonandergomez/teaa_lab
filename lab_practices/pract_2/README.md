@@ -365,6 +365,14 @@ Lab practice 2 is about two use cases:
        you can see it by inspecting the code
 	   [gbt_uc13_binary_trees.py](../../portal.dsic/examples/python/gbt_uc13_binary_trees.py)
 
+
+        You will see in the code that only four classes have been used, you have to discover,
+        by analysing the code, how the new target classes are assigned to samples, and what
+        each one of the new target classes means.
+        In the case of the using a `GBTRegressor` the target classes are also different from
+        the all the previous examples.
+
+
         As in previous examples, you can run some experiments by varying the configuration hyper-parameters:
 
         ```bash
