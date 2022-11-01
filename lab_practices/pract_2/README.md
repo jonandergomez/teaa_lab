@@ -274,10 +274,10 @@ Lab practice 2 is about two use cases:
       - [results.l2.mnist.test/gbt](../../portal.dsic/examples/results.l2.mnist.test/gbt)
 
   
-12.b. Using a cascade of binary classifiers.
-      Inspect and run the code [gbt_mnist_binary_trees.py](../../portal.dsic/examples/python/gbt_mnist_binary_trees.py)
+	12.b. Using a cascade of binary classifiers.
+		Inspect and run the code [gbt_mnist_binary_trees.py](../../portal.dsic/examples/python/gbt_mnist_binary_trees.py)
 
-    The command line options are the same used in previous examples. See it above.
+	The command line options are the same used in previous examples. See it above.
 
     ```bash
     cd ${HOME}
