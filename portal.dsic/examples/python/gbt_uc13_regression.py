@@ -24,6 +24,8 @@ from pyspark.sql.functions import col
 
 from utils_for_results import save_results
 
+#ratio = 3600.0
+ratio = 1.0
 
 def main(args, sc):
 
@@ -38,7 +40,8 @@ def main(args, sc):
     # Function to process each CSV line
     def process_csv_line(row):
         # returns a list with patient, time-to-seizure and features
-        return row[0], float(row[1]) / 3600.0, Vectors.dense([float(x) for x in row[2:]])
+        #return row[0], float(row[1]) / ratio, Vectors.dense([float(x) for x in row[2:]])
+        return row[0], min(600.0, float(row[1])) / ratio, Vectors.dense([float(x) for x in row[2:]])
 
     # Processing each csv line in parallel and regenerate DataFrames with the appropriate column names
     trainData = trainData.rdd.map(process_csv_line).toDF(['patient', 'label', 'features'])
@@ -100,11 +103,11 @@ def main(args, sc):
             print("Root Mean Squared Error (RMSE) on training data = %g" % rmse)
 
             def value_to_label(y):
-                y = y * 3600
-                if 0.0 <= y <= 1: return 1
-                elif 1 <= y <= 300: return 2
-                elif y < 0.0: return 3
-                else: return 0
+                y = y * ratio
+                if  -1.0 <= y <=   1.0: return 1
+                elif 1.0 <= y <= 300.0: return 2
+                elif        y <    0.0: return 3
+                else:                   return 0
 
             y_true_pred = predictions.select('label', 'prediction').collect()
             y_true = [value_to_label(y[0]) for y in y_true_pred]
