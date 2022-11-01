@@ -234,18 +234,18 @@ Lab practice 2 is about two use cases:
 12. **Do the same using `gradient-boosted-trees` instead of `random-forest` or `extra-trees` for**
     [MNIST Digits database](https://en.wikipedia.org/wiki/MNIST_database).
 
-12.a. Using regressors then categorizing the predicted values.
-      Inspect and run the code [gbt_mnist.py](../../portal.dsic/examples/python/gbt_mnist.py)
+	12.a. Using regressors then categorizing the predicted values.
+		Inspect and run the code [gbt_mnist.py](../../portal.dsic/examples/python/gbt_mnist.py)
 
-      The command line options are the same used for Random Forest and Extremely Randomized Trees. See it above.
-      In this case the `impurity` is used but fixed to `variance`.
+	The command line options are the same used for Random Forest and Extremely Randomized Trees. See it above.
+	In this case the `impurity` is used but fixed to `variance`.
 
-      ```bash
-      cd ${HOME}
+	```bash
+	cd ${HOME}
 
-      teaa/examples/scripts/run-python.sh teaa/examples/python/gbt_mnist.py \
+	teaa/examples/scripts/run-python.sh teaa/examples/python/gbt_mnist.py \
             --numTrees 10 --maxDepth 7 --pcaComponents 40
-      ```
+	```
 
       The results can be found with the following commands:
 
