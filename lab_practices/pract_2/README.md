@@ -140,16 +140,16 @@ Lab practice 2 is about two use cases:
    ```bash
    cd ${HOME}
 
-   cat results.l2.uc13.train/rf/rf_chb03_00050_pca_02_classes.txt
+   cat results.l2.uc13.train/rf/chb03/rf_chb03_00050_pca_02_classes.txt
 
-   cat results.l2.uc13.test/rf/rf_chb03_00050_pca_02_classes.txt
+   cat results.l2.uc13.test/rf/chb03/rf_chb03_00050_pca_02_classes.txt
    ```
 
    The images can be downloaded to your computer and then visualized, anyway all the results are available
    in the repository exploring the following directories:
 
-   - [results.l2.uc13.train/rf/chb03](../../portal.dsic/examples/results.l2.uc13.train/rf/chb03)
-   - [results.l2.uc13.test/rf/chb03](../../portal.dsic/examples/results.l2.uc13.test/rf/chb03)
+   - [results.l2.uc13.train/rf](../../portal.dsic/examples/results.l2.uc13.train/rf/)
+   - [results.l2.uc13.test/rf](../../portal.dsic/examples/results.l2.uc13.test/rf/)
 
 
 1. **Do the same using `extra-trees` instead of `random-forest` for**
@@ -201,7 +201,7 @@ Lab practice 2 is about two use cases:
     cd ${HOME}
 
     teaa/examples/scripts/run-python.sh teaa/examples/python/ert_uc13.py chb03 \
-            --numTrees 50 --doBinaryClassification --usingPCA 
+            --numTrees 50 --maxDepth 7 --doBinaryClassification --usingPCA 
     ```
 
     The results can be found with the following commands:
@@ -219,9 +219,9 @@ Lab practice 2 is about two use cases:
     ```bash
     cd ${HOME}
 
-    cat results.l2.uc13.train/ert/ert_00010_pca_0050_maxdepth_007.txt
+    cat results.l2.uc13.train/ert/chb03/ert_chb03_00050_maxdepth_007_pca_02_classes.txt
 
-    cat results.l2.uc13.test/ert/ert_00010_pca_0050_maxdepth_007.txt
+    cat results.l2.uc13.test/ert/chb03/ert_chb03_00050_maxdepth_007_pca_02_classes.txt
     ```
 
     The images can be downloaded to your computer and then visualized, anyway all the results are available
@@ -313,4 +313,91 @@ Lab practice 2 is about two use cases:
         - [results.l2b.mnist.test/gbt](../../portal.dsic/examples/results.l2b.mnist.test/gbt)
 
 
-1.  ***PENDING***
+1. **Do the same using `gradient-boosted-trees` instead of `random-forest` or `extra-trees` for**
+   [CHB-MIT Scalp EEG Database](https://physionet.org/lightwave/?db=chbmit/1.0.0)
+
+    1. For the binary case, inspect and use the code
+	   [gbt_uc13.py](../../portal.dsic/examples/python/gbt_uc13.py)
+
+        As in previous examples, you can run some experiments by varying the configuration hyper-parameters:
+
+        ```bash
+        cd ${HOME}
+
+        teaa/examples/scripts/run-python.sh teaa/examples/python/python/gbt_uc13.py chb03 \
+                --numTrees 20 --maxDepth 5 --doBinaryClassification --usingPCA --verbose 0
+        ```
+
+        The results of this example can be found:
+
+        ```bash
+        cd ${HOME}
+
+        ls -l results.l2.uc13.train/gbt/chb03
+
+        ls -l results.l2.uc13.test/gbt/chb03
+        ```
+
+        And visualizing the text results with the following commands:
+
+        ```bash
+        cd ${HOME}
+
+        cat results.l2.uc13.train/gbt/chb03/gbt_chb03_00020_005_pca_02_classes.txt
+
+        cat results.l2.uc13.test/gbt/chb03/gbt_chb03_00020_005_pca_02_classes.txt
+        ```
+
+        The images can be downloaded to your computer and then visualized, anyway all the results are available
+        in the repository exploring the following directories:
+
+        - [results.l2.uc13.train/gbt](../../portal.dsic/examples/results.l2.uc13.train/gbt)
+        - [results.l2.uc13.test/gbt](../../portal.dsic/examples/results.l2.uc13.test/gbt)
+
+
+    1. For the multi-class case, the first tested approach has been using a `GBTRegressor` as in the case of the
+       [MNIST Digits database](https://en.wikipedia.org/wiki/MNIST_database).
+       But the results are really wrong. Despite this approach has not been used for generating results,
+       you can inspect the code
+	   [gbt_uc13_regression.py](../../portal.dsic/examples/python/gbt_uc13_regression.py)
+
+    1. Another approach with also bad results consists in using a cascade of binary classifiers,
+       you can see it by inspecting the code
+	   [gbt_uc13_binary_trees.py](../../portal.dsic/examples/python/gbt_uc13_binary_trees.py)
+
+        As in previous examples, you can run some experiments by varying the configuration hyper-parameters:
+
+        ```bash
+        cd ${HOME}
+
+        teaa/examples/scripts/run-python.sh teaa/examples/python/python/gbt_uc13_binary_trees.py chb03 \
+                --numTrees 20 --maxDepth 5 --doBinaryClassification --usingPCA --verbose 0
+        ```
+
+        The results of this example can be found:
+
+        ```bash
+        cd ${HOME}
+
+        ls -l results.l2c.uc13.train/gbt/chb03
+
+        ls -l results.l2c.uc13.test/gbt/chb03
+        ```
+
+        And visualizing the text results with the following commands:
+
+        ```bash
+        cd ${HOME}
+
+        cat results.l2c.uc13.train/gbt/chb03/gbt_chb03_00020_005_pca_02_classes.txt
+
+        cat results.l2c.uc13.test/gbt/chb03/gbt_chb03_00020_005_pca_02_classes.txt
+        ```
+
+        The images can be downloaded to your computer and then visualized, anyway all the results are available
+        in the repository exploring the following directories:
+
+        - [results.l2c.uc13.train/gbt](../../portal.dsic/examples/results.l2c.uc13.train/gbt)
+        - [results.l2c.uc13.test/gbt](../../portal.dsic/examples/results.l2c.uc13.test/gbt)
+
+        **_NOT ALL THE RESULTS ARE AVAILABLE YET_**
