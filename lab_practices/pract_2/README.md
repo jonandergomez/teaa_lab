@@ -408,4 +408,5 @@ Lab practice 2 is about two use cases:
         - [results.l2c.uc13.train/gbt](../../portal.dsic/examples/results.l2c.uc13.train/gbt)
         - [results.l2c.uc13.test/gbt](../../portal.dsic/examples/results.l2c.uc13.test/gbt)
 
-        **_NOT ALL THE RESULTS FOR THIS CONFIGURATION ARE AVAILABLE YET_**
+        
+        **SUMMARIES for all use cases and techniques are available in** [results.summary](../../portal.dsic/examples/results.summary)
