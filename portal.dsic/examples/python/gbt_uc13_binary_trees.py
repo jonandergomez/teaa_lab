@@ -62,8 +62,15 @@ def main(args, sc):
     trainData = trainData.rdd.map(process_csv_line).toDF(['patient', 'time-to-seizure', 'label', 'l0', 'l1', 'l2', 'features'])
     testData  =  testData.rdd.map(process_csv_line).toDF(['patient', 'time-to-seizure', 'label', 'l0', 'l1', 'l2', 'features'])
 
-    print(numpy.unique(trainData.select('label').collect()))
-    print(numpy.unique(testData.select('label').collect()))
+    train_labels = numpy.unique(trainData.select('label').collect())
+    test_labels = numpy.unique(testData.select('label').collect())
+
+    print(train_labels)
+    print(test_labels)
+
+    if len(train_labels) == 1 or len(test_labels) == 1 or len(train_labels) != len(test_labels):
+        print(f'aborting the execution for patient {args.patient}')
+        sys.exit(1)
 
 
     _0_vs_the_rest = SQLTransformer(statement="SELECT * FROM __THIS__")              # does not filter, all training samples will be used
@@ -166,8 +173,6 @@ def main(args, sc):
 
     trainData.unpersist()
     testData.unpersist()
-
-    sc.stop()
 
 
 

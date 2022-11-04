@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# patient 11 must be removed
 for p in 03 07 08 10 11 12 13 15 16 18 19 22 24
 do
     patient="chb${p}"
