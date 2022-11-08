@@ -41,6 +41,7 @@ Lab practice 3 is about two use cases:
     - `--bandWidth`, _Colon separated list of the band width for the KDE classifier_, default value `0.1:0.2:0.5:1.0:2.0`
     - `--pcaComponents`, _Number of components of PCA, an integer > 1 or a float in the range [0,1[_, default value `37`
 
+    Example:
     ```bash
         teaa/examples/scripts/run-python-2.sh teaa/examples/python/kde_mnist.py \
                                 --codebookSize 500 \
@@ -73,6 +74,7 @@ Lab practice 3 is about two use cases:
     - `--doBinaryClassification` or `--no-doBinaryClassification`
     - `--usingPCA` or `--no-usingPCA`
     
+    Example:
     ```bash
         teaa/examples/scripts/run-python-2.sh teaa/examples/python/kde_uc13_21x20.py chb10 \
                                         --codebookSize 200 \
@@ -105,6 +107,7 @@ Lab practice 3 is about two use cases:
     - `--K`, _Colon separated list of values for **K** the KNN classifier_, default value `3:5:7:9:11:13`
     - `--pcaComponents`, _Number of components of PCA, an integer > 1 or a float in the range [0,1[_, default value `37`
 
+    Example:
     ```bash
         teaa/examples/scripts/run-python-2.sh teaa/examples/python/knn_mnist.py \
                                 --codebookSize 500 \
@@ -136,6 +139,7 @@ Lab practice 3 is about two use cases:
     - `--doBinaryClassification` or `--no-doBinaryClassification`
     - `--usingPCA` or `--no-usingPCA`
     
+    Example:
     ```bash
         teaa/examples/scripts/run-python-2.sh teaa/examples/python/knn_uc13_21x20.py chb10 \
                                         --codebookSize 200 \
