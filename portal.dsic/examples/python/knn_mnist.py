@@ -1,83 +1,39 @@
 """
     Author: Jon Ander Gomez Adrian (jon@dsic.upv.es, http://personales.upv.es/jon)
     Version: 1.0
-    Date: October 2021
+    Date: November 2022
     Universitat Politecnica de Valencia
     Technical University of Valencia TU.VLC
 
-    Using K-Nearest Neighbours for classification 
+    Using memory-based techniques for classification
+
+    Memory-based techniques used in this lab practice:
+        Kernel Density Estimation
+        K-Nearest Neighbours
+
+    This code is only for K-Nearest Neighbours Classifiers, see the file
+        kde_mnist.py for Kernel Density Estimation
 """
 
-import os
 import sys
+import os
 import time
-import math
+import argparse
 import numpy
-import pickle
 
-try:
-    from pyspark import SparkContext, SparkConf
-except:
-    SparkContext = None
-    SparkConf = None
+from pyspark import SparkContext, SparkConf
+from pyspark.sql import SparkSession
 
 from sklearn.decomposition import PCA
-from sklearn.preprocessing import PolynomialFeatures
-from load_mnist import load_mnist
-from utils_for_results import save_results
+#from pyspark.mllib.clustering import KMeans, KMeansModel
 from machine_learning import KMeans
 
 from KNN_Classifier import KNN_Classifier
+from load_mnist import load_mnist
+from utils_for_results import save_results
 
 
-if __name__ == "__main__":
-    """
-    Usage: spark-submit --master local[4]  python/knn_mnist.py --k <k> 
-    """
-
-    home_dir = os.getenv('HOME')
-    if home_dir is None:
-        raise Exception("Impossible to continue without a reference to the user's home directory")
-
-    verbose = 0
-    spark_context = None
-    num_partitions = 80
-    models_dir = f'{home_dir}/digits/models.3'
-    log_dir = f'{home_dir}/digits/log.3'
-    results_dir = f'{home_dir}/digits/results.3'
-    do_training = False
-    do_classification = False
-    model_filename = None
-    band_width = None
-    pca_components = 30
-    pf_degree = 1
-    K = 7
-    use_kmeans = False
-    codebook_size = 200
-    use_probs = False
-
-    elapsed_time = {'train': 0, 'test': 0}
-                                                   
-    for i in range(len(sys.argv)):
-        if   sys.argv[i] == "--verbosity"     :           verbose = int(sys.argv[i + 1])
-        elif sys.argv[i] == "--num-partitions":    num_partitions = int(sys.argv[i + 1])
-        elif sys.argv[i] == "--k"             :                 K = int(sys.argv[i + 1])
-        elif sys.argv[i] == "--codebook-size" :     codebook_size = int(sys.argv[i + 1])
-        elif sys.argv[i] == "--use-kmeans"    :        use_kmeans = True
-        elif sys.argv[i] == "--use-probs"     :         use_probs = True
-        elif sys.argv[i] == "--model"         :    model_filename = sys.argv[i + 1]
-        elif sys.argv[i] == "--train"         :       do_training = True
-        elif sys.argv[i] == "--classify"      : do_classification = True
-        elif sys.argv[i] == "--results-dir"   :       results_dir = sys.argv[i + 1]
-        elif sys.argv[i] == "--models-dir"    :        models_dir = sys.argv[i + 1]
-        elif sys.argv[i] == "--log-dir"       :           log_dir = sys.argv[i + 1]
-        elif sys.argv[i] == "--pca"           :    pca_components = float(sys.argv[i + 1])
-        elif sys.argv[i] == "--pf-degree"     :         pf_degree = int(sys.argv[i + 1])
-
-
-    if SparkConf is not None:
-        spark_conf = SparkConf().set("spark.driver.maxResultSize", "24g").set("spark.app.name", "K-NearestNeighbors-with-dataset-MNIST")
-        spark_context = SparkContext(conf = spark_conf)
+def main(args, sc):
 
     X, y = load_mnist()
     X /= 255.0
@@ -85,165 +41,120 @@ if __name__ == "__main__":
     X_train, X_test = X[:60000], X[60000:]
     y_train, y_test = y[:60000], y[60000:]
     #
-    #pca = PCA(n_components = 0.95)
-    if pca_components > 1: pca_components = int(pca_components)
-    pca = PCA(n_components = pca_components)
+    pca = PCA(n_components = args.pcaComponents if args.pcaComponents <= 1.0 else int(args.pcaComponents))
     pca.fit(X_train)
     X_train = pca.transform(X_train)
     X_test = pca.transform(X_test)
-    pca_components = X_train.shape[1]
-    if pf_degree > 1:
-        pf = PolynomialFeatures(degree = pf_degree, interaction_only = True, include_bias = False)
-        X_train = pf.fit_transform(X_train)
-        X_test = pf.fit_transform(X_test)
     print(X_train.shape, y_train.shape)
     print(X_test.shape, y_test.shape)
 
-    if model_filename is None:
-        model_filename = f'knn-pca-{pca_components}'
-        if use_kmeans:
-            model_filename += f'-codebook-size-{codebook_size}'
-        else:
-            model_filename += '-no-kmeans'
-
-    if use_kmeans:
-        #############################################################################################################################
-        codebooks = list()
-        starting_time = time.time()
-        for k in range(10):
-            kmodel = KMeans(n_clusters = codebook_size, verbosity = 1, modality = 'Lloyd', init = 'KMeans++')
-            kmodel.epsilon = 1.0e-8
-            kmodel.fit(X_train[y_train == k])
-            for i in range(kmodel.n_clusters):
-                codebooks.append((k, kmodel.cluster_centers_[i].copy()))
-        print('processing time lapse for', kmodel.n_clusters, 'clusters per class', time.time() - starting_time, 'seconds')
-        y = list()
-        X = list()
-        for t in codebooks:
-            y.append(t[0])
-            X.append(t[1])
-        y_train_for_training = numpy.array(y)
-        X_train_for_training = numpy.array(X)
-        #############################################################################################################################
-    else:
-        y_train_for_training = y_train
-        X_train_for_training = X_train
-
-    if spark_context is not None:
-        rdd_train = spark_context.parallelize([(y, x.copy()) for x, y in zip(X_train, y_train)], numSlices = num_partitions)
-        rdd_test  = spark_context.parallelize([(y, x.copy()) for x, y in zip(X_test,  y_test)],  numSlices = num_partitions)
-        print(f'train subset with {rdd_train.count()} samples distributed into {rdd_train.getNumPartitions()} partitions')
-        print(f'test  subset with {rdd_test.count()} samples distributed into {rdd_test.getNumPartitions()} partitions')
-    else:
-        print(f'train subset with {X_train.shape[0]} samples')
-        print(f'test  subset with {X_test.shape[0]} samples')
+    pcaComponents = X_train.shape[1]
 
     labels = numpy.unique(y_train)
 
-    def compute_distances_for_numpy(x, sample):
-        # x[0] contains the label
-        # x[1] contains the sample
-        result = list()
-        for z in sample:
-            result.append([(x[0], ((z - x[1]) ** 2).sum())])
-        return result
+    results_dir = f'{args.baseDir}/{args.resultsDir}'
+    models_dir  = f'{args.baseDir}/{args.modelsDir}'
+    log_dir     = f'{args.baseDir}/{args.logDir}'
+    #os.makedirs(log_dir,     exist_ok = True)
+    #os.makedirs(models_dir,  exist_ok = True)
+    #os.makedirs(results_dir, exist_ok = True)
 
-    def compute_distances_for_lists(x, sample):
-        # x[0] contains the label
-        # x[1] contains the sample
-        result = list()
-        for z in sample:
-            result.append([(x[0], ((z - x[1]) ** 2).sum())])
-        return result
+    for cb_size in args.codebookSize.split(sep = ':'):
+        if cb_size is None or len(cb_size) == 0: continue
+        codebookSize = int(cb_size)
 
-    def compute_distances_for_one_sample(x, sample):
-        # x[0] contains the label
-        # x[1] contains the sample
-        return [[(x[0], ((sample - x[1]) ** 2).sum())]]
+        if codebookSize > 0:
+            codebooks = list()
+            for k in range(10):
+                starting_time = time.time()
+                kmodel = KMeans(n_clusters = codebookSize, verbosity = 1, modality = 'Lloyd', init = 'KMeans++')
+                kmodel.epsilon = 1.0e-8
+                kmodel.fit(X_train[y_train == k])
+                for i in range(kmodel.n_clusters):
+                    codebooks.append((k, kmodel.cluster_centers_[i].copy()))
+                print('processing time lapse for', kmodel.n_clusters, 'clusters per class', time.time() - starting_time, 'seconds')
+            y = list()
+            X = list()
+            for t in codebooks:
+                y.append(t[0])
+                X.append(t[1])
+            _y_train_ = numpy.array(y)
+            _X_train_ = numpy.array(X)
+        else:
+            _y_train_ = y_train
+            _X_train_ = X_train
 
-    def natural_merge(la, lb):
-        lc = list()
-        for i in range(len(la)):
-            a = la[i]
-            b = lb[i]
-            c = list()
-            #if type(a) is not list: raise Exception(type(a))
-            #if type(b) is not list: raise Exception(type(b))
-            while len(c) < K and len(a) * len(b) > 0:
-                if a[0][1] <= b[0][1]:
-                    c.append(a[0])
-                    del a[0]
-                else: 
-                    c.append(b[0])
-                    del b[0]
-            while len(c) < K and len(a) > 0:
-                c.append(a[0])
-                del a[0]
-            while len(c) < K and len(b) > 0:
-                c.append(b[0])
-                del b[0]
-            #del a, b
-            '''
-            Slower version using sort method from lists
-            c = a + b
-            c.sort(key = lambda x: x[1])
-            if len(c) > K: c = c[:K]
-            '''
-            if len(c) > K:
-                raise Exception('Unexpected length of a merged list')
-            lc.append(c)
-        return lc
+        print(_X_train_.shape, _y_train_.shape)
 
-    def get_prediction(knn):
-        y = [0] * len(labels)
-        for k in knn: y[k[0]] += 1
-        return numpy.array(y).argmax()
+        for _k_ in args.K.split(sep = ':'):
+            if _k_ is None or len(_k_) == 0: continue
+            K = int(_k_)
 
-    def get_probs(knn):
-        y = [0] * len(labels)
-        for k in knn: y[k[0]] += 1
-        y = numpy.array(y)
-        return y / (1.0e-5 + y.sum())
-        
-    if os.path.exists(f'{models_dir}/{model_filename}'):
-        with open(f'{models_dir}/{model_filename}', 'rb') as f:
-            knn = pickle.load(f)
-            f.close()
-    else:
-        os.makedirs(models_dir, exist_ok = True)
-        knn = KNN_Classifier(K = K, num_classes = 10)
-        knn.fit(X_train_for_training, y_train_for_training, min_samples_to_split = 100)
-        with open(f'{models_dir}/{model_filename}', 'wb') as f:
-            pickle.dump(knn, f)
-            f.close()
-    #
-    if spark_context is not None:
-        reference_time = time.time()
-        y_train_true_pred = knn.predict(rdd_train)
-        elapsed_time['train'] += time.time() - reference_time
-        reference_time = time.time()
-        y_test_true_pred = knn.predict(rdd_test)
-        elapsed_time['test'] += time.time() - reference_time
-        #
-        y_train_pred = numpy.array([t[1] for t in y_train_true_pred])
-        y_test_pred  = numpy.array([t[1] for t in y_test_true_pred])
-    else:
-        reference_time = time.time()
-        y_train_pred = knn.predict(X_train)
-        elapsed_time['train'] += time.time() - reference_time
-        reference_time = time.time()
-        y_test_pred  = knn.predict(X_test)
-        elapsed_time['test'] += time.time() - reference_time
+            print('KMeans codebook size', codebookSize, 'K', K)
 
-    # Save results in text and graphically represented confusion matrices
-    filename_prefix = f'knn-classification-results-pca-{pca_components}-k-%d' % K
-    if use_kmeans:
-        filename_prefix += f'-codebook-size-{codebook_size}'
-    else:
-        filename_prefix += '-no-kmeans'
+            train_elapsed_time = 0
+            test_elapsed_time = 0
+            reference_timestamp = time.time()
 
-    save_results(f'{results_dir}.train', filename_prefix, y_train, y_train_pred, elapsed_time = elapsed_time['train'])
-    save_results(f'{results_dir}.test',  filename_prefix, y_test,  y_test_pred, elapsed_time = elapsed_time['test'])
-    #
-    if spark_context is not None:
-        spark_context.stop()
+            # Creating the K-Nearest Neighbour classifier
+            knn = KNN_Classifier(K = K, num_classes = len(labels))
+
+            # Training the model
+            knn.fit(_X_train_, _y_train_, min_samples_to_split = 100 if codebookSize == 0 else codebookSize // 20)
+
+            train_elapsed_time += time.time() - reference_timestamp
+
+            if sc is not None:
+                rdd_train = sc.parallelize([(y, x.copy()) for x, y in zip(X_train, y_train)])
+                rdd_test  = sc.parallelize([(y, x.copy()) for x, y in zip(X_test,  y_test)])
+                # num_samples = rdd_train.count()
+
+                # Classifies the samples from the training subset
+                reference_timestamp = time.time()
+                y_train_true_pred = knn.predict(rdd_train)
+                train_elapsed_time += time.time() - reference_timestamp
+                y_train_true = numpy.array([t[0] for t in y_train_true_pred])
+                y_train_pred = numpy.array([t[1] for t in y_train_true_pred])
+                # Classifies the samples from the testing subset
+                reference_timestamp = time.time()
+                y_test_true_pred = knn.predict(rdd_test)
+                test_elapsed_time += time.time() - reference_timestamp
+                y_test_true = numpy.array([t[0] for t in y_test_true_pred])
+                y_test_pred = numpy.array([t[1] for t in y_test_true_pred])
+            else:
+                # Classifies the samples from the training subset
+                reference_timestamp = time.time()
+                y_train_true = y_train
+                y_train_pred = knn.predict(X_train)
+                train_elapsed_time += time.time() - reference_timestamp
+                # Classifies the samples from the testing subset
+                reference_timestamp = time.time()
+                y_test_true = y_test
+                y_test_pred = knn.predict(X_test)
+                test_elapsed_time += time.time() - reference_timestamp
+
+            filename_prefix = 'knn_kmeans_%04d_pca_%04d_K_%03d' % (codebookSize, pcaComponents, K)
+            save_results(f'{results_dir}.train/knn', filename_prefix = filename_prefix, y_true = y_train_true, y_pred = y_train_pred, elapsed_time = train_elapsed_time, labels = labels)
+            save_results(f'{results_dir}.test/knn',  filename_prefix = filename_prefix, y_true = y_test_true,  y_pred = y_test_pred,  elapsed_time = test_elapsed_time,  labels = labels)
+
+        # end for K
+    # end for KMeans codebook size
+# end of the method main()
+
+
+if __name__ == "__main__":
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--verbose', default=0, type=int, help='Verbosity level')
+    parser.add_argument('--codebookSize', default="0:100:200", type=str, help='Colon separated list of the codebook sizes to apply kmeans before KNN')
+    parser.add_argument('--K', default="3:5:7:9:11:13", type=str, help='Colon separated list of K, i.e.,  the number of thet nearest training samples to the one to be classified')
+    parser.add_argument('--pcaComponents', default=37, type=float, help='Number of components of PCA an integer > 1 or a float in the range [0,1[')
+    parser.add_argument('--baseDir',    default='.',                type=str, help='Directory base from which create the directories for models, results and logs')
+    parser.add_argument('--modelsDir',  default='models.l3.mnist',  type=str, help='Directory to save models --if it is the case')
+    parser.add_argument('--resultsDir', default='results.l3.mnist', type=str, help='Directory where to store the results')
+    parser.add_argument('--logDir',     default='log.l3.mnist',     type=str, help='Directory where to store the logs --if it is the case')
+
+    #sc = SparkSession.builder.appName(f"KernelDensityEstimationClassifierForMNIST").getOrCreate()
+    sc = SparkContext(appName = "KernelDensityEstimationClassifierForMNIST")
+    main(parser.parse_args(), sc)
+    if sc is not None: sc.stop()

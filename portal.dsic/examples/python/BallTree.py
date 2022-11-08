@@ -91,7 +91,7 @@ class BallTree:
             indices = [t[0] for t in projection[median_pos:]]
             S_r = (S_n[0][indices], S_n[1][indices])
             #
-            print(len(S_n[0]), len(S_l[0]), len(S_r[0]))
+            #print(len(S_n[0]), len(S_l[0]), len(S_r[0]))
             if len(S_l[0]) != len(S_n[0]) and len(S_r[0]) != len(S_n[0]):
                 split.left  = self.do_split(S_l)
                 split.right = self.do_split(S_r)
@@ -163,13 +163,13 @@ class BallTree:
         else:
             dl = numpy.inf
             dr = numpy.inf
-            if split.left  is not None: dl = ((split.left.center - x) ** 2).sum()
+            if split.left  is not None: dl = ((split.left.center  - x) ** 2).sum()
             if split.right is not None: dr = ((split.right.center - x) ** 2).sum()
             if dl <= dr:
-                if split.left  is not None: self.explore_nodes(split.left, x, pq, K)
+                if split.left  is not None: self.explore_nodes(split.left,  x, pq, K)
                 if split.right is not None: self.explore_nodes(split.right, x, pq, K)
             else:
                 if split.right is not None: self.explore_nodes(split.right, x, pq, K)
-                if split.left  is not None: self.explore_nodes(split.left, x, pq, K)
+                if split.left  is not None: self.explore_nodes(split.left,  x, pq, K)
         return None
     # ------------------------------------------------------------------------------

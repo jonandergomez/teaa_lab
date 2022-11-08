@@ -1,225 +1,197 @@
 """
     Author: Jon Ander Gomez Adrian (jon@dsic.upv.es, http://personales.upv.es/jon)
     Version: 1.0
-    Date: October 2021
+    Date: November 2022
     Universitat Politecnica de Valencia
     Technical University of Valencia TU.VLC
 
-    Using Kernel Density Estimation for classification
+    Using memory-based techniques for classification
+
+    Memory-based techniques used in this lab practice:
+        Kernel Density Estimation
+        K-Nearest Neighbours
+
+    This code is only for Kernel Density Estimation Classifiers, see the files
+        knn_uc13_21x20.py for K-Nearest Neighbours
 """
 
-import os
 import sys
+import os
 import time
+import argparse
 import numpy
-import pickle
 
-from sklearn.base import BaseEstimator
-from sklearn.metrics import confusion_matrix, classification_report, plot_confusion_matrix
-from matplotlib import pyplot
+from pyspark import SparkContext, SparkConf
+from pyspark.sql import SparkSession
 
-from utils_for_results import save_results
+from sklearn.decomposition import PCA
+#from pyspark.mllib.clustering import KMeans, KMeansModel
+from machine_learning import KMeans
+
 from KernelClassifier import KernelClassifier
+from utils_for_results import save_results
 
-try:
-    from pyspark import SparkContext
-    #from pyspark.mllib.clustering import KMeans, KMeansModel
-except:
-    SparkContext = None
+
+def main(args, sc):
+
+    # Loading and parsing the data file, converting it to a DataFrame.
+    if args.usingPCA:
+        trainData = sc.read.option('delimiter', ';').csv(f"data/uc13/uc13-{args.patient}-21x20-train-pca.csv")
+        testData  = sc.read.option('delimiter', ';').csv(f"data/uc13/uc13-{args.patient}-21x20-test-pca.csv")
+    else:
+        trainData = sc.read.option('delimiter', ';').csv(f"data/uc13/uc13-{args.patient}-21x20-train.csv")
+        testData  = sc.read.option('delimiter', ';').csv(f"data/uc13/uc13-{args.patient}-21x20-test.csv")
+
+    # Preparing the labels according to the number of target classes
+    #   2 for binary classification
+    #  10 for multi-class classification
+    label_mapping = [i for i in range(10)]
+    if args.doBinaryClassification:
+        label_mapping = [0 for i in range(10)]
+        label_mapping[1] = 1
+    labels = numpy.unique(label_mapping)
+        
+    # Function to process each CSV line
+    def process_csv_line(row):
+        # returns a list with patient, label and features
+        #return row[0], int(label_mapping[int(row[1])]), numpy.array([float(x) for x in row[2:]])
+        # returns a list with label and features
+        return int(label_mapping[int(row[1])]), numpy.array([float(x) for x in row[2:]])
+
+    # Processing each csv line in parallel and regenerate DataFrames with the appropriate column names
+    trainData = trainData.rdd.map(process_csv_line)#.toDF(['patient', 'label', 'features'])
+    testData  =  testData.rdd.map(process_csv_line)#.toDF(['patient', 'label', 'features'])
+
+    trainData.persist()
+    testData.persist()
+
+    yX = trainData.collect()
+    X_train = numpy.array([t[1] for t in yX])
+    y_train = numpy.array([t[0] for t in yX])
+    del yX
+    yX = testData.collect()
+    X_test = numpy.array([t[1] for t in yX])
+    y_test = numpy.array([t[0] for t in yX])
+    del yX
+
+    pcaComponents = X_train.shape[1]
+
+    labels = numpy.unique(y_train)
+
+    results_dir = f'{args.baseDir}/{args.resultsDir}'
+    models_dir  = f'{args.baseDir}/{args.modelsDir}'
+    log_dir     = f'{args.baseDir}/{args.logDir}'
+    #os.makedirs(log_dir,     exist_ok = True)
+    #os.makedirs(models_dir,  exist_ok = True)
+    #os.makedirs(results_dir, exist_ok = True)
+
+    for cb_size in args.codebookSize.split(sep = ':'):
+        if cb_size is None or len(cb_size) == 0: continue
+        codebookSize = int(cb_size)
+
+        if codebookSize > 0:
+            codebooks = list()
+            for k in range(10):
+                starting_time = time.time()
+                training_samples = X_train[y_train == k]
+                if len(training_samples) > codebookSize:
+                    kmodel = KMeans(n_clusters = codebookSize, verbosity = 1, modality = 'Lloyd', init = 'KMeans++')
+                    kmodel.epsilon = 1.0e-8
+                    kmodel.fit(X_train[y_train == k])
+                    for i in range(kmodel.n_clusters):
+                        codebooks.append((k, kmodel.cluster_centers_[i].copy()))
+                    print('processing time lapse for', kmodel.n_clusters, 'clusters per class', time.time() - starting_time, 'seconds')
+                else:
+                    for i in range(len(training_samples)):
+                        codebooks.append((k, training_samples[i].copy()))
+            y = list()
+            X = list()
+            for t in codebooks:
+                y.append(t[0])
+                X.append(t[1])
+            _y_train_ = numpy.array(y)
+            _X_train_ = numpy.array(X)
+        else:
+            _y_train_ = y_train
+            _X_train_ = X_train
+
+        print(_X_train_.shape, _y_train_.shape)
+
+        for bw in args.bandWidth.split(sep = ':'):
+            if bw is None or len(bw) == 0: continue
+            bandWidth = float(bw)
+
+            print(args.patient, 'KMeans codebook size', codebookSize, 'bandWidth', bandWidth)
+
+            train_elapsed_time = 0
+            test_elapsed_time = 0
+            reference_timestamp = time.time()
+
+            # Creating the Kernel Density Estimation classifier
+            kde = KernelClassifier(band_width = bandWidth)
+
+            # Training the model
+            kde.fit(_X_train_, _y_train_)
+
+            train_elapsed_time += time.time() - reference_timestamp
+
+            if sc is not None:
+                rdd_train = trainData # sc.parallelize([(y, x.copy()) for x, y in zip(X_train, y_train)])
+                rdd_test  = testData  # sc.parallelize([(y, x.copy()) for x, y in zip(X_test,  y_test)])
+                # num_samples = rdd_train.count()
+
+                # Classifies the samples from the training subset
+                reference_timestamp = time.time()
+                y_train_true, y_train_pred = kde.predict(rdd_train)
+                train_elapsed_time += time.time() - reference_timestamp
+                # Classifies the samples from the testing subset
+                reference_timestamp = time.time()
+                y_test_true,  y_test_pred  = kde.predict(rdd_test)
+                test_elapsed_time += time.time() - reference_timestamp
+            else:
+                # Classifies the samples from the training subset
+                reference_timestamp = time.time()
+                y_train_true = y_train
+                y_train_pred = kde.predict(X_train)
+                train_elapsed_time += time.time() - reference_timestamp
+                # Classifies the samples from the testing subset
+                reference_timestamp = time.time()
+                y_test_true = y_test
+                y_test_pred = kde.predict(X_test)
+                test_elapsed_time += time.time() - reference_timestamp
+
+            filename_prefix = 'kde_kmeans_%04d_pca_%04d_bandwidth_%.3f_%02d_classes' % (codebookSize, pcaComponents, bandWidth, len(labels))
+            save_results(f'{results_dir}.train/kde/{args.patient}', filename_prefix = filename_prefix, y_true = y_train_true, y_pred = y_train_pred, elapsed_time = train_elapsed_time, labels = labels)
+            save_results(f'{results_dir}.test/kde/{args.patient}',  filename_prefix = filename_prefix, y_true = y_test_true,  y_pred = y_test_pred,  elapsed_time = test_elapsed_time,  labels = labels)
+
+        # end for bandwidth
+    # end for KMeans codebook size
+# end of the method main()
 
 
 if __name__ == "__main__":
-    """
-    Usage: spark-submit --master local[4]  python/kde_uc13_21x20.py --band-width <bw>
-    """
 
-    home_dir = os.getenv('HOME')
-    if home_dir is None:
-        raise Exception("Impossible to continue without the user's home directory")
-
-    f = os.popen('hostname')
-    hostname = f.readline().strip()
-    f.close()
-    if hostname is not None and hostname.find('eibds01') >= 0:
-        hdfs_home_dir = '/user/cluster'
-        local_home_dir = '/home/cluster'
-    else:
-        hdfs_home_dir = '/user/ubuntu'
-        local_home_dir = '/home/ubuntu'
-    
-    verbose = 0
-    spark_context = None
-    num_partitions = 80
-    num_channels = 21
-    global_patient = 'chb01'
-    do_classification = False
-    do_prediction = False
-    band_width = None
-    label_mapping = [i for i in range(10)]
-    version = 3
-                                                   
-    for i in range(len(sys.argv)):
-        #if   sys.argv[i] == "--dataset"       :  dataset_filename = sys.argv[i + 1]
-        #elif sys.argv[i] == "--results-dir"   :       results_dir = sys.argv[i + 1]
-        #elif sys.argv[i] == "--models-dir"    :        models_dir = sys.argv[i + 1]
-        #elif sys.argv[i] == "--log-dir"       :           log_dir = sys.argv[i + 1]
-        if sys.argv[i] in ['--dataset', '--results-dir', '--models-dir', '--log-dir']:
-            print()
-            print(f'Option {sys.argv[i]} no longer accepted, for this code use --patient')
-            print()
-            sys.exit(0)
-
-        elif sys.argv[i] == "--patient"       :    global_patient = sys.argv[i + 1]
-        elif sys.argv[i] == "--verbosity"     :           verbose = int(sys.argv[i + 1])
-        elif sys.argv[i] == "--num-partitions":    num_partitions = int(sys.argv[i + 1])
-        elif sys.argv[i] == "--band-width"    :        band_width = float(sys.argv[i + 1])
-        elif sys.argv[i] == "--classify"      : do_classification = True
-        elif sys.argv[i] == "--predict"       :     do_prediction = True
-        elif sys.argv[i] == "--reduce-labels" :
-            label_mapping[0] = 0
-            label_mapping[1] = 1
-            label_mapping[2] = 1
-            label_mapping[3] = 0
-            label_mapping[4] = 0
-            label_mapping[5] = 0
-            label_mapping[6] = 1
-            label_mapping[7] = 0
-            label_mapping[8] = 0
-            label_mapping[9] = 0
-            version = 4
-
-    results_dir = f'{home_dir}/uc13-21x20/{global_patient}/results.{version}'
-    models_dir = f'uc13-21x20/{global_patient}/models.{version}'
-    log_dir = f'{home_dir}/uc13-21x20/{global_patient}/log.{version}'
-    train_dataset_filename = f'{hdfs_home_dir}/data/uc13/uc13-{global_patient}-21x20-train.csv'
-    test_dataset_filename = f'{hdfs_home_dir}/data/uc13/uc13-{global_patient}-21x20-test.csv'
-
-    if SparkContext is not None:
-        spark_context = SparkContext(appName = "Kernel-Density-Estimation-dataset-UC13")
-
-    os.makedirs(log_dir,    exist_ok = True)
-    #os.makedirs(models_dir, exist_ok = True)
-
-    '''
-        Load all the lines from a file (or files in a directory) into an RDD of text lines.
-
-        It is assumed there is no header, each CSV file contains an undefined number or lines.
-        - Each line represents a sample.
-        - All the lines **must** contain the same number of values.
-        - All the values **must** be numeric, i.e., integers or real values.
-    '''
-    # RDD object conversion
-    def csv_line_to_tuple(line):
-        parts = line.split(';')
-        label = label_mapping[int(parts[1])]
-        sample = numpy.array([float(x) for x in parts[2:]]).reshape(num_channels, -1)
-        return (label, sample)
-
-    def csv_line_to_list_of_tuples(line):
-        parts = line.split(';')
-        label = label_mapping[int(parts[1])]
-        sample = numpy.array([float(x) for x in parts[2:]]).reshape(num_channels, -1)
-        return [(label, x) for x in sample]
-
-    if spark_context is not None:
-        # Data loading and parsing
-        train_csv_lines = spark_context.textFile(train_dataset_filename)
-        test_csv_lines  = spark_context.textFile(test_dataset_filename)
-        print("file(s) loaded ")
-        # RDD repartitioning
-        train_csv_lines = train_csv_lines.repartition(num_partitions)
-        test_csv_lines  =  test_csv_lines.repartition(num_partitions)
-
-        rdd_train_data    = train_csv_lines.map(csv_line_to_tuple)#.sample(False, 0.01)
-        rdd_train_samples = train_csv_lines.flatMap(csv_line_to_list_of_tuples)
-        rdd_test_data     = test_csv_lines.map(csv_line_to_tuple)#.sample(False, 0.01)
-        rdd_test_samples  = test_csv_lines.flatMap(csv_line_to_list_of_tuples)
-
-        # Retrives basic info from the RDD object
-        num_train_samples = rdd_train_samples.count()
-        x = rdd_train_samples.take(1)
-        dim = x[0][1].shape[0]
-        num_test_samples = rdd_test_samples.count()
-
-        print(f'loaded {num_train_samples} {dim}-dimensional samples for training into {rdd_train_samples.getNumPartitions()} partitions')
-        print(f'loaded {num_test_samples} {dim}-dimensional samples for testing into {rdd_test_samples.getNumPartitions()} partitions')
- 
-        y_train = numpy.array(rdd_train_samples.map(lambda t: t[0]).collect())
-        X_train = numpy.array(rdd_train_samples.map(lambda t: t[1]).collect())
-    else:
-        with os.popen(f'hdfs dfs -cat {train_dataset_filename}') as f:
-            train_csv_lines = f.readlines()
-            f.close()
-        with os.popen(f'hdfs dfs -cat {test_dataset_filename}') as f:
-            test_csv_lines = f.readlines()
-            f.close()
-
-        train_samples = list()
-        for csv_line in train_csv_lines:
-            train_samples += csv_line_to_list_of_tuples(csv_line)
-
-        y_train = numpy.array([t[0] for t in train_samples])
-        X_train = numpy.array([t[1] for t in train_samples])
-
-    model = KernelClassifier(band_width = band_width)
-
-    elapsed_time = {'train' : 0, 'test' : 0}
-
-    use_kmeans = True
-    n_clusters = 4000
-    if use_kmeans:
-        #############################################################################################################################
-        from machine_learning import KMeans as JonKMeans, kmeans_load
-        codebooks_y = list()
-        codebooks_X = list()
-        starting_time = time.time()
-        for label in numpy.unique(y_train):
-            print('computing k-means for label', label)
-            _X_train = X_train[y_train == label]
-            if len(_X_train) <= n_clusters:
-                for i in range(len(_X_train)):
-                    codebooks_y.append(label)
-                    codebooks_X.append(_X_train[i].copy())
-            else:
-                os.makedirs(f'{local_home_dir}/{models_dir}', exist_ok = True)
-                kmodel_filename = f'{local_home_dir}/{models_dir}/kmeans-%05d-%03d.pkl' % (n_clusters, label)
-                kmodel = kmeans_load(kmodel_filename)
-                if kmodel is None:
-                    #kmodel = JonKMeans(n_clusters = n_clusters, verbosity = 1, modality = 'original-k-Means')
-                    kmodel = JonKMeans(n_clusters = n_clusters, verbosity = 1, modality = 'Lloyd', init = 'random')
-                    kmodel.epsilon = 1.0e-8
-                    #kmodel.fit(_X_train)
-                    #kmodel.modality = 'Lloyd'
-                    kmodel.fit(_X_train)
-                    #kmeans_model = KMeans.train(rdd_train_samples.map(lambda t: t[1]), k = n_clusters, maxIterations = 2000, initializationMode = "kmeans||", initializationSteps = 5, epsilon = 1.0e-9)
-                    #kmodel.cluster_centers_ = numpy.array(kmeans_model.centers)
-                    #kmodel.n_clusters = len(kmodel.cluster_centers_)
-                    kmodel.save(kmodel_filename)
-                #
-                for i in range(kmodel.n_clusters):
-                    codebooks_y.append(label)
-                    codebooks_X.append(kmodel.cluster_centers_[i].copy())
-        print('processing time lapse for', len(codebooks_X), 'clusters in total', time.time() - starting_time, 'seconds')
-        codebooks_X = numpy.array(codebooks_X)
-        codebooks_y = numpy.array(codebooks_y)
-        model.fit(codebooks_X, codebooks_y)
-        #############################################################################################################################
-    else:            
-        model.fit(X_train, y_train)
+    parser = argparse.ArgumentParser()
     #
-    band_width = model.band_width
+    parser.add_argument('patient', type=str, help='Patient identifier')
+    #
+    parser.add_argument('--doBinaryClassification', action='store_true')
+    parser.add_argument('--no-doBinaryClassification', action='store_false')
+    parser.set_defaults(doBinaryClassification = False)
+    #
+    parser.add_argument('--usingPCA', action='store_true')
+    parser.add_argument('--no-usingPCA', action='store_false')
+    parser.set_defaults(usingPCA = False)
+    #
+    parser.add_argument('--verbose', default=0, type=int, help='Verbosity level')
+    parser.add_argument('--codebookSize', default="0:100:200", type=str, help='Colon separated list of the codebook sizes to apply kmeans before KDE')
+    parser.add_argument('--bandWidth', default="0.1:0.2:0.5:1.0:2.0", type=str, help='Colon separated list of the band width for the KDE classifier')
+    parser.add_argument('--baseDir',    default='.',                type=str, help='Directory base from which create the directories for models, results and logs')
+    parser.add_argument('--modelsDir',  default='models.l3.uc13',  type=str, help='Directory to save models --if it is the case')
+    parser.add_argument('--resultsDir', default='results.l3.uc13', type=str, help='Directory where to store the results')
+    parser.add_argument('--logDir',     default='log.l3.uc13',     type=str, help='Directory where to store the logs --if it is the case')
 
-    if spark_context is not None:
-        for subset, rdd_data in zip(['train', 'test'], [rdd_train_data, rdd_test_data]):
-            print(subset, rdd_data.count(), rdd_data.getNumPartitions())
-            reference_time = time.time()
-            y_true, y_pred = model.predict(rdd_data)
-            elapsed_time[subset] += time.time() - reference_time
-            #
-            print(confusion_matrix(y_true, y_pred))
-            print(classification_report(y_true, y_pred))
-            # Save results in text and graphically represented confusion matrices
-            filename_prefix = f'kde-classification-results-bw-%.3f' % band_width
-            save_results(f'{results_dir}-{subset}', filename_prefix, y_true, y_pred, elapsed_time = elapsed_time[subset])
-        #
-        spark_context.stop()
+    sc = SparkSession.builder.appName(f"KernelDensityEstimationClassifierForUC13").getOrCreate()
+    #sc = SparkContext(appName = "KernelDensityEstimationClassifierForUC13")
+    main(parser.parse_args(), sc)
+    if sc is not None: sc.stop()
