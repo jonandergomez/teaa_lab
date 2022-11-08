@@ -68,7 +68,7 @@ Lab practice 2 is about two use cases:
 
 1. **Inspect the code** [rf_mnist.py](../../portal.dsic/examples/python/rf_mnist.py)
    **to be used in this lab session for working with the**
-   [MNIST Digits database](https://en.wikipedia.org/wiki/MNIST_database),
+   [MNIST Digits database](https://en.wikipedia.org/wiki/MNIST_database)
 
 1. **Run the code** [rf_mnist.py](../../portal.dsic/examples/python/rf_mnist.py)
    **with different configuration options for** [Random Forest](https://en.wikipedia.org/wiki/Random_forest):
