@@ -156,6 +156,14 @@ Lab practice 3 is about two use cases:
     configuration parameters (a.k.a. hyper-parameters). In particular, `bandwith` for KDE classifers,
     `K` for KNN classifiers, and `codebook size` for both.
 
+1. The summary of results for each kind of experiment includes the running times of doing inference with both training
+   and test subsets. 
+
+   Is it worth to do K-Means in order to reduce the size of the training subset used in these memory-based techniques
+   to mitigate the problem of the time required to classify each sample?
+
+   For which of both techniques is the reduction of inference time more relevant?
+
 1. Report and preparation of the presentation
 
     As you can guess from the questions raised previously, you have to run some experiments (just a few ones)
