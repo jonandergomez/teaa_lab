@@ -14,7 +14,7 @@ do
         do
             scripts/run-python-2.sh python/knn_uc13_21x20.py ${patient} \
                                         --codebookSize ${kmeans_codebook_sizes} \
-                                        --K ${band_width} \
+                                        --K ${K} \
                                         ${using_pca} ${do_binary_classification} \
                                         --verbose 0
         done

@@ -121,7 +121,7 @@ def main(args, sc):
             if _k_ is None or len(_k_) == 0: continue
             K = int(_k_)
 
-            print('KMeans codebook size', codebookSize, 'K', K)
+            print(args.patient, 'KMeans codebook size', codebookSize, 'K', K)
 
             train_elapsed_time = 0
             test_elapsed_time = 0
@@ -164,9 +164,9 @@ def main(args, sc):
                 y_test_pred = knn.predict(X_test)
                 test_elapsed_time += time.time() - reference_timestamp
 
-            filename_prefix = 'knn_kmeans_%04d_pca_%04d_K_%03d' % (codebookSize, pcaComponents, K)
-            save_results(f'{results_dir}.train/knn', filename_prefix = filename_prefix, y_true = y_train_true, y_pred = y_train_pred, elapsed_time = train_elapsed_time, labels = labels)
-            save_results(f'{results_dir}.test/knn',  filename_prefix = filename_prefix, y_true = y_test_true,  y_pred = y_test_pred,  elapsed_time = test_elapsed_time,  labels = labels)
+            filename_prefix = 'knn_kmeans_%04d_pca_%04d_K_%03d_%02d_classes' % (codebookSize, pcaComponents, K, len(labels))
+            save_results(f'{results_dir}.train/knn/{args.patient}', filename_prefix = filename_prefix, y_true = y_train_true, y_pred = y_train_pred, elapsed_time = train_elapsed_time, labels = labels)
+            save_results(f'{results_dir}.test/knn/{args.patient}',  filename_prefix = filename_prefix, y_true = y_test_true,  y_pred = y_test_pred,  elapsed_time = test_elapsed_time,  labels = labels)
 
         # end for K
     # end for KMeans codebook size
@@ -196,7 +196,7 @@ if __name__ == "__main__":
     parser.add_argument('--resultsDir', default='results.l3.uc13', type=str, help='Directory where to store the results')
     parser.add_argument('--logDir',     default='log.l3.uc13',     type=str, help='Directory where to store the logs --if it is the case')
 
-    #sc = SparkSession.builder.appName(f"KernelDensityEstimationClassifierForUC13").getOrCreate()
-    sc = SparkContext(appName = "KernelDensityEstimationClassifierForUC13")
+    sc = SparkSession.builder.appName(f"K-NearestNeighboursClassifierForUC13").getOrCreate()
+    #sc = SparkContext(appName = "K-NearestNeighboursClassifierForUC13"
     main(parser.parse_args(), sc)
     if sc is not None: sc.stop()
