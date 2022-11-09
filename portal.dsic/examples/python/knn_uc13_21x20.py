@@ -76,7 +76,7 @@ def main(args, sc):
 
     pcaComponents = X_train.shape[1]
 
-    labels = numpy.unique(y_train)
+    # labels = numpy.unique(y_train)
 
     results_dir = f'{args.baseDir}/{args.resultsDir}'
     models_dir  = f'{args.baseDir}/{args.modelsDir}'
@@ -100,10 +100,10 @@ def main(args, sc):
                     kmodel.fit(X_train[y_train == k])
                     for i in range(kmodel.n_clusters):
                         codebooks.append((k, kmodel.cluster_centers_[i].copy()))
+                    print('processing time lapse for', kmodel.n_clusters, 'clusters per class', time.time() - starting_time, 'seconds')
                 else:
                     for i in range(len(training_samples)):
                         codebooks.append((k, training_samples[i].copy()))
-                print('processing time lapse for', kmodel.n_clusters, 'clusters per class', time.time() - starting_time, 'seconds')
             y = list()
             X = list()
             for t in codebooks:
@@ -131,7 +131,7 @@ def main(args, sc):
             knn = KNN_Classifier(K = K, num_classes = len(labels))
 
             # Training the model
-            knn.fit(_X_train_, _y_train_, min_samples_to_split = 100 if codebookSize == 0 else codebookSize // 20)
+            knn.fit(_X_train_, _y_train_, min_samples_to_split = 100 if codebookSize == 0 else 50)
 
             train_elapsed_time += time.time() - reference_timestamp
 
