@@ -14,23 +14,23 @@ do
             pca=$2
             bw_or_K=$3
 
-            accuracy=$(grep -H "^   macro avg" ${filename} | awk '{ print $(NF-1) }')
+            f1_macro_avg=$(grep -H "^   macro avg" ${filename} | awk '{ print $(NF-1) }')
             running_time=$(grep -H "^running time in seconds:" ${filename} | awk '{ print $NF }')
 
-            echo "${cb_size};${pca};${bw_or_K};${accuracy};${running_time}"
+            echo "${cb_size};${pca};${bw_or_K};${f1_macro_avg};${running_time}"
 
         done >/tmp/temp.${technique}.$$
 
         if [ "${technique}" = "kde" ]
         then
-            (echo "codebook size;pca;band width;macro avg;running time" ; cat /tmp/temp.${technique}.$$) >/tmp/${dataset}-${technique}-${subset}-accuracy-evolution.csv
+            (echo "codebook size;pca;band width;f1 macro avg;running time" ; cat /tmp/temp.${technique}.$$) >/tmp/${dataset}-${technique}-${subset}-f1-macro-avg-evolution.csv
         else
-            (echo "codebook size;pca;K;macro avg;running time" ; cat /tmp/temp.${technique}.$$) >/tmp/${dataset}-${technique}-${subset}-accuracy-evolution.csv
+            (echo "codebook size;pca;K;f1 macro avg;running time" ; cat /tmp/temp.${technique}.$$) >/tmp/${dataset}-${technique}-${subset}-f1-macro-avg-evolution.csv
         fi
 
         rm -f /tmp/temp.${technique}.$$
 
         mkdir -p results.summary/l3/${dataset}
-        mv /tmp/${dataset}-${technique}-${subset}-accuracy-evolution.csv results.summary/l3/${dataset}/
+        mv /tmp/${dataset}-${technique}-${subset}-f1-macro-avg-evolution.csv results.summary/l3/${dataset}/
     done
 done

@@ -126,40 +126,26 @@ class BallTree:
         
     def explore_nodes(self, split, x, pq, K):
         #print('len(pq)', len(pq), K)
+        # distance to the ball, negative when inside the ball
         d = BallTree.squared_distance(split.center, x) - split.radius
+        # distance to the sample in the top of the heap
         d_pq = BallTree.squared_distance(x, pq[0][2]) if len(pq) > 0 else numpy.inf
-        if d > d_pq:
+        if d > d_pq: # the sample x is further from the ball than to the sample on top of the heap
             return None
         elif split.S_n is not None:
             distances = ((split.S_n[1] - x) ** 2).sum(axis = 1)
             if len(distances.shape) != 1:
                 raise Exception(f'incorrect shape {distances.shape}')
-            for i in range(len(split.S_n[0])):
-                if distances[i] < d_pq:
-                    y = split.S_n[0][i]
-                    z = split.S_n[1][i]
-                    item = (-distances[i], y, z)
-                    if len(pq) >= K:
-                        heapq.heapreplace(pq, item)
-                    else:
-                        heapq.heappush(pq, item)
-                    d_pq = BallTree.squared_distance(x, pq[0][2]) if len(pq) > 0 else numpy.inf
-            '''
-            zzz = [(i, distances[i]) for i in range(len(distances))]
-            zzz.sort(key = lambda t: t[1])
-            for i, d in zzz:
-                if d < d_pq:
-                    y = split.S_n[0][i]
-                    z = split.S_n[1][i]
-                    item = (-d, y, z)
-                    if len(pq) >= K:
-                        heapq.heapreplace(pq, item)
-                    else:
-                        heapq.heappush(pq, item)
-                    d_pq = BallTree.squared_distance(x, pq[0][2]) if len(pq) > 0 else numpy.inf
+            # chooses samples from the subset S_n whose distance to x is lower than the distance to the top of the heap 
+            for i in filter(lambda a: distances[a] < d_pq, range(len(split.S_n[0]))):
+                y = split.S_n[0][i]
+                z = split.S_n[1][i]
+                item = (-distances[i], y, z)
+                if len(pq) >= K:
+                    heapq.heapreplace(pq, item)
                 else:
-                    break
-            '''
+                    heapq.heappush(pq, item)
+                d_pq = BallTree.squared_distance(x, pq[0][2]) if len(pq) > 0 else numpy.inf
         else:
             dl = numpy.inf
             dr = numpy.inf
