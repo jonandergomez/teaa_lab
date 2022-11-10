@@ -15,6 +15,7 @@ do
             then
                 for num_classes in 02 10
                 do
+                    csv_file="/tmp/${dataset}-${patient}-f1-macro-avg-evolution-${technique}-${num_classes}-classes-${subset}.csv"
                     case ${technique} in
                         rf)
                             grep -H "^   macro avg" ${results_dir}/${technique}_*_${num_classes}_classes.txt \
@@ -26,7 +27,7 @@ do
                                 | awk '{ print $3, $4, $(NF-1) }' \
                                 | awk '{ for(i=1; i <= NF; i++) printf("%s;", $i); printf("\n"); }' >/tmp/temp.${technique}.$$
 
-                            (echo "num trees;pca;f1 macro avg" ; cat /tmp/temp.${technique}.$$) >/tmp/${dataset}-${technique}-${patient}-${num_classes}-classes-${subset}-f1-macro-avg-evolution.csv
+                            (echo "num trees;pca;f1 macro avg" ; cat /tmp/temp.${technique}.$$) >${csv_file}
                             rm -f /tmp/temp.${technique}.$$
                             ;;
                         
@@ -40,7 +41,7 @@ do
                                 | awk '{ print $3, $6, $5, $(NF-1) }' \
                                 | awk '{ for(i=1; i <= NF; i++) printf("%s;", $i); printf("\n"); }' >/tmp/temp.${technique}.$$
 
-                            (echo "num trees;pca;max_depth;f1 macro avg" ; cat /tmp/temp.${technique}.$$) >/tmp/${dataset}-${technique}-${patient}-${num_classes}-classes-${subset}-f1-macro-avg-evolution.csv
+                            (echo "num trees;pca;max depth;f1 macro avg" ; cat /tmp/temp.${technique}.$$) >${csv_file}
                             rm -f /tmp/temp.${technique}.$$
                             ;;
                         
@@ -56,21 +57,17 @@ do
                                     | awk '{ print $3, $5, $4, $(NF-1) }' \
                                     | awk '{ for(i=1; i <= NF; i++) printf("%s;", $i); printf("\n"); }' >/tmp/temp.${technique}.$$
 
-                                (echo "num trees;pca;max_depth;f1 macro avg" ; cat /tmp/temp.${technique}.$$) >/tmp/${dataset}-${technique}-${patient}-${num_classes}-classes-${subset}-f1-macro-avg-evolution.csv
+                                (echo "num trees;pca;max depth;f1 macro avg" ; cat /tmp/temp.${technique}.$$) >${csv_file}
                                 rm -f /tmp/temp.${technique}.$$
                             fi
                             ;;
-                   esac 
+                    esac 
 
-
-
-
-                    csv_file="/tmp/${dataset}-${technique}-${patient}-${num_classes}-classes-${subset}-f1-macro-avg-evolution.csv"
                     dest_dir="results.summary/l2/${dataset}/${technique}/${patient}"
                     if [ -f ${csv_file} ]
                     then
                         mkdir -p  ${dest_dir}
-                        mv /tmp/${dataset}-${technique}-${patient}-${num_classes}-classes-${subset}-f1-macro-avg-evolution.csv ${dest_dir}
+                        mv ${csv_file} ${dest_dir}
                     fi
                 done
             fi
@@ -98,6 +95,8 @@ do
         patient="chb${p}"
         results_dir="results.l2c.${dataset}.${subset}/${technique}/${patient}"
 
+        csv_file="/tmp/${dataset}-${patient}-f1-macro-avg-evolution-${technique}-${num_classes}-classes-${subset}.csv"
+
         if [ -d ${results_dir} ]
         then
             num_classes="04"
@@ -110,17 +109,16 @@ do
                     | awk '{ print $3, $5, $4, $(NF-1) }' \
                     | awk '{ for(i=1; i <= NF; i++) printf("%s;", $i); printf("\n"); }' >/tmp/temp.${technique}.$$
 
-            (echo "num trees;pca;max_depth;f1 macro avg" ; cat /tmp/temp.${technique}.$$) >/tmp/${dataset}-${technique}-${patient}-${num_classes}-classes-${subset}-f1-macro-avg-evolution.csv
+            (echo "num trees;pca;max_depth;f1 macro avg" ; cat /tmp/temp.${technique}.$$) >${csv_file}
             rm -f /tmp/temp.${technique}.$$
         fi
 
 
-        csv_file="/tmp/${dataset}-${technique}-${patient}-${num_classes}-classes-${subset}-f1-macro-avg-evolution.csv"
         dest_dir="results.summary/l2c/${dataset}/${technique}/${patient}"
         if [ -f ${csv_file} ]
         then
             mkdir -p  ${dest_dir}
-            mv /tmp/${dataset}-${technique}-${patient}-${num_classes}-classes-${subset}-f1-macro-avg-evolution.csv ${dest_dir}
+            mv ${csv_file} ${dest_dir}
         fi
     done
 done

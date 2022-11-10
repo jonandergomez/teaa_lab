@@ -15,11 +15,12 @@ do
             | awk '{ for(i=1; i <= NF; i++) printf("%s;", $i); printf("\n"); }' >/tmp/temp.${technique}.$$
 
 
-        (echo "num trees;pca;max depth;f1 macro avg" ; cat /tmp/temp.${technique}.$$) >/tmp/${dataset}-${technique}-${subset}-f1-macro-avg-evolution.csv
+        csv_file="/tmp/${dataset}-f1-macro-avg-evolution-${technique}-${subset}.csv"
+        (echo "num trees;pca;max depth;f1 macro avg" ; cat /tmp/temp.${technique}.$$) >${csv_file}
 
         rm -f /tmp/temp.${technique}.$$
 
         mkdir -p results.summary/l2/${dataset}
-        mv /tmp/${dataset}-${technique}-${subset}-f1-macro-avg-evolution.csv results.summary/l2/${dataset}/
+        mv ${csv_file} results.summary/l2/${dataset}/
    done
 done

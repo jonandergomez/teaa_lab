@@ -43,7 +43,7 @@ do
                     header="num classes;codebook size;pca;K;f1 macro avg;running time"
                 fi
 
-                csv_file="/tmp/${dataset}-${technique}-${patient}-${subset}-f1-macro-avg-evolution.csv"
+                csv_file="/tmp/${dataset}-${patient}-f1-macro-avg-evolution-${technique}-${subset}.csv"
                 (echo "${header}" ; cat /tmp/temp.${technique}.$$) >${csv_file}
                 rm -f /tmp/temp.${technique}.$$
 

@@ -21,16 +21,18 @@ do
 
         done >/tmp/temp.${technique}.$$
 
+        csv_file="/tmp/${dataset}-f1-macro-avg-evolution-${technique}-${subset}.csv"
+
         if [ "${technique}" = "kde" ]
         then
-            (echo "codebook size;pca;band width;f1 macro avg;running time" ; cat /tmp/temp.${technique}.$$) >/tmp/${dataset}-${technique}-${subset}-f1-macro-avg-evolution.csv
+            (echo "codebook size;pca;band width;f1 macro avg;running time" ; cat /tmp/temp.${technique}.$$) >${csv_file}
         else
-            (echo "codebook size;pca;K;f1 macro avg;running time" ; cat /tmp/temp.${technique}.$$) >/tmp/${dataset}-${technique}-${subset}-f1-macro-avg-evolution.csv
+            (echo "codebook size;pca;K;f1 macro avg;running time" ; cat /tmp/temp.${technique}.$$) >${csv_file}
         fi
 
         rm -f /tmp/temp.${technique}.$$
 
         mkdir -p results.summary/l3/${dataset}
-        mv /tmp/${dataset}-${technique}-${subset}-f1-macro-avg-evolution.csv results.summary/l3/${dataset}/
+        mv ${csv_file} results.summary/l3/${dataset}/
     done
 done
