@@ -72,7 +72,6 @@ class BallTree:
                 split.S_n.persist()
                 return split
             #
-            #
         elif type(S_n) == tuple:
             X = S_n[1]
             if len(X) < self.min_samples_to_split: return split
