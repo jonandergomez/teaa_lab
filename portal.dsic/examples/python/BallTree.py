@@ -135,16 +135,20 @@ class BallTree:
             distances = ((split.S_n[1] - x) ** 2).sum(axis = 1)
             if len(distances.shape) != 1:
                 raise Exception(f'incorrect shape {distances.shape}')
-            # chooses samples from the subset S_n whose distance to x is lower than the distance to the top of the heap 
-            for i in filter(lambda a: distances[a] < d_pq, range(len(split.S_n[0]))):
-                y = split.S_n[0][i]
-                z = split.S_n[1][i]
-                item = (-distances[i], y, z)
-                if len(pq) >= K:
-                    heapq.heapreplace(pq, item)
-                else:
-                    heapq.heappush(pq, item)
-                d_pq = BallTree.squared_distance(x, pq[0][2]) if len(pq) > 0 else numpy.inf
+            # chooses samples from the subset S_n whose distance to x is lower than the distance
+            # to the top of the heap and updates 'd_pq', the distance to the heap, 
+            # i.e., to the furthest sample in the set of K nearest neighbours so far, that is why
+            # it is not possible to use a filter and we have to visit all the samples in the ball
+            for i in range(len(split.S_n[0])):
+                if distances[i] < d_pq:
+                    y = split.S_n[0][i]
+                    z = split.S_n[1][i]
+                    item = (-distances[i], y, z)
+                    if len(pq) >= K:
+                        heapq.heapreplace(pq, item)
+                    else:
+                        heapq.heappush(pq, item)
+                    d_pq = BallTree.squared_distance(x, pq[0][2]) if len(pq) > 0 else numpy.inf
         else:
             dl = numpy.inf
             dr = numpy.inf
