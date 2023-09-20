@@ -31,8 +31,17 @@ students can connect by using their username and password to the master of
 the cluster as follows:
 
 >   
-> `ssh  <username>@teaa-master-cluster.dsicv.upv.es`
+> `ssh  <username>@teaa-master-ubuntu22.dsicv.upv.es`
 >   
+
+The first step you have to do is to change your password. The default password will be indicated by the professor during the first lab session.
+To change your password you have to run the command **passwd**.
+
+>
+> `passwd` 
+>
+
+Then you will be prompted once for your current password and twice for the new one.
 
 ******
 #
@@ -53,6 +62,13 @@ As for the **ls** command in Linux, the option **-h** is used to
 print the file sizes in a human readable mode.
 
 ![Here](../figures/screenshot-hdfs-5.png)
+
+You can see the contents of HDFS connecting to [http://teaa-master-ubuntu22.dsicv.upv.es:50070](http://teaa-master-ubuntu22.dsicv.upv.es:50070)
+and with some commands from the Linux console.
+
+>
+> hdfs dfs -ls /data
+>
 
 ******
 
