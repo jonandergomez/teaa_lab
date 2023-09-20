@@ -63,7 +63,8 @@ print the file sizes in a human readable mode.
 
 ![Here](../figures/screenshot-hdfs-5.png)
 
-You can see the contents of HDFS connecting to [http://teaa-master-ubuntu22.dsicv.upv.es:50070](http://teaa-master-ubuntu22.dsicv.upv.es:50070)
+You can see the contents of HDFS connecting to
+[http://teaa-master-ubuntu22.dsicv.upv.es:50070](http://teaa-master-ubuntu22.dsicv.upv.es:50070)
 and with some commands from the Linux console.
 
 >
@@ -106,3 +107,46 @@ and some of the other examples have been extracted from the
 During the first lab session other
 [Spark examples](https://spark.apache.org/examples.html)
 will be explained.
+
+
+### Let us run some examples
+
+#### To get an approximation to the value of PI by using Monte Carlo
+
+>
+> `cd teaa/examples`
+>
+> `scripts/run-python.sh python/pi.py`
+>
+
+#### To perform the word count of a simple text stored in a plain text file 
+
+>
+> `scripts/run-python.sh python/word_count_1.py hdfs://teaa-master-ubuntu22/data/alice.txt`
+>
+> `less ~/spark/local/word_count_1.out`
+>
+
+#### To perform the word count of a field from a dataset of reviews in a JSON file 
+
+>
+> `scripts/run-python.sh python/word_count_2.py hdfs://teaa-master-ubuntu22/data/reviews.json`
+>
+> `less ~/spark/local/word_count_2.out`
+>
+
+You can test other larger files like the next one of 5 GB
+
+>
+> `scripts/run-python.sh python/word_count_2.py hdfs://teaa-master-ubuntu22/data/yelp_academic_dataset_review.json`
+>
+> `less ~/spark/local/word_count_2.out`
+>
+
+and this other of 15.6 GB that will last much more minutes
+
+>
+> `scripts/run-python.sh python/word_count_2.py hdfs://teaa-master-ubuntu22/data/goodreads_reviews_dedup.json`
+>
+> `less ~/spark/local/word_count_2.out`
+>
