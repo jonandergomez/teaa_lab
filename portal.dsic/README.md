@@ -86,6 +86,8 @@ to monitor the
 [Spark](https://spark.apache.org)
 cluster and the tasks.
 Running tasks can be stopped from this interface.
+You can see this inferface of Spark connecting to
+[http://teaa-master-ubuntu22.dsicv.upv.es:8080](http://teaa-master-ubuntu22.dsicv.upv.es:8080).
 
 ![Here](../figures/screenshot-spark-01.png)
 
