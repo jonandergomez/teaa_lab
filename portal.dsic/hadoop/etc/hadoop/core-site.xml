@@ -19,7 +19,7 @@
 <configuration>
 	<property>
 		<name>fs.defaultFS</name>
-		<value>hdfs://teaa-master-cluster.dsicv.upv.es:8020/</value>
+		<value>hdfs://teaa-master-ubuntu22.dsicv.upv.es:8020/</value>
 		<description>
 			fs.defaultFS
 		</description>

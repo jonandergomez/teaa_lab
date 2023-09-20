@@ -30,8 +30,8 @@
 # - SPARK_LOCAL_IP, to set the IP address Spark binds to on this node
 # - SPARK_PUBLIC_DNS, to set the public DNS name of the driver program
 # - SPARK_LOCAL_DIRS, storage directories to use on this node for shuffle and RDD data
-#SPARK_LOCAL_DIRS="/home/ubuntu/teaa/disk/dirs/spark/local"
-SPARK_LOCAL_DIRS="${HOME}/spark/local"
+SPARK_LOCAL_DIRS="/home/ubuntu/teaa/disk/dirs/spark/local"
+#SPARK_LOCAL_DIRS="${HOME}/spark/local"
 # - MESOS_NATIVE_JAVA_LIBRARY, to point to your libmesos.so if you use Mesos
 
 # Options read in YARN client/cluster mode
@@ -79,4 +79,4 @@ SPARK_LOG_DIR="/home/ubuntu/teaa/disk/logs"
 # - OPENBLAS_NUM_THREADS=1   Disable multi-threading of OpenBLAS
 
 # Set Python version
-PYSPARK_PYTHON=python3
+#PYSPARK_PYTHON=python3

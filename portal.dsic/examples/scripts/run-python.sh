@@ -2,11 +2,13 @@
 
 export PYTHONPATH="${HOME}/machine_learning_for_students"
 
-master="spark://teaa-master-cluster.dsicv.upv.es:7077"
+export PYSPARK_PYTHON="/opt/anaconda3/bin/python"
+
+master="spark://teaa-master-ubuntu22.dsicv.upv.es:7077"
 
 case $(hostname) in
-    *teaa-*-cluster.dsicv.upv.es|*teaa-*-cluster)
-        master="spark://teaa-master-cluster.dsicv.upv.es:7077"
+    *teaa-*-ubuntu22.dsicv.upv.es|*teaa-*-ubuntu22|*teaa-base-ubuntu22)
+        master="spark://teaa-master-ubuntu22.dsicv.upv.es:7077"
         ;;
     *eibds01.mbda)
         master="spark://eibds01.mbda:7077"
@@ -22,3 +24,5 @@ spark-submit --master ${master} \
              --driver-memory 6G \
              --py-files ${PYTHONPATH}/mypythonlib.tgz \
              ${program}  $*
+
+#             --archives ${PYTHONPATH}/mypythonlib.tgz \

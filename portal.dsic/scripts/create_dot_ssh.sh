@@ -3,12 +3,12 @@
 workers=$(cat ${SPARK_HOME}/conf/workers | grep -v "^#" | grep -v "^$" | awk '{ print $1 }')
 cluster_base_dir="${HOME}/teaa/disk"
 
-for wn in ${workers} teaa-master-cluster.dsicv.upv.es
+for wn in ${workers} teaa-master-ubuntu22.dsicv.upv.es
 do
 	echo "${wn}"
 
 	case ${wn} in
-		localhost|teaa-master-cluster*)
+		localhost|teaa-master-ubuntu22*)
 			#echo "Nothing to do!"
 			;;
 		*)

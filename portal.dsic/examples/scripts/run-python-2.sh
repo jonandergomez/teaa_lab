@@ -1,6 +1,7 @@
 #!/bin/bash
 
 export PYTHONPATH="${HOME}/machine_learning_for_students"
+export PYSPARK_PYTHON="/opt/anaconda3/bin/python"
 
 master="spark://teaa-master-cluster.dsicv.upv.es:7077"
 python_dir="/home/ubuntu/teaa/examples/python"

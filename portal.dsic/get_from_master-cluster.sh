@@ -1,7 +1,9 @@
 #!/bin/bash -eu
 
 #server="ds-teaa-002.dsicv.upv.es"
-server="teaa-master-cluster.dsicv.upv.es"
+#server="teaa-master-cluster.dsicv.upv.es"
+#server="teaa-base-ubuntu22.dsicv.upv.es"
+server="teaa-master-ubuntu22.dsicv.upv.es"
 
 no_force="n"
 additional_options=""

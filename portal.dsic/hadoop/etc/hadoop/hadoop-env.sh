@@ -52,7 +52,7 @@
 # The java implementation to use. By default, this environment
 # variable is REQUIRED on ALL platforms except OS X!
 # export JAVA_HOME=
-export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64 # ADDED BY Jon Ander Gomez FOR TEAA
+export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64 # ADDED BY Jon Ander Gomez FOR TEAA
 
 # Location of Hadoop.  By default, Hadoop will attempt to determine
 # this location based upon its execution path.
@@ -149,7 +149,7 @@ export HADOOP_OPTS="$HADOOP_OPTS -Djava.library.path=$HADOOP_HOME/lib/native" #Â
 # Enable optional, bundled Hadoop features
 # This is a comma delimited list.  It may NOT be overridden via .hadooprc
 # Entries may be added/removed as needed.
-# export HADOOP_OPTIONAL_TOOLS="hadoop-azure,hadoop-aliyun,hadoop-aws,hadoop-openstack,hadoop-kafka,hadoop-azure-datalake"
+# export HADOOP_OPTIONAL_TOOLS="hadoop-kafka,hadoop-aws,hadoop-azure-datalake,hadoop-aliyun,hadoop-azure"
 
 ###
 # Options for remote shell connectivity
@@ -190,7 +190,7 @@ export HADOOP_OPTS="$HADOOP_OPTS -Djava.library.path=$HADOOP_HOME/lib/native" #Â
 # ${HADOOP_HOME}/logs by default.
 # Java property: hadoop.log.dir
 # export HADOOP_LOG_DIR=${HADOOP_HOME}/logs
-export HADOOP_LOG_DIR=/home/ubuntu/teaa/disk/logs # ADDED BY Jon Ander Gomez FOR TEAA
+export HADOOP_LOG_DIR="/home/ubuntu/teaa/disk/logs" # ADDED BY Jon Ander Gomez FOR TEAA
 
 # A string representing this instance of hadoop. $USER by default.
 # This is used in writing log and pid files, so keep that in mind!
@@ -422,3 +422,16 @@ export HADOOP_LOG_DIR=/home/ubuntu/teaa/disk/logs # ADDED BY Jon Ander Gomez FOR
 # For example, to limit who can execute the namenode command,
 # export HDFS_NAMENODE_USER=hdfs
 export HDFS_NAMENODE_USER=ubuntu # ADDED BY Jon Ander Gomez FOR TEAA
+
+
+###
+# Registry DNS specific parameters
+###
+# For privileged registry DNS, user to run as after dropping privileges
+# This will replace the hadoop.id.str Java property in secure mode.
+# export HADOOP_REGISTRYDNS_SECURE_USER=yarn
+
+# Supplemental options for privileged registry DNS
+# By default, Hadoop uses jsvc which needs to know to launch a
+# server jvm.
+# export HADOOP_REGISTRYDNS_SECURE_EXTRA_OPTS="-jvm server"

@@ -1,37 +1,37 @@
 127.0.0.1	localhost
-127.0.1.1	evirl-ubuntumate-2020
+127.0.1.1	ubuntu22-portal-ng-tmpl
 
-172.23.180.95 teaa-master-cluster ds-teaa-023 ds-teaa-023.dsicv.upv.es teaa-master-cluster.dsicv.upv.es
-172.23.180.15 teaa-worker01-cluster ds-teaa-002 ds-teaa-002.dsicv.upv.es teaa-worker01-cluster.dsicv.upv.es
-172.23.180.16 teaa-worker02-cluster ds-teaa-004 ds-teaa-004.dsicv.upv.es teaa-worker02-cluster.dsicv.upv.es
-172.23.180.17 teaa-worker03-cluster ds-teaa-005 ds-teaa-005.dsicv.upv.es teaa-worker03-cluster.dsicv.upv.es
-172.23.180.78 teaa-worker04-cluster ds-teaa-006 ds-teaa-006.dsicv.upv.es teaa-worker04-cluster.dsicv.upv.es
-172.23.180.79 teaa-worker05-cluster ds-teaa-007 ds-teaa-007.dsicv.upv.es teaa-worker05-cluster.dsicv.upv.es
-172.23.180.80 teaa-worker06-cluster ds-teaa-008 ds-teaa-008.dsicv.upv.es teaa-worker06-cluster.dsicv.upv.es
-172.23.180.81 teaa-worker07-cluster ds-teaa-009 ds-teaa-009.dsicv.upv.es teaa-worker07-cluster.dsicv.upv.es
-172.23.180.82 teaa-worker08-cluster ds-teaa-010 ds-teaa-010.dsicv.upv.es teaa-worker08-cluster.dsicv.upv.es
-172.23.180.83 teaa-worker09-cluster ds-teaa-011 ds-teaa-011.dsicv.upv.es teaa-worker09-cluster.dsicv.upv.es
-172.23.180.84 teaa-worker10-cluster ds-teaa-012 ds-teaa-012.dsicv.upv.es teaa-worker10-cluster.dsicv.upv.es
-172.23.180.85 teaa-worker11-cluster ds-teaa-013 ds-teaa-013.dsicv.upv.es teaa-worker11-cluster.dsicv.upv.es
-172.23.180.86 teaa-worker12-cluster ds-teaa-014 ds-teaa-014.dsicv.upv.es teaa-worker12-cluster.dsicv.upv.es
-172.23.180.87 teaa-worker13-cluster ds-teaa-015 ds-teaa-015.dsicv.upv.es teaa-worker13-cluster.dsicv.upv.es
-172.23.180.88 teaa-worker14-cluster ds-teaa-016 ds-teaa-016.dsicv.upv.es teaa-worker14-cluster.dsicv.upv.es
-172.23.180.89 teaa-worker15-cluster ds-teaa-017 ds-teaa-017.dsicv.upv.es teaa-worker15-cluster.dsicv.upv.es
-172.23.180.90 teaa-worker16-cluster ds-teaa-018 ds-teaa-018.dsicv.upv.es teaa-worker16-cluster.dsicv.upv.es
-172.23.180.91 teaa-worker17-cluster ds-teaa-019 ds-teaa-019.dsicv.upv.es teaa-worker17-cluster.dsicv.upv.es
-172.23.180.92 teaa-worker18-cluster ds-teaa-020 ds-teaa-020.dsicv.upv.es teaa-worker18-cluster.dsicv.upv.es
-172.23.180.93 teaa-worker19-cluster ds-teaa-021 ds-teaa-021.dsicv.upv.es teaa-worker19-cluster.dsicv.upv.es
-172.23.180.94 teaa-worker20-cluster ds-teaa-022 ds-teaa-022.dsicv.upv.es teaa-worker20-cluster.dsicv.upv.es
-172.23.182.168 teaa-worker21-cluster ds-teaa-024 ds-teaa-024.dsicv.upv.es teaa-worker21-cluster.dsicv.upv.es
-172.23.182.169 teaa-worker22-cluster ds-teaa-025 ds-teaa-025.dsicv.upv.es teaa-worker22-cluster.dsicv.upv.es
-172.23.182.170 teaa-worker23-cluster ds-teaa-026 ds-teaa-026.dsicv.upv.es teaa-worker23-cluster.dsicv.upv.es
-172.23.182.171 teaa-worker24-cluster ds-teaa-027 ds-teaa-027.dsicv.upv.es teaa-worker24-cluster.dsicv.upv.es
-172.23.182.172 teaa-worker25-cluster ds-teaa-028 ds-teaa-028.dsicv.upv.es teaa-worker25-cluster.dsicv.upv.es
-172.23.182.173 teaa-worker26-cluster ds-teaa-029 ds-teaa-029.dsicv.upv.es teaa-worker26-cluster.dsicv.upv.es
-172.23.182.174 teaa-worker27-cluster ds-teaa-030 ds-teaa-030.dsicv.upv.es teaa-worker27-cluster.dsicv.upv.es
-172.23.182.175 teaa-worker28-cluster ds-teaa-031 ds-teaa-031.dsicv.upv.es teaa-worker28-cluster.dsicv.upv.es
-172.23.182.176 teaa-worker29-cluster ds-teaa-032 ds-teaa-032.dsicv.upv.es teaa-worker29-cluster.dsicv.upv.es
-172.23.182.177 teaa-worker30-cluster ds-teaa-033 ds-teaa-033.dsicv.upv.es teaa-worker30-cluster.dsicv.upv.es
+172.23.180.106 teaa-master-ubuntu22 ds-teaa-035 ds-teaa-035.dsicv.upv.es teaa-master-ubuntu22.dsicv.upv.es
+172.23.180.107 teaa-worker01-ubuntu22 ds-teaa-036 ds-teaa-036.dsicv.upv.es teaa-worker01-ubuntu22.dsicv.upv.es
+172.23.180.108 teaa-worker02-ubuntu22 ds-teaa-037 ds-teaa-037.dsicv.upv.es teaa-worker02-ubuntu22.dsicv.upv.es
+172.23.180.113 teaa-worker03-ubuntu22 ds-teaa-038 ds-teaa-038.dsicv.upv.es teaa-worker03-ubuntu22.dsicv.upv.es
+172.23.180.114 teaa-worker04-ubuntu22 ds-teaa-039 ds-teaa-039.dsicv.upv.es teaa-worker04-ubuntu22.dsicv.upv.es
+172.23.180.115 teaa-worker05-ubuntu22 ds-teaa-040 ds-teaa-040.dsicv.upv.es teaa-worker05-ubuntu22.dsicv.upv.es
+172.23.180.116 teaa-worker06-ubuntu22 ds-teaa-041 ds-teaa-041.dsicv.upv.es teaa-worker06-ubuntu22.dsicv.upv.es
+172.23.180.117 teaa-worker07-ubuntu22 ds-teaa-042 ds-teaa-042.dsicv.upv.es teaa-worker07-ubuntu22.dsicv.upv.es
+172.23.180.118 teaa-worker08-ubuntu22 ds-teaa-043 ds-teaa-043.dsicv.upv.es teaa-worker08-ubuntu22.dsicv.upv.es
+172.23.180.119 teaa-worker09-ubuntu22 ds-teaa-044 ds-teaa-044.dsicv.upv.es teaa-worker09-ubuntu22.dsicv.upv.es
+172.23.180.120 teaa-worker10-ubuntu22 ds-teaa-045 ds-teaa-045.dsicv.upv.es teaa-worker10-ubuntu22.dsicv.upv.es
+172.23.180.121 teaa-worker11-ubuntu22 ds-teaa-046 ds-teaa-046.dsicv.upv.es teaa-worker11-ubuntu22.dsicv.upv.es
+172.23.180.122 teaa-worker12-ubuntu22 ds-teaa-047 ds-teaa-047.dsicv.upv.es teaa-worker12-ubuntu22.dsicv.upv.es
+172.23.180.123 teaa-worker13-ubuntu22 ds-teaa-048 ds-teaa-048.dsicv.upv.es teaa-worker13-ubuntu22.dsicv.upv.es
+172.23.180.124 teaa-worker14-ubuntu22 ds-teaa-049 ds-teaa-049.dsicv.upv.es teaa-worker14-ubuntu22.dsicv.upv.es
+172.23.180.125 teaa-worker15-ubuntu22 ds-teaa-050 ds-teaa-050.dsicv.upv.es teaa-worker15-ubuntu22.dsicv.upv.es
+172.23.180.126 teaa-worker16-ubuntu22 ds-teaa-051 ds-teaa-051.dsicv.upv.es teaa-worker16-ubuntu22.dsicv.upv.es
+172.23.180.127 teaa-worker17-ubuntu22 ds-teaa-052 ds-teaa-052.dsicv.upv.es teaa-worker17-ubuntu22.dsicv.upv.es
+172.23.180.128 teaa-worker18-ubuntu22 ds-teaa-053 ds-teaa-053.dsicv.upv.es teaa-worker18-ubuntu22.dsicv.upv.es
+172.23.180.139 teaa-worker19-ubuntu22 ds-teaa-054 ds-teaa-054.dsicv.upv.es teaa-worker19-ubuntu22.dsicv.upv.es
+172.23.180.140 teaa-worker20-ubuntu22 ds-teaa-055 ds-teaa-055.dsicv.upv.es teaa-worker20-ubuntu22.dsicv.upv.es
+172.23.180.141 teaa-worker21-ubuntu22 ds-teaa-056 ds-teaa-056.dsicv.upv.es teaa-worker21-ubuntu22.dsicv.upv.es
+172.23.180.142 teaa-worker22-ubuntu22 ds-teaa-057 ds-teaa-057.dsicv.upv.es teaa-worker22-ubuntu22.dsicv.upv.es
+172.23.180.143 teaa-worker23-ubuntu22 ds-teaa-058 ds-teaa-058.dsicv.upv.es teaa-worker23-ubuntu22.dsicv.upv.es
+172.23.180.144 teaa-worker24-ubuntu22 ds-teaa-059 ds-teaa-059.dsicv.upv.es teaa-worker24-ubuntu22.dsicv.upv.es
+172.23.180.145 teaa-worker25-ubuntu22 ds-teaa-060 ds-teaa-060.dsicv.upv.es teaa-worker25-ubuntu22.dsicv.upv.es
+172.23.180.146 teaa-worker26-ubuntu22 ds-teaa-061 ds-teaa-061.dsicv.upv.es teaa-worker26-ubuntu22.dsicv.upv.es
+172.23.180.147 teaa-worker27-ubuntu22 ds-teaa-062 ds-teaa-062.dsicv.upv.es teaa-worker27-ubuntu22.dsicv.upv.es
+172.23.180.148 teaa-worker28-ubuntu22 ds-teaa-063 ds-teaa-063.dsicv.upv.es teaa-worker28-ubuntu22.dsicv.upv.es
+172.23.180.154 teaa-worker29-ubuntu22 ds-teaa-064 ds-teaa-064.dsicv.upv.es teaa-worker29-ubuntu22.dsicv.upv.es
+172.23.180.156 teaa-worker30-ubuntu22 ds-teaa-065 ds-teaa-065.dsicv.upv.es teaa-worker30-ubuntu22.dsicv.upv.es
 
 # The following lines are desirable for IPv6 capable hosts
 ::1     ip6-localhost ip6-loopback

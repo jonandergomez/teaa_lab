@@ -24,7 +24,7 @@
 #   Technical University of Valencia (http://www.upv.es)
 #
 
-
+import os
 import sys
 import time
 from operator import add
@@ -44,11 +44,11 @@ def measure_time(msg = None):
     starting_time = t
 
 
-do_the_collect_into_the_driver = False
+do_the_collect_into_the_driver = True
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
-        print("Usage: word_count_2 <file>", file=sys.stderr)
+        print("Usage: word_count_2 <file>", file = sys.stderr)
         sys.exit(-1)
 
     measure_time('excution starts')
@@ -65,6 +65,7 @@ if __name__ == "__main__":
     measure_time('loading data')
 
     reviews_df.printSchema()
+    print(reviews_df.columns)
 
     measure_time('printing the schema')
 
@@ -72,16 +73,27 @@ if __name__ == "__main__":
 
     measure_time('creating the temporal view')
 
-    review_lines = spark.sql("SELECT review_text from reviews")
+    column_name = 'review_text'
+    if column_name in reviews_df.columns:
+        pass
+    elif 'text' in reviews_df.columns:
+        column_name = 'text'
+    elif 't' in reviews_df.columns:
+        column_name = 't'
+    else:
+        print('No valid column found in the scheme. This program ends prematurely')
+        spark.stop()
+        sys.exit(-1)
+
+    review_lines = spark.sql(f"SELECT {column_name} from reviews")
 
     measure_time('performing the SQL-like select')
 
-    print('num samples:', review_lines.count(), 'num partitions', review_lines.rdd.getNumPartitions())
+    print('num samples:', review_lines.count(), 'num partitions:', review_lines.rdd.getNumPartitions())
     measure_time('counting samples/lines')
 
     # to see what an object in the data frame is, a Row
     print(review_lines.first())
-
 
     def clean_strings(s):
         if s is None: return ''
@@ -121,7 +133,7 @@ if __name__ == "__main__":
     # transformation, returns an RDD of the same data type by removing less frequent words
     counts = counts.filter(lambda x: x[1] >= 10) # comment this line to get all the words
 
-    measure_time('couting word occurences')
+    measure_time('counting word occurences')
 
     # the lazy execution of all, because reduceByKey() is a transformation
     # and not an action, makes that the time after the collect() includes
@@ -136,15 +148,22 @@ if __name__ == "__main__":
         output.sort(key = lambda x: x[1], reverse = True) #  sort by counter in descending order
         measure_time('sorting 2')
 
-        with open('word_count_2.out', 'wt') as f:
+        output_filename = os.path.expanduser('~/spark/local/word_count_2.out')
+        with open(output_filename, 'wt') as f:
             for (word, count) in output:
                 print("%s: %i" % (word, count), file = f)
             f.close()
+
     else:
+        output_filename = 'hdfs://teaa-master-ubuntu22/data/word_count_2.csv'
         df = counts.toDF()
         measure_time('converting to DataFrame')
-        df.write.csv(path = 'word_count_2.csv', mode = 'overwrite', sep = ';')
+        df.write.csv(path = output_filename, mode = 'overwrite', sep = ';')
 
     measure_time('saving')
+
+    print(f'You can find the result of this word count in the file {output_filename}')
+    print()
+    print("A SHELL instruction you can use is: hdfs dfs -cat /data/word_count_2.csv/*.csv | sort -hk 2 -r -t';' | head")
 
     spark.stop()

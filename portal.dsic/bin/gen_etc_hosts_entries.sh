@@ -4,9 +4,9 @@ for n in {0..30}
 do
     if [ $n -eq 0 ]
     then
-        worker_name=teaa-master-cluster.dsicv.upv.es
+        worker_name=teaa-master-ubuntu22.dsicv.upv.es
 	else
-        worker_name=$(printf "teaa-worker%02d-cluster.dsicv.upv.es" $n)
+        worker_name=$(printf "teaa-worker%02d-ubuntu22.dsicv.upv.es" $n)
     fi
 
     address_line=$(host ${worker_name} | grep address)

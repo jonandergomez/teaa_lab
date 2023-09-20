@@ -19,7 +19,7 @@
 <configuration>
 	<property>
 		<name>dfs.namenode.http-address</name>
-		<value>teaa-master-cluster.dsicv.upv.es:50070</value>
+		<value>teaa-master-ubuntu22.dsicv.upv.es:50070</value>
 		<final>true</final>
 	</property>
 
@@ -60,7 +60,7 @@
 
 	<property>
 		<name>dfs.permissions.supergroup</name>
-		<value>teaa</value>
+		<value>hdfs</value>
 	</property>
 
 </configuration>

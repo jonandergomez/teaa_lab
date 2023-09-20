@@ -33,7 +33,7 @@
 
 	<property>
 		<name>yarn.resourcemanager.hostname</name>
-		<value>teaa-master-cluster.dsicv.upv.es</value>
+		<value>teaa-master-ubuntu22.dsicv.upv.es</value>
 	</property>
 	<property>
 		<name>yarn.resourcemanager.address</name>

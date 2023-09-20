@@ -20,3 +20,4 @@ done
 rm -rf   ${cluster_base_dir}/hdfs/namenode
 rm -rf   ${cluster_base_dir}/hdfs/datanode
 mkdir -p ${cluster_base_dir}/hdfs/namenode
+mkdir -p ${cluster_base_dir}/hdfs/datanode

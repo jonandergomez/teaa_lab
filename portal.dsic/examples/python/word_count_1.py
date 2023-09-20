@@ -25,6 +25,7 @@
 #
 
 
+import os
 import sys
 from operator import add
 
@@ -65,12 +66,13 @@ if __name__ == "__main__":
     output.sort(key = lambda x: x[0], reverse = False)
     output.sort(key = lambda x: x[1], reverse = True)
 
-    f = open('word_count_1.out', 'w')
+    output_filename = os.path.expanduser('~/spark/local/word_count_1.out')
+    f = open(output_filename, 'wt')
     for (word, count) in output:
         print("%s: %i" % (word, count), file=f)
     f.close()
     print()
-    print('You can find the result of this word count in the file word_count_1.out')
+    print(f'You can find the result of this word count in the file {output_filename}')
     print()
 
     spark.stop()

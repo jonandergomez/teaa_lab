@@ -52,20 +52,20 @@
 	</property>
 	<property>
 		<name>mapreduce.jobhistory.address</name>                                                                          
-		<value>teaa-master-cluster.dsicv.upv.es:10020</value>
+		<value>teaa-master-ubuntu22.dsicv.upv.es:10020</value>
 	</property>
 	<property>
 		<name>mapreduce.jobhistory.webapp.address</name>
-		<value>teaa-master-cluster.dsicv.upv.es:19888</value>
+		<value>teaa-master-ubuntu22.dsicv.upv.es:19888</value>
 	</property>
 	<property>
 		<name>mapreduce.jobhistory.intermediate-done-dir</name>
-		<!--value>/home/ubuntu/teaa/disk/dirs/mr-history/tmp</value-->
+			<!--value>/home/ubuntu/teaa/disk/dirs/mr-history/tmp</value-->
 		<value>/mr-history/tmp</value>
 	</property>
 	<property>
 		<name>mapreduce.jobhistory.done-dir</name>
-		<!--value>/home/ubuntu/teaa/disk/dirs/mr-history/done</value-->
+			<!--value>/home/ubuntu/teaa/disk/dirs/mr-history/done</value-->
 		<value>/mr-history/done</value>
 	</property>
 
