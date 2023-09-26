@@ -160,14 +160,14 @@ the 14-dimensional real space.
 
   |**EEG channel**|**Frequency range**      |
   |--------------:|:------------------------|
-  |delta          | 0.5Hz -- 4Hz            |
-  |theta          | 4Hz -- 8Hz              |
-  |alpha          | 8 -- 13                 |
-  |beta           | 13 -- 30                |
-  |gamma-1        | 30 -- 50                |
-  |gamma-2        | 50 -- 56 + 64 -- 75     |
-  |gamma-3        | 75 -- 100               |
-  |gamma-4        | 100 -- 116 + 124 -- 128 |
+  |delta          | from 0.5 Hz to   4 Hz            |
+  |theta          | from   4 Hz to   8 Hz              |
+  |alpha          | from   8 Hz to  13 Hz                 |
+  |beta           | from  13 Hz to  30 Hz                |
+  |gamma-1        | from  30 Hz to  50 Hz                |
+  |gamma-2        | from  50 Hz to  56 Hz plus from 64 Hz to 75 Hz     |
+  |gamma-3        | from  75 Hz to 100 Hz               |
+  |gamma-4        | from 100 Hz to 116 Hz plus from 124 Hz to 128 Hz |
 
   
 - and six components corresponding to the above mentioned statistics.
