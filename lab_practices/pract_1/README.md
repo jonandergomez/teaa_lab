@@ -1,6 +1,6 @@
 # Lab practice 1
 
-This subsection is devoted to **lab practice 1**.
+This subsection is devoted to **lab practice 1**. Use [this link](#exercises) to jump where exercices start.
 
 Lab practice 1 is about Use Case 13 of the [DeepHealth EU project](https://deephealth-project.eu)
 based on the [CHB-MIT Scalp EEG Database](https://physionet.org/lightwave/?db=chbmit/1.0.0)
@@ -211,7 +211,7 @@ The **goal** is to predict seizures within the previous 60 minutes,
 if it is possible, before 30 minutes of the seizure.
 
 
-## Work to do in this lab practice (not in one single lab session)
+## <a name="exercises"></a>Work to do in this lab practice (not in one single lab session)
 
 1. KMeans on MNIST Digits database:
 
