@@ -317,7 +317,7 @@ if it is possible, before 30 minutes of the seizure.
    A grid search varying different configuration parameters have been done using the Python code
    [gmm_mnist_2022.py](../../portal.dsic/examples/python/gmm_mnist_2022.py)
 
-   The results can be found in [results.l1.digits.2022.test/](../../portal.dsic/examples/results.l1.digits.2022.test/),
+   The results can be found in [results.digits.gmm.test/](../../portal.dsic/examples/results/digits/gmm/test/),
    where the name of the files with the results contain the values of the configuration parameters.
 
    - The value for the number of componente of the GMM of each target class varies from 3 to 70, you will see
@@ -346,7 +346,7 @@ if it is possible, before 30 minutes of the seizure.
    The script used to execute the grid search can be found in [run-mnist-gmm-grid.sh](../../portal.dsic/examples/scripts/run-mnist-gmm-grid.sh)
 
    Similar to the case when using K-Means, the evolution of the accuracy using GMMs depending on different
-   hyper-parameters is available [here](../../portal.dsic/examples/results.l1.digits.2022.test/mnist-gmm-accuracy-evolution.csv).
+   hyper-parameters is available [here](../../portal.dsic/examples/results/digits/gmm/digits-gmm-f1-macro-avg-evolution-test.csv).
    You can do several representations of these data; for instance, the evolution of the accuracy versus the
    number of componentes in the GMM for different number of components of PCA.
 
