@@ -21,32 +21,14 @@ from pyspark import SparkContext
 from pyspark.mllib.clustering import KMeans, KMeansModel
 
 from utils_for_results import save_results
-
-def load_mnist():
-#
-    home = os.getenv('HOME')
-    filename = None
-    if home is not None:
-        filename = home + '/scikit_learn_data/openml/openml.org/mnist_784.npz'
-    else:
-        filename = '/tmp/mnist_784.npz' # This will fail in Windows machines
-    #
-    if os.path.exists(filename):
-        npz = numpy.load(filename, allow_pickle = True)
-        X, y = npz['X'], npz['y']
-    else:
-        X, y = fetch_openml('mnist_784', version = 'active', return_X_y = True)
-        numpy.savez(filename, X = X, y = y)
-    #
-    y = numpy.array([int(_) for _ in y])
-    return X, y
+from load_mnist import load_mnist
 
 
 if __name__ == "__main__":
     sc = SparkContext(appName = "kmeans-mnist")  # SparkContext
 
     X, y = load_mnist()
-    X /= 255.0
+    X = X.astype(float) / 255.0
     print(X.shape, y.shape)
     X_train, X_test = X[:60000], X[60000:]
     y_train, y_test = y[:60000], y[60000:]
@@ -60,15 +42,16 @@ if __name__ == "__main__":
 
 
     debug = 0
-    models_dir = 'models.digits'
-    log_dir = 'log.digits'
+    models_dir = 'models/digits/kmeans'
+    log_dir = 'logs/digits/kmeans'
+    results_dir = 'results/digits/kmeans'
+    regularize_counter_weights = False
 
     list_of_num_clusters = list()
-    #for k in range(   2,  150,   1): list_of_num_clusters.append(k) # comment this line to skip these clustering sizes
     for k in range(  10,  150,  10): list_of_num_clusters.append(k) # comment this line to skip these clustering sizes
     for k in range( 150,  500,  50): list_of_num_clusters.append(k) # comment this line to skip these clustering sizes
     for k in range( 500, 1000, 100): list_of_num_clusters.append(k) # comment this line to skip these clustering sizes
-    list_of_num_clusters.append(1000)
+    list_of_num_clusters.append(1000) # comment this line to skip these clustering specific size
 
     num_partitions = 60
 
@@ -81,6 +64,8 @@ if __name__ == "__main__":
         elif sys.argv[i] == '--n-partitions':
             num_partitions = int(sys.argv[i + 1])
 
+    os.makedirs(models_dir, exist_ok = True)
+    os.makedirs(log_dir, exist_ok = True)
 
     rdd_train = sc.parallelize([x.copy() for x in X_train], numSlices = num_partitions)
     rdd_test  = sc.parallelize([x.copy() for x in X_test ], numSlices = num_partitions)
@@ -122,7 +107,7 @@ if __name__ == "__main__":
                                                     maxIterations = 2000,
                                                     initializationMode = "kmeans||",
                                                     initializationSteps = 5,
-                                                    epsilon = 1.0e-9)
+                                                    epsilon = 1.0e-5)
             ending_time = time.time()
             print('processing time lapse for', num_clusters, 'clusters', ending_time - starting_time, 'seconds')
 
@@ -206,7 +191,11 @@ if __name__ == "__main__":
             print(";".join("{:.0f}".format(v) for v in counters[l]), file = f)
         f.close()
 
-        conditional_probabilities = counters / counters.sum(axis = 1).reshape(-1, 1)
+        if regularize_counter_weights:
+            _cp_ = counters / counters.sum(axis = 0).reshape(1, -1)
+            conditional_probabilities = _cp_ / _cp_.sum(axis = 1).reshape(-1, 1)
+        else:
+            conditional_probabilities = counters / counters.sum(axis = 1).reshape(-1, 1)
         target_class_a_priori_probabilities = counters.sum(axis = 1) / counters.sum()
 
         def classify_sample(t):
@@ -223,13 +212,13 @@ if __name__ == "__main__":
         y_true_and_pred = data.collect()
         y_true = numpy.array([x[0] for x in y_true_and_pred])
         y_pred = numpy.array([x[1] for x in y_true_and_pred])
-        save_results('results.digits.train', filename_prefix, y_true, y_pred)
+        save_results(results_dir + '/train', filename_prefix, y_true, y_pred)
         #
         data = test_data.map(classify_sample)
         y_true_and_pred = data.collect()
         y_true = numpy.array([x[0] for x in y_true_and_pred])
         y_pred = numpy.array([x[1] for x in y_true_and_pred])
-        save_results('results.digits.test',  filename_prefix, y_true, y_pred)
+        save_results(results_dir + '/test',  filename_prefix, y_true, y_pred)
     ####################################################################
     rdd_train.unpersist()
     sc.stop()

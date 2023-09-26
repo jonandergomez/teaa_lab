@@ -52,6 +52,8 @@ do
         echo "PANIC"
         exit 1
     fi
+    echo "######################################### ${dir}"
+    echo ""
 done
 
 pushd examples
@@ -78,6 +80,8 @@ dir="examples"
         echo "PANIC"
         exit 1
     fi
+    echo "######################################### ${dir}"
+    echo ""
 #done
 
 
@@ -99,6 +103,8 @@ do
         echo "PANIC"
         exit 1
     fi
+    echo "######################################### ${dir}"
+    echo ""
 done
 
 popd
@@ -119,6 +125,8 @@ do
         echo "PANIC"
         exit 1
     fi
+    echo "######################################### ${dir}"
+    echo ""
 done
 
 popd

@@ -1,11 +1,11 @@
 #!/bin/bash 
 
-dataset="mnist"
+dataset="digits"
+results_dir="results/${dataset}/gmm"
 
 for subset in  "test"  # "train"
 do
-
-    grep -H "^   macro avg" results.l1.digits.2022.${subset}/gmm-classification-results*.txt \
+    grep -H "^   macro avg" ${results_dir}/${subset}/gmm-classification-results*.txt \
         | sed 's/-/ /g' \
         | awk '{ print $5, $7, $9, $11, $(NF-1) }' \
         | sed 's/\.txt:/ /g' \
@@ -13,7 +13,7 @@ do
 
 
     csv_file="/tmp/${dataset}-gmm-f1-macro-avg-evolution-${subset}.csv"
-    target_dir="results.summary/l1/${dataset}/gmm"
+    target_dir="${results_dir}/"
 
     (echo "J;pca;min var;covar type;f1 macro avg" ; cat /tmp/temp.${subset}.$$) >${csv_file}
 

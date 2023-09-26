@@ -26,8 +26,8 @@ from pyspark.mllib.clustering import GaussianMixture
 
 if __name__ == "__main__":
     """
-    Usage: spark-submit --master local[4]  python/gmm_mnist_2022.py  --base-dir .   --dataset data/uc13-train.csv  --covar full      2>/dev/null
-           spark-submit --master local[4]  python/gmm_mnist_2022.py  --base-dir .   --dataset data/uc13-train.csv  --covar diagonal  2>/dev/null
+    Usage: spark-submit --master local[4]  python/gmm_mnist_2022.py  --base-dir .  --covar full      2>/dev/null
+           spark-submit --master local[4]  python/gmm_mnist_2022.py  --base-dir .  --covar diagonal  2>/dev/null
 
     Parameters
     ----------
@@ -52,11 +52,11 @@ if __name__ == "__main__":
     parser.add_argument('--doClassification', default=False, type=bool, help='Flag to indicate whether do the classification')
     #
     parser.add_argument('--baseDir', default='.', type=str, help='Directory from which all the other paths are relative to')
-    parser.add_argument('--resultsDir', default='results.l1.digits.2022', type=str, help='Directory where to store the results')
-    parser.add_argument('--modelsDir', default='models.l1.digits.2022', type=str, help='Directory where to store the models')
-    parser.add_argument('--logDir', default='log.l1.digits.2022', type=str, help='Directory where to store the logs')
+    parser.add_argument('--resultsDir', default='results/digits/gmm', type=str, help='Directory where to store the results')
+    parser.add_argument('--modelsDir', default='models/digits/gmm', type=str, help='Directory where to store the models')
+    parser.add_argument('--logDir', default='logs/digits/gmm', type=str, help='Directory where to store the logs')
     #
-    parser.add_argument('--numPartitions', default=60, type=int, help='Number of partitions for RDDs')
+    parser.add_argument('--numPartitions', default=600, type=int, help='Number of partitions for RDDs')
     #
     args = parser.parse_args()
 
@@ -66,7 +66,7 @@ if __name__ == "__main__":
     spark_context = SparkContext(conf = spark_conf)
 
     X, y = load_mnist()
-    X /= 255.0
+    X  = X / 255.0
     print(X.shape, y.shape)
     X_train, X_test = X[:60000], X[60000:]
     y_train, y_test = y[:60000], y[60000:]
@@ -129,6 +129,6 @@ if __name__ == "__main__":
     print('accuracy = ', 100 * sum(y_pred == y_true)  / len(y_true))
 
     filename_prefix = 'gmm-classification-results-k-%04d-pca-%s-min_var-%.6f-covar-%s' % (args.k, args.pcaComponents, args.minVar, args.covarType)
-    save_results(f'{results_dir}.test', filename_prefix, y_true, y_pred)
+    save_results(f'{args.baseDir}/{args.resultsDir}/test', filename_prefix, y_true, y_pred)
 
     spark_context.stop()

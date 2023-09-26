@@ -1,20 +1,19 @@
 #!/bin/bash
 
-#models_dir="models"
-#models_dir="models.pca"
-models_dir="models.digits"
-
-#results_dir="results4.pca.train"
-results_dir="results.digits.train"
+models_dir="models/digits/kmeans"
+results_dir="results/digits/kmeans/train"
 
 for filename in $(ls ${models_dir}/cluster-distribution-*.csv)
 do
     echo $filename
-    python3 python/see_confusion_matrix.py --filename ${filename} --results-dir ${results_dir} --kmeans --save-figs
+    python python/see_confusion_matrix.py --filename ${filename} --results-dir ${results_dir} --kmeans --save-figs
 done
+
+models_dir="models/digits/gmm"
+results_dir="results/digits/gmm/train"
 
 for filename in $(ls ${models_dir}/gmm-distribution-*.csv)
 do
     echo $filename
-    python3 python/see_confusion_matrix.py --filename ${filename} --results-dir ${results_dir} --gmm --save-figs
+    python python/see_confusion_matrix.py --filename ${filename} --results-dir ${results_dir} --gmm --save-figs
 done

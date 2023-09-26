@@ -29,7 +29,7 @@ and in some research papers, here you have two recent papers:
 The data preprocessing has been done following the typical **short-term analysis** also used for Speech recognition
 and other signals.
 This kind of analysis consists in assuming we are analysing a signal that contains information that do not change too fast,
-that is, that for a short period of time the features we are interested to extract from the signal do not change.
+that is, that for a short period of time the features we are interested in to extract from the signal do not change.
 In Speech recognition, the short-term considered period is of **20-25 ms**,
 in the case of EEG signals, and due to the large amount of data in the dataset used here,
 the period is **4 seconds**. In both cases, and in general, a sliding window is applied. Every **10 ms** for Speech recognition
@@ -54,7 +54,7 @@ When the output of the DFT is available for each sliding window then a filter ba
 Next figure shows the [Mel scale filter bank](https://en.wikipedia.org/wiki/Mel_scale),
 the most widely used for Speech recognition.
 This filter bank consists of a set of overlapping pass band filters of equal size with more resolution
-on low frequencies than in high frequencies, trying to emulate the frequency discrimination our
+on low frequencies than in high frequencies, trying to emulate the frequency discrimination carried out by our
 [Cochlea](https://en.wikipedia.org/wiki/Cochlea).
 For the case of EEG signals a linear instead of logarithmic filter bank is used, that is restricted to 
 a specific band of frequencies.
@@ -69,7 +69,7 @@ can be computed from the raw signal in the time domain, i.e., from the waveform.
 Next figure shows the first 5 filters to be applied on the output of the filter bank to obtain the
 [Cepstral Coefficients (CC)](https://en.wikipedia.org/wiki/Mel-frequency_cepstrum).
 Horizontal blue line constat at **1.0** is for computing the CC0, i.e., the sum of all the filters,
-that is the total energy contained in the frequency domain for a given sliding window.
+which is the total energy contained in the frequency domain for a given sliding window.
 
 ![Here](figures/cepstral-coefficients.svg)
 
@@ -152,12 +152,26 @@ explains how to compute these statistics.
 
 ******
 
-Finally, the output of the ***short-term analysis*** is that each channel is converted to a sequence of vectors in
+Finally, the output of the ***short-term analysis*** is that each channel is converted into a sequence of vectors in
 the 14-dimensional real space.
 
-- Eight components are extracted from the frequency domain, in lineally spaced pass band filters, and
+- Eight components are extracted from the frequency domain, in lineally spaced pass band filters, according to the
+  above-mentioned paper:
 
-- six components correspond to the above mentioned statistics.
+  |**EEG channel**|**Frequency range**      |
+  |--------------:|:------------------------|
+  |delta          | 0.5Hz -- 4Hz            |
+  |theta          | 4Hz -- 8Hz              |
+  |alpha          | 8 -- 13                 |
+  |beta           | 13 -- 30                |
+  |gamma-1        | 30 -- 50                |
+  |gamma-2        | 50 -- 56 + 64 -- 75     |
+  |gamma-3        | 75 -- 100               |
+  |gamma-4        | 100 -- 116 + 124 -- 128 |
+
+  
+- and six components corresponding to the above mentioned statistics.
+  In our current implementation we are using **energy** instead of the **mean**.
   
 
 ## Goal of the use case and the lab practice
@@ -167,8 +181,10 @@ as ***ictal*** and ***inter-ictal***.
 However, in order to train models for predicting ***ictal*** periods,
 i.e., ***seizures***, the samples from ***inter-ictal*** periods are
 automatically labelled into other classes according to human expert criteria.
-Next table shows the criteria used here, with a total of 10 classes
+Next table shows an example of criteria with a total of 10 classes
 distributed between ***pre-ictal*** and ***post-ictal*** periods.
+Choosing the criteria to separate periods is relevant to obtain good results
+for early detection.
 
 |number of samples per class|class index|class name |
 |--------------------------:|:---------:|:----------------|
@@ -213,23 +229,23 @@ if it is possible, before 30 minutes of the seizure.
    ```
 
    Results for several clustering sizes ranging from 10 to 1000 can be found in
-   [results.digits.train](../../portal.dsic/examples/results.digits.train)
+   [results.digits.train](../../portal.dsic/examples/results/digits/kmeans/train)
    and 
-   [results.digits.test](../../portal.dsic/examples/results.digits.test)
+   [results.digits.test](../../portal.dsic/examples/results/digits/kmeans/test)
 
    Of interest the matrices with the conditional probabilities of observing samples
    corresponding to one cluster with respect to each digit. For instance:
-   [conditional-probabilities-kmeans-10-0010.png](../../portal.dsic/examples/results.digits.train/conditional-probabilities-kmeans-10-0010.png)
+   [conditional-probabilities-kmeans-10-0010.png](../../portal.dsic/examples/results/digits/kmeans/train/conditional-probabilities-kmeans-10-0010.png)
 
    You can see the evolution of the criteria 
    [Calinski-Harabasz](https://scikit-learn.org/stable/modules/clustering.html#calinski-harabasz-index)
    and
    [Davies-Bouldin](https://scikit-learn.org/stable/modules/clustering.html#davies-bouldin-index)
    to determine the (sub-)optimal number of clusters for a given data set in the file:
-   [kmeans-kpis.txt](../../portal.dsic/examples/log.digits/kmeans-kpis.txt)
+   [kmeans-kpis.txt](../../portal.dsic/examples/logs/digits/kmeans/kmeans-kpis.txt)
 
 
-   Are you able to obtain some preliminary conclusions about the similarities between some digits whih are reflected,
+   Are you able to obtain some preliminary conclusions about the similarities between some digits which are reflected,
    somehow, in the conditional probabilities?
 
    You can obtain the evolution of the accuracy versus the size of the clustering by executing the script:
@@ -242,7 +258,7 @@ if it is possible, before 30 minutes of the seizure.
 
    The result is a CSV file whose absolute path in the filesystem of the master
    is **/tmp/mnist-kmeans-accuracy-evolution.csv**,
-   but you can find it [here](../../portal.dsic/examples/results.digits.test/mnist-kmeans-accuracy-evolution.csv)
+   but you can find it [here](../../portal.dsic/examples/results/digits/kmeans/test/mnist-kmeans-accuracy-evolution.csv)
 
 
 2. KMeans on UC13 dataset (applied to each patient individually):
