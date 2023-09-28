@@ -229,9 +229,9 @@ if it is possible, before 30 minutes of the seizure.
    ```
 
    Results for several clustering sizes ranging from 10 to 1000 can be found in
-   [results.digits.train](../../portal.dsic/examples/results/digits/kmeans/train)
+   [results/digits/train](../../portal.dsic/examples/results/digits/kmeans/train)
    and 
-   [results.digits.test](../../portal.dsic/examples/results/digits/kmeans/test)
+   [results/digits/test](../../portal.dsic/examples/results/digits/kmeans/test)
 
    Of interest the matrices with the conditional probabilities of observing samples
    corresponding to one cluster with respect to each digit. For instance:
@@ -315,7 +315,7 @@ if it is possible, before 30 minutes of the seizure.
    A grid search varying different configuration parameters have been done using the Python code
    [gmm_mnist_2022.py](../../portal.dsic/examples/python/gmm_mnist_2022.py)
 
-   The results can be found in [results.digits.gmm.test/](../../portal.dsic/examples/results/digits/gmm/test/),
+   The results can be found in [results/digits/gmm/test/](../../portal.dsic/examples/results/digits/gmm/test/),
    where the name of the files with the results contain the values of the configuration parameters.
 
    - The value for the number of componente of the GMM of each target class varies from 3 to 70, you will see
