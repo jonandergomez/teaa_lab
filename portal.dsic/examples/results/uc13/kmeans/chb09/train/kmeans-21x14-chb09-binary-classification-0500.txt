@@ -1,0 +1,12 @@
+        125          0
+       1103      84270
+
+              precision    recall  f1-score   support
+
+     seizure       0.10      1.00      0.18       125
+  interictal       1.00      0.99      0.99     85373
+
+    accuracy                           0.99     85498
+   macro avg       0.55      0.99      0.59     85498
+weighted avg       1.00      0.99      0.99     85498
+
