@@ -1,0 +1,20 @@
+          0          0          0          0          0          0
+          0          0          0          0          0          0
+          0          0          0          0          0          0
+        154       3067       1698      10370        955       5638
+          0          0          0          0          0          0
+          0          0          0          0          0          0
+
+                precision    recall  f1-score   support
+
+       seizure       0.00      0.00      0.00         0
+ pre-ictal-10m       0.00      0.00      0.00         0
+ pre-ictal-20m       0.00      0.00      0.00         0
+    interictal       1.00      0.47      0.64     21882
+post-ictal-20m       0.00      0.00      0.00         0
+post-ictal-60m       0.00      0.00      0.00         0
+
+      accuracy                           0.47     21882
+     macro avg       0.17      0.08      0.11     21882
+  weighted avg       1.00      0.47      0.64     21882
+

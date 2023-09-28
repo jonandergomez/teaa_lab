@@ -264,50 +264,48 @@ if it is possible, before 30 minutes of the seizure.
 2. KMeans on UC13 dataset (applied to each patient individually):
 
    Obtain several codebooks with the **Lloyd**'s algorithm of K-Means using the Spark cluster
-   with the Python code [kmeans_uc13_21x20.py](../../portal.dsic/examples/python/kmeans_uc13_21x20.py)
+   with the Python code [kmeans_uc13_21x14.py](../../portal.dsic/examples/python/kmeans_uc13_21x14.py)
 
    _In fact, you do not have to run it because the results are also available and there
    is no time to execute all the runs by all the students. Anyway, some examples of the
    command to execute it, assuming you are in your home directory, are:_
 
    ```bash
-       teaa/examples/scripts/run-python.sh teaa/examples/python/kmeans_uc13_21x20.py --patient chb01 --do-binary-classification --train --classify
+       teaa/examples/scripts/run-python.sh teaa/examples/python/kmeans_uc13_21x14.py --patient chb01 --do-binary-classification --train --classify
     
-       teaa/examples/scripts/run-python.sh teaa/examples/python/kmeans_uc13_21x20.py --patient chb24 --train --classify
+       teaa/examples/scripts/run-python.sh teaa/examples/python/kmeans_uc13_21x14.py --patient chb24 --train --classify
    ```
 
-   Results for several clustering sizes ranging from 10 to 150 per patient can be found in
-   [uc13-21x20](../../portal.dsic/examples/uc13-21x20), where you will find one directory per patient,
-   and inside each patient one directory per run. Let us see the directories corresponding to patient __chb01__:
+   Results for several clustering sizes ranging from 300 to 1000 per patient can be found in
+   [uc13-21x14](../../portal.dsic/examples/results/uc13/kmeans/), where you will find one directory per patient,
+   and inside each patient one directory per run (i.e., train and test) and differentiated by task (i.e., binary
+   and multi-class classification).
+   Let us see the directories corresponding to patient __chb01__:
 
-   Binary classification:
+   - [results/uc13/kmeans/chb01/train](../../portal.dsic/examples/results/uc13/kmeans/chb01/train)
 
-   - [results.02-classes.train](../../portal.dsic/examples/uc13-21x20/chb01/results.02-classes.train)
+   - [results/uc13/kmeans/chb01/test](../../portal.dsic/examples/results/uc13/kmeans/chb01/test)
 
-   - [results.02-classes.test](../../portal.dsic/examples/uc13-21x20/chb01/results.02-classes.test)
-
-   Multiclass classification:
-
-   - [results.10-classes.train](../../portal.dsic/examples/uc13-21x20/chb01/results.10-classes.train)
-
-   - [results.10-classes.test](../../portal.dsic/examples/uc13-21x20/chb01/results.10-classes.test)
-
-   _In these directories, you will also find the results using GMMs which will be commented later, now you can ignore them._
 
    You can see the evolution of the criteria 
    [Calinski-Harabasz](https://scikit-learn.org/stable/modules/clustering.html#calinski-harabasz-index)
    and
    [Davies-Bouldin](https://scikit-learn.org/stable/modules/clustering.html#davies-bouldin-index)
    to determine the (sub-)optimal number of clusters for a given data set in the file
-   [kmeans-kpis-chb01.txt](../../portal.dsic/examples/uc13-21x20/chb01/log/kmeans-kpis-chb01.txt)
+   [kmeans-kpis-chb01.txt](../../portal.dsic/examples/logs/uc13/kmeans/kmeans-kpis-chb01.txt)
    for patient **chb01**. The files for the others patients are in the corresponding directory, you only
    have to change the patient identifier in the path.
 
 
-   Additionally, in 
-   [the directory of the models corresponding to patient **chb01**](../../portal.dsic/examples/uc13-21x20/chb01/models/)
+   Additionally, in the directory of the models, not available in the GitHub because of the size
+   but available in the master,
+   ```
+        examples/models/uc13/kmeans/
+   ```
    you can find CSV files with the cluster distribution with respect to each target class, for instance
-   [cluster-disribution-0010.csv](../../portal.dsic/examples/uc13-21x20/chb01/models/cluster-distribution-0010.csv),
+   ```
+        cluster-disribution-chb01-multi-class-classification-0300.csv
+   ```
    from which you can generate the matrix of conditional probabilities by modifying the Python code 
    [see_conditional_probabilities.py](../../portal.dsic/examples/python/see_conditional_probabilities.py)
 

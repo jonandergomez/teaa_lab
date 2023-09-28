@@ -39,7 +39,7 @@ axis.set_ylabel('Target classes')
 axis.set_title('Conditional probabilities')
 pyplot.tight_layout()
 if do_save_fig and results_dir is not None:
-    pyplot.savefig(f'{results_dir}/conditional-probabilities-{clustering_type}-%d-%04d.svg' % (mat.shape[0], mat.shape[1]), format = 'svg')
-    pyplot.savefig(f'{results_dir}/conditional-probabilities-{clustering_type}-%d-%04d.png' % (mat.shape[0], mat.shape[1]), format = 'png')
+    pyplot.savefig(f'{results_dir}/conditional-probabilities-{clustering_type}-{mat.shape[0]:02d}-{mat.shape[1]:04d}.svg', format = 'svg')
+    pyplot.savefig(f'{results_dir}/conditional-probabilities-{clustering_type}-{mat.shape[0]:02d}-{mat.shape[1]:04d}.png', format = 'png')
 else:
     pyplot.show()

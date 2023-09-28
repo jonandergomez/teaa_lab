@@ -66,13 +66,13 @@ def load_conditional_probabilities(counter_pairs_filename):
 
 if __name__ == "__main__":
     if use_spark:
-        sc = SparkContext(appName = "kmeans-uc13-21x20")  # SparkContext
+        sc = SparkContext(appName = "kmeans-uc13-21x14")  # SparkContext
     else:
         sc = None
 
     debug = 0
     num_channels = 21
-    base_dir = 'uc13-21x20'
+    base_dir = 'uc13-21x14'
     patient = 'chb02'
     min_num_clusters = 10
     max_num_clusters = 150
@@ -135,7 +135,7 @@ if __name__ == "__main__":
     if use_spark:
         # Loads and repartitions the data
         for subset in ['train', 'test']:
-            csv_lines = sc.textFile(f'data/uc13/uc13-{patient}-21x20-{subset}.csv')
+            csv_lines = sc.textFile(f'data/uc13/uc13-{patient}-21x14-{subset}.csv')
             csv_lines = csv_lines.repartition(num_partitions)
             data = csv_lines.map(csv_line_to_patient_label_and_sample)
             data_rdds[subset] = data
