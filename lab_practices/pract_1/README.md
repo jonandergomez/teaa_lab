@@ -353,44 +353,38 @@ if it is possible, before 30 minutes of the seizure.
 
    No grid search has been carried out for this dataset, not feasible in time with the available resources in the cluster.
 
-   The code used to generate the results is [gmm_uc13_21x20.py](../../portal.dsic/examples/python/gmm_uc13_21x20.py)
+   The code used to generate the results is [gmm_uc13_21x14.py](../../portal.dsic/examples/python/gmm_uc13_21x14.py)
 
    The script to execute all the runs for all the patients using both binary and multi-class classifications is the following:
 
    ```bash
       for patient in {01..24}
       do
-          scripts/run-python.sh python/gmm_uc13_21x20.py --patient chb${patient} --do-binary-classification
-          scripts/run-python.sh python/gmm_uc13_21x20.py --patient chb${patient}
+          scripts/run-python.sh python/gmm_uc13_21x14.py --patient chb${patient} --do-binary-classification
+          scripts/run-python.sh python/gmm_uc13_21x14.py --patient chb${patient}
       done
    ```
 
    The results can be found in the directory
-   [uc13-21x20](../../portal.dsic/examples/uc13-21x20), where you will find one directory per patient,
+   [results/uc13/gmm](../../portal.dsic/examples/results/uc13/gmm), where you will find one directory per patient,
    and inside each patient one directory per run.
    Let us see the directories corresponding to patient __chb01__:
 
-   Binary classification:
+   Both **binary** and **multi-class** classification:
 
-   - [results.02-classes.train](../../portal.dsic/examples/uc13-21x20/chb01/results.02-classes.train)
+   - [results/uc13/gmm/chb01/train](../../portal.dsic/examples/results/uc13/gmm/chb01/train)
 
-   - [results.02-classes.test](../../portal.dsic/examples/uc13-21x20/chb01/results.02-classes.test)
+   - [results/uc13/gmm/chb01/test](../../portal.dsic/examples/results/uc13/gmm/chb01/test)
 
-   Multiclass classification:
 
-   - [results.10-classes.train](../../portal.dsic/examples/uc13-21x20/chb01/results.10-classes.train)
-
-   - [results.10-classes.test](../../portal.dsic/examples/uc13-21x20/chb01/results.10-classes.test)
-
-   _These directories are the same where the results of the classifiers based on KMeans are stored,
-   in this case you have to inspect the files whose name starts by **gmm** and ignore the ones starting with **kmeans**._
-
-   It has not been possible to carry out different runs varying the maximum number of components of each GMM 
+   It has been possible to carry out different runs varying the maximum number of components of each GMM 
    used for modelling the region in the *d*-dimensonal space where the samples of each target class are distributed.
-   In our case, the maximum number of components of each GMM has been set to 30
-   and only the **diagonal** convariance matrix of each Gaussian component has been used.
-   However, as the strategy to estimate each GMM is automatic splitting starting from one single GMM component,
-   it could be possible that for some GMMs the number of components will lower than 30.
+   The tested maximum number of components per GMM are 10, 15, 20, 25, 30, 50 and 100.
+   However, only the **diagonal** convariance matrix of each Gaussian component has been used.
+   Let us remark that, as the strategy to estimate each GMM is automatic splitting starting from one single GMM component,
+   it could be possible that for some GMMs the number of components will lower than the configured maximum.
+   Last but not least, when the number of samples in the training set for a given label is lower than 1000 the
+   number of Gaussian components has been set to two, and when lower than 100 to one.
 
 
 5. It would have been interesting to carry out several runs to evaluate the performance (KPI accuracy)
