@@ -221,8 +221,8 @@ if __name__ == "__main__":
 
             else: # Build the model (cluster the data)
                 starting_time = time.time()
-                kmeans_model = KMeans.train(samples, k = num_clusters, maxIterations = 100, initializationMode = "kmeans||", initializationSteps = 5, epsilon = 1.0e-4)
-                #kmeans_model = KMeans.train(samples, k = num_clusters, maxIterations = 2000, initializationMode = "kmeans||", initializationSteps = 5, epsilon = 1.0e-9)
+                #kmeans_model = KMeans.train(samples, k = num_clusters, maxIterations = 100, initializationMode = "kmeans||", initializationSteps = 5, epsilon = 1.0e-4)
+                kmeans_model = KMeans.train(samples, k = num_clusters, maxIterations = 2000, initializationMode = "kmeans||", initializationSteps = 5, epsilon = 1.0e-9)
                 ending_time = time.time()
                 print('processing time lapse for', num_clusters, 'clusters', ending_time - starting_time, 'seconds')
 
