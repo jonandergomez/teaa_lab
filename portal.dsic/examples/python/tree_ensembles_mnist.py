@@ -50,15 +50,15 @@ if __name__ == "__main__":
     verbose = 0
 
     spark_context = None
-    num_partitions = 80
-    models_dir = 'digits/models.2'
-    log_dir = 'digits/log.2'
-    results_dir = 'digits/results.2'
+    num_partitions = 60
+    log_dir = 'logs/digits/ensembles'
+    models_dir = 'models/digits/ensembles'
+    results_dir = 'results/digits/ensembles'
     do_training = False
     do_classification = False
     model_filename = None
     learning_rate = 0.1
-    pca_components = 30
+    pca_components = 0.95
     pf_degree = 1
                                                    
     for i in range(len(sys.argv)):
@@ -81,13 +81,17 @@ if __name__ == "__main__":
         elif sys.argv[i] == "--pf-degree"     :         pf_degree = int(sys.argv[i + 1])
 
 
+    os.makedirs(logs_dir, exist_ok = True)
+    os.makedirs(models_dir, exist_ok = True)
+    os.makedirs(results_dir, exist_ok = True)
+
     if model_filename is None:
         model_filename = f'{models_dir}/{ensemble_type}-{num_trees}-{impurity}-{max_depth}'
 
     spark_context = SparkContext(appName = "TreeBasedEnsembles-dataset-MNIST")
 
     X, y = load_mnist()
-    X /= 255.0
+    X = X / 255.0
     print(X.shape, y.shape)
     X_train, X_test = X[:60000], X[60000:]
     y_train, y_test = y[:60000], y[60000:]
@@ -141,7 +145,7 @@ if __name__ == "__main__":
             return label_unmapping[max(0, min(900, k))]
             
     rdd_train = spark_context.parallelize([LabeledPoint(remap_label(y), x.copy()) for x, y in zip(X_train, y_train)], numSlices = num_partitions)
-    rdd_test  = spark_context.parallelize([LabeledPoint(remap_label(y), x.copy()) for x, y in zip(X_test, y_test)], numSlices = num_partitions)
+    rdd_test  = spark_context.parallelize([LabeledPoint(remap_label(y), x.copy()) for x, y in zip(X_test,  y_test)],  numSlices = num_partitions)
 
     num_samples = rdd_train.count()
 
@@ -174,7 +178,6 @@ if __name__ == "__main__":
             model = ExtraTreesClassifier(n_estimators = num_trees, criterion = impurity, max_depth = max_depth, n_jobs = -1, verbose = 1)
             model.fit(X_train, y_train)
             # Saves the model to local disk (in the master) using Pickle serialization for Python
-            os.makedirs(models_dir, exist_ok = True)
             with open(model_filename, 'wb') as f:
                 pickle.dump(model, f)
                 f.close()
@@ -228,7 +231,7 @@ if __name__ == "__main__":
 
         # Save results in text and graphically represented confusion matrices
         filename_prefix = f'{ensemble_type}-classification-results-{num_trees}-{impurity}-{max_depth}-{pca_components}'
-        save_results(f'{results_dir}.train', filename_prefix, y_train_true, y_train_pred, elapsed_time = elapsed_time['train'])
-        save_results(f'{results_dir}.test',  filename_prefix, y_test_true, y_test_pred, elapsed_time = elapsed_time['test'])
+        save_results(f'{results_dir}/train', filename_prefix, y_train_true, y_train_pred, elapsed_time = elapsed_time['train'])
+        save_results(f'{results_dir}/test',  filename_prefix, y_test_true, y_test_pred, elapsed_time = elapsed_time['test'])
     #
     spark_context.stop()

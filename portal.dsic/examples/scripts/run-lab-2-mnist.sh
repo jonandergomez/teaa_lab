@@ -1,213 +1,54 @@
 #!/bin/bash
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 100 --num-iterations 100 --impurity gini --max-depth 3 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 100 --num-iterations 100 --impurity gini --max-depth 4 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 100 --num-iterations 100 --impurity gini --max-depth 5 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 100 --num-iterations 100 --impurity gini --max-depth 6 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 100 --num-iterations 100 --impurity gini --max-depth 7 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 100 --num-iterations 100 --impurity gini --max-depth 8 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 100 --num-iterations 100 --impurity gini --max-depth 9 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 100 --num-iterations 100 --impurity gini --max-depth 10 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 150 --num-iterations 150 --impurity gini --max-depth 3 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 150 --num-iterations 150 --impurity gini --max-depth 4 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 150 --num-iterations 150 --impurity gini --max-depth 5 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 150 --num-iterations 150 --impurity gini --max-depth 6 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 150 --num-iterations 150 --impurity gini --max-depth 7 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 150 --num-iterations 150 --impurity gini --max-depth 8 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 150 --num-iterations 150 --impurity gini --max-depth 9 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 150 --num-iterations 150 --impurity gini --max-depth 10 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 200 --num-iterations 200 --impurity gini --max-depth 3 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 200 --num-iterations 200 --impurity gini --max-depth 4 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 200 --num-iterations 200 --impurity gini --max-depth 5 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 200 --num-iterations 200 --impurity gini --max-depth 6 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 200 --num-iterations 200 --impurity gini --max-depth 7 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 200 --num-iterations 200 --impurity gini --max-depth 8 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 200 --num-iterations 200 --impurity gini --max-depth 9 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 200 --num-iterations 200 --impurity gini --max-depth 10 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 250 --num-iterations 250 --impurity gini --max-depth 3 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 250 --num-iterations 250 --impurity gini --max-depth 4 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 250 --num-iterations 250 --impurity gini --max-depth 5 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 250 --num-iterations 250 --impurity gini --max-depth 6 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 250 --num-iterations 250 --impurity gini --max-depth 7 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 250 --num-iterations 250 --impurity gini --max-depth 8 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 250 --num-iterations 250 --impurity gini --max-depth 9 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 250 --num-iterations 250 --impurity gini --max-depth 10 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 300 --num-iterations 300 --impurity gini --max-depth 3 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 300 --num-iterations 300 --impurity gini --max-depth 4 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 300 --num-iterations 300 --impurity gini --max-depth 5 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 300 --num-iterations 300 --impurity gini --max-depth 6 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 300 --num-iterations 300 --impurity gini --max-depth 7 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 300 --num-iterations 300 --impurity gini --max-depth 8 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 300 --num-iterations 300 --impurity gini --max-depth 9 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 300 --num-iterations 300 --impurity gini --max-depth 10 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 400 --num-iterations 400 --impurity gini --max-depth 3 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 400 --num-iterations 400 --impurity gini --max-depth 4 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 400 --num-iterations 400 --impurity gini --max-depth 5 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 400 --num-iterations 400 --impurity gini --max-depth 6 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 400 --num-iterations 400 --impurity gini --max-depth 7 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 400 --num-iterations 400 --impurity gini --max-depth 8 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 400 --num-iterations 400 --impurity gini --max-depth 9 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 400 --num-iterations 400 --impurity gini --max-depth 10 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 500 --num-iterations 500 --impurity gini --max-depth 3 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 500 --num-iterations 500 --impurity gini --max-depth 4 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 500 --num-iterations 500 --impurity gini --max-depth 5 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 500 --num-iterations 500 --impurity gini --max-depth 6 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 500 --num-iterations 500 --impurity gini --max-depth 7 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 500 --num-iterations 500 --impurity gini --max-depth 8 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 500 --num-iterations 500 --impurity gini --max-depth 9 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 500 --num-iterations 500 --impurity gini --max-depth 10 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 600 --num-iterations 600 --impurity gini --max-depth 3 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 600 --num-iterations 600 --impurity gini --max-depth 4 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 600 --num-iterations 600 --impurity gini --max-depth 5 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 600 --num-iterations 600 --impurity gini --max-depth 6 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 600 --num-iterations 600 --impurity gini --max-depth 7 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 600 --num-iterations 600 --impurity gini --max-depth 8 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 600 --num-iterations 600 --impurity gini --max-depth 9 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 600 --num-iterations 600 --impurity gini --max-depth 10 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 700 --num-iterations 700 --impurity gini --max-depth 3 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 700 --num-iterations 700 --impurity gini --max-depth 4 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 700 --num-iterations 700 --impurity gini --max-depth 5 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 700 --num-iterations 700 --impurity gini --max-depth 6 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 700 --num-iterations 700 --impurity gini --max-depth 7 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 700 --num-iterations 700 --impurity gini --max-depth 8 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 700 --num-iterations 700 --impurity gini --max-depth 9 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 700 --num-iterations 700 --impurity gini --max-depth 10 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 800 --num-iterations 800 --impurity gini --max-depth 3 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 800 --num-iterations 800 --impurity gini --max-depth 4 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 800 --num-iterations 800 --impurity gini --max-depth 5 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 800 --num-iterations 800 --impurity gini --max-depth 6 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 800 --num-iterations 800 --impurity gini --max-depth 7 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 800 --num-iterations 800 --impurity gini --max-depth 8 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 800 --num-iterations 800 --impurity gini --max-depth 9 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 800 --num-iterations 800 --impurity gini --max-depth 10 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 900 --num-iterations 900 --impurity gini --max-depth 3 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 900 --num-iterations 900 --impurity gini --max-depth 4 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 900 --num-iterations 900 --impurity gini --max-depth 5 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 900 --num-iterations 900 --impurity gini --max-depth 6 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 900 --num-iterations 900 --impurity gini --max-depth 7 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 900 --num-iterations 900 --impurity gini --max-depth 8 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 900 --num-iterations 900 --impurity gini --max-depth 9 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 900 --num-iterations 900 --impurity gini --max-depth 10 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 1000 --num-iterations 1000 --impurity gini --max-depth 3 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 1000 --num-iterations 1000 --impurity gini --max-depth 4 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 1000 --num-iterations 1000 --impurity gini --max-depth 5 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 1000 --num-iterations 1000 --impurity gini --max-depth 6 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 1000 --num-iterations 1000 --impurity gini --max-depth 7 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 1000 --num-iterations 1000 --impurity gini --max-depth 8 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 1000 --num-iterations 1000 --impurity gini --max-depth 9 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type random-forest --num-trees 1000 --num-iterations 1000 --impurity gini --max-depth 10 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 100 --num-iterations 100 --impurity gini --max-depth 3 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 100 --num-iterations 100 --impurity gini --max-depth 4 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 100 --num-iterations 100 --impurity gini --max-depth 5 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 100 --num-iterations 100 --impurity gini --max-depth 6 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 100 --num-iterations 100 --impurity gini --max-depth 7 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 100 --num-iterations 100 --impurity gini --max-depth 8 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 100 --num-iterations 100 --impurity gini --max-depth 9 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 100 --num-iterations 100 --impurity gini --max-depth 10 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 150 --num-iterations 150 --impurity gini --max-depth 3 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 150 --num-iterations 150 --impurity gini --max-depth 4 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 150 --num-iterations 150 --impurity gini --max-depth 5 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 150 --num-iterations 150 --impurity gini --max-depth 6 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 150 --num-iterations 150 --impurity gini --max-depth 7 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 150 --num-iterations 150 --impurity gini --max-depth 8 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 150 --num-iterations 150 --impurity gini --max-depth 9 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 150 --num-iterations 150 --impurity gini --max-depth 10 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 200 --num-iterations 200 --impurity gini --max-depth 3 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 200 --num-iterations 200 --impurity gini --max-depth 4 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 200 --num-iterations 200 --impurity gini --max-depth 5 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 200 --num-iterations 200 --impurity gini --max-depth 6 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 200 --num-iterations 200 --impurity gini --max-depth 7 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 200 --num-iterations 200 --impurity gini --max-depth 8 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 200 --num-iterations 200 --impurity gini --max-depth 9 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 200 --num-iterations 200 --impurity gini --max-depth 10 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 250 --num-iterations 250 --impurity gini --max-depth 3 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 250 --num-iterations 250 --impurity gini --max-depth 4 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 250 --num-iterations 250 --impurity gini --max-depth 5 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 250 --num-iterations 250 --impurity gini --max-depth 6 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 250 --num-iterations 250 --impurity gini --max-depth 7 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 250 --num-iterations 250 --impurity gini --max-depth 8 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 250 --num-iterations 250 --impurity gini --max-depth 9 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 250 --num-iterations 250 --impurity gini --max-depth 10 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 300 --num-iterations 300 --impurity gini --max-depth 3 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 300 --num-iterations 300 --impurity gini --max-depth 4 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 300 --num-iterations 300 --impurity gini --max-depth 5 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 300 --num-iterations 300 --impurity gini --max-depth 6 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 300 --num-iterations 300 --impurity gini --max-depth 7 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 300 --num-iterations 300 --impurity gini --max-depth 8 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 300 --num-iterations 300 --impurity gini --max-depth 9 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 300 --num-iterations 300 --impurity gini --max-depth 10 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 400 --num-iterations 400 --impurity gini --max-depth 3 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 400 --num-iterations 400 --impurity gini --max-depth 4 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 400 --num-iterations 400 --impurity gini --max-depth 5 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 400 --num-iterations 400 --impurity gini --max-depth 6 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 400 --num-iterations 400 --impurity gini --max-depth 7 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 400 --num-iterations 400 --impurity gini --max-depth 8 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 400 --num-iterations 400 --impurity gini --max-depth 9 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 400 --num-iterations 400 --impurity gini --max-depth 10 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 500 --num-iterations 500 --impurity gini --max-depth 3 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 500 --num-iterations 500 --impurity gini --max-depth 4 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 500 --num-iterations 500 --impurity gini --max-depth 5 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 500 --num-iterations 500 --impurity gini --max-depth 6 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 500 --num-iterations 500 --impurity gini --max-depth 7 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 500 --num-iterations 500 --impurity gini --max-depth 8 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 500 --num-iterations 500 --impurity gini --max-depth 9 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 500 --num-iterations 500 --impurity gini --max-depth 10 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 600 --num-iterations 600 --impurity gini --max-depth 3 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 600 --num-iterations 600 --impurity gini --max-depth 4 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 600 --num-iterations 600 --impurity gini --max-depth 5 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 600 --num-iterations 600 --impurity gini --max-depth 6 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 600 --num-iterations 600 --impurity gini --max-depth 7 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 600 --num-iterations 600 --impurity gini --max-depth 8 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 600 --num-iterations 600 --impurity gini --max-depth 9 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 600 --num-iterations 600 --impurity gini --max-depth 10 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 700 --num-iterations 700 --impurity gini --max-depth 3 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 700 --num-iterations 700 --impurity gini --max-depth 4 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 700 --num-iterations 700 --impurity gini --max-depth 5 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 700 --num-iterations 700 --impurity gini --max-depth 6 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 700 --num-iterations 700 --impurity gini --max-depth 7 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 700 --num-iterations 700 --impurity gini --max-depth 8 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 700 --num-iterations 700 --impurity gini --max-depth 9 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 700 --num-iterations 700 --impurity gini --max-depth 10 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 800 --num-iterations 800 --impurity gini --max-depth 3 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 800 --num-iterations 800 --impurity gini --max-depth 4 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 800 --num-iterations 800 --impurity gini --max-depth 5 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 800 --num-iterations 800 --impurity gini --max-depth 6 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 800 --num-iterations 800 --impurity gini --max-depth 7 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 800 --num-iterations 800 --impurity gini --max-depth 8 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 800 --num-iterations 800 --impurity gini --max-depth 9 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 800 --num-iterations 800 --impurity gini --max-depth 10 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 900 --num-iterations 900 --impurity gini --max-depth 3 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 900 --num-iterations 900 --impurity gini --max-depth 4 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 900 --num-iterations 900 --impurity gini --max-depth 5 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 900 --num-iterations 900 --impurity gini --max-depth 6 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 900 --num-iterations 900 --impurity gini --max-depth 7 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 900 --num-iterations 900 --impurity gini --max-depth 8 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 900 --num-iterations 900 --impurity gini --max-depth 9 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 900 --num-iterations 900 --impurity gini --max-depth 10 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 1000 --num-iterations 1000 --impurity gini --max-depth 3 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 1000 --num-iterations 1000 --impurity gini --max-depth 4 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 1000 --num-iterations 1000 --impurity gini --max-depth 5 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 1000 --num-iterations 1000 --impurity gini --max-depth 6 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 1000 --num-iterations 1000 --impurity gini --max-depth 7 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 1000 --num-iterations 1000 --impurity gini --max-depth 8 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 1000 --num-iterations 1000 --impurity gini --max-depth 9 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type extra-trees --num-trees 1000 --num-iterations 1000 --impurity gini --max-depth 10 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type gradient-boosted-trees --num-trees 10 --num-iterations 10 --impurity gini --max-depth 3 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type gradient-boosted-trees --num-trees 10 --num-iterations 10 --impurity gini --max-depth 4 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type gradient-boosted-trees --num-trees 10 --num-iterations 10 --impurity gini --max-depth 5 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type gradient-boosted-trees --num-trees 10 --num-iterations 10 --impurity gini --max-depth 6 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type gradient-boosted-trees --num-trees 10 --num-iterations 10 --impurity gini --max-depth 7 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type gradient-boosted-trees --num-trees 15 --num-iterations 15 --impurity gini --max-depth 3 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type gradient-boosted-trees --num-trees 15 --num-iterations 15 --impurity gini --max-depth 4 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type gradient-boosted-trees --num-trees 15 --num-iterations 15 --impurity gini --max-depth 5 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type gradient-boosted-trees --num-trees 15 --num-iterations 15 --impurity gini --max-depth 6 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type gradient-boosted-trees --num-trees 15 --num-iterations 15 --impurity gini --max-depth 7 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type gradient-boosted-trees --num-trees 20 --num-iterations 20 --impurity gini --max-depth 3 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type gradient-boosted-trees --num-trees 20 --num-iterations 20 --impurity gini --max-depth 4 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type gradient-boosted-trees --num-trees 20 --num-iterations 20 --impurity gini --max-depth 5 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type gradient-boosted-trees --num-trees 20 --num-iterations 20 --impurity gini --max-depth 6 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type gradient-boosted-trees --num-trees 20 --num-iterations 20 --impurity gini --max-depth 7 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type gradient-boosted-trees --num-trees 25 --num-iterations 25 --impurity gini --max-depth 3 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type gradient-boosted-trees --num-trees 25 --num-iterations 25 --impurity gini --max-depth 4 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type gradient-boosted-trees --num-trees 25 --num-iterations 25 --impurity gini --max-depth 5 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type gradient-boosted-trees --num-trees 25 --num-iterations 25 --impurity gini --max-depth 6 --train --classify
-scripts/run-python-2.sh python/tree_ensembles_mnist.py --num-partitions 80 --ensemble-type gradient-boosted-trees --num-trees 25 --num-iterations 25 --impurity gini --max-depth 7 --train --classify
+
+num_partitions=60
+
+# RANDOM FOREST
+
+for num_trees in 100 150 200 250 300 400 500 600 700 800 900 100
+do
+    for max_depth in {3..10}
+    do
+        echo scripts/run-python.sh python/tree_ensembles_mnist.py \
+            --num-partitions ${num_partitions} \
+            --ensemble-type random-forest \
+            --num-trees ${num_trees} \
+            --num-iterations ${num_trees} \
+            --impurity gini \
+            --max-depth ${max_depth} \
+            --train --classify
+    done
+done
+
+# EXTREMELY RANDOMIZED TREES
+
+for num_trees in 100 150 200 250 300 400 500 600 700 800 900 100
+do
+    for max_depth in {3..10}
+    do
+        echo scripts/run-python.sh python/tree_ensembles_mnist.py \
+            --num-partitions ${num_partitions} \
+            --ensemble-type extra-trees \
+            --num-trees ${num_trees} \
+            --num-iterations ${num_trees} \
+            --impurity gini \
+            --max-depth ${max_depth} \
+            --train --classify
+    done
+done
+
+# GRADIENT BOOSTED TREES
+
+for num_trees in 10 15 20 30 50 100
+do
+    for max_depth in {3..7}
+    do
+        echo scripts/run-python.sh python/tree_ensembles_mnist.py \
+            --num-partitions ${num_partitions} \
+            --ensemble-type gradient-boosted-trees \
+            --num-trees ${num_trees} \
+            --num-iterations ${num_trees} \
+            --impurity gini \
+            --max-depth ${max_depth} \
+            --train --classify
+    done
+done

@@ -26,7 +26,8 @@ mat = numpy.genfromtxt(filename, delimiter = ';')
 
 #print(mat.shape)
 
-for i in range(mat.shape[0]): mat[i, :] /= sum(mat[i, :])
+#mat = mat / mat.sum(axis = 0)
+mat = mat / mat.sum(axis = 1).reshape(-1, 1)
 
 height_inches = 4
 width_inches = min(max(height_inches, mat.shape[1] * 0.4), 30)

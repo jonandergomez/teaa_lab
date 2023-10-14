@@ -40,7 +40,7 @@ from utils_for_results import save_results
 def main(args, sc):
 
     X, y = load_mnist()
-    X /= 255.0
+    X = X / 255.0
     print(X.shape, y.shape)
     X_train, X_test = X[:60000], X[60000:]
     y_train, y_test = y[:60000], y[60000:]
@@ -59,17 +59,22 @@ def main(args, sc):
     trainData = [[int(y_train[i]), Vectors.dense(X_train[i])] for i in range(len(X_train))]
     testData  = [[int(y_test[i]),  Vectors.dense(X_test[i])]  for i in range(len(X_test))]
 
+    del X_train
+    del X_test
+    del y_train
+    del y_test
+
 
     # Converting it to a DataFrame
-    trainData = sc.createDataFrame(trainData, ['label', 'features'])
-    testData  = sc.createDataFrame(testData,  ['label', 'features'])
+    trainData = sc.createDataFrame(trainData, ['label', 'features']).repartition(600)
+    testData  = sc.createDataFrame(testData,  ['label', 'features']).repartition(600)
 
     results_dir = f'{args.baseDir}/{args.resultsDir}'
     models_dir  = f'{args.baseDir}/{args.modelsDir}'
     log_dir     = f'{args.baseDir}/{args.logDir}'
     #os.makedirs(log_dir,     exist_ok = True)
     #os.makedirs(models_dir,  exist_ok = True)
-    #os.makedirs(results_dir, exist_ok = True)
+    os.makedirs(results_dir, exist_ok = True)
 
     for nt in args.numTrees.split(sep = ':'):
         if nt is None or len(nt) == 0: continue
@@ -107,7 +112,7 @@ def main(args, sc):
             y_pred = [y[1] for y in y_true_pred]
 
             filename_prefix = 'rf_%05d_pca_%04d_maxdepth_%03d' % (numTrees, pcaComponents, maxDepth)
-            save_results(f'{results_dir}.train/rf', filename_prefix = filename_prefix, y_true = y_true, y_pred = y_pred, elapsed_time = None, labels = labels)
+            save_results(f'{results_dir}/rf/train', filename_prefix = filename_prefix, y_true = y_true, y_pred = y_pred, elapsed_time = None, labels = labels)
 
 
             # TESTING SUBSET
@@ -128,7 +133,7 @@ def main(args, sc):
             y_pred = [y[1] for y in y_true_pred]
 
             filename_prefix = 'rf_%05d_pca_%04d_maxdepth_%03d' % (numTrees, pcaComponents, maxDepth)
-            save_results(f'{results_dir}.test/rf', filename_prefix = filename_prefix, y_true = y_true, y_pred = y_pred, elapsed_time = None, labels = labels)
+            save_results(f'{results_dir}/rf/test', filename_prefix = filename_prefix, y_true = y_true, y_pred = y_pred, elapsed_time = None, labels = labels)
         # end for max depth
     # end for num trees
 
@@ -145,9 +150,9 @@ if __name__ == "__main__":
     parser.add_argument('--impurity', default="gini", type=str, help='Impurity type. Options are: gini or entropy')
     parser.add_argument('--pcaComponents', default=37, type=float, help='Number of components of PCA an integer > 1 or a float in the range [0,1[')
     parser.add_argument('--baseDir',    default='.',                type=str, help='Directory base from which create the directories for models, results and logs')
-    parser.add_argument('--modelsDir',  default='models.l2.mnist',  type=str, help='Directory to save models --if it is the case')
-    parser.add_argument('--resultsDir', default='results.l2.mnist', type=str, help='Directory where to store the results')
-    parser.add_argument('--logDir',     default='log.l2.mnist',     type=str, help='Directory where to store the logs --if it is the case')
+    parser.add_argument('--modelsDir',  default='models/digits/ensembles',  type=str, help='Directory to save models --if it is the case')
+    parser.add_argument('--resultsDir', default='results/digits/ensembles', type=str, help='Directory where to store the results')
+    parser.add_argument('--logDir',     default='logs/digits/ensembles',     type=str, help='Directory where to store the logs --if it is the case')
 
     sc = SparkSession.builder.appName(f"RandomForestClassifierForMNIST").getOrCreate()
     main(parser.parse_args(), sc)
