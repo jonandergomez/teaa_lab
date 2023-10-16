@@ -1,12 +1,12 @@
-          1          7
+          2          6
           0      14025
 
               precision    recall  f1-score   support
 
-           0       1.00      0.12      0.22         8
+           0       1.00      0.25      0.40         8
            1       1.00      1.00      1.00     14025
 
     accuracy                           1.00     14033
-   macro avg       1.00      0.56      0.61     14033
+   macro avg       1.00      0.62      0.70     14033
 weighted avg       1.00      1.00      1.00     14033
 

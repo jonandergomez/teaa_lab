@@ -12,6 +12,8 @@ Gradient Boosting Trees Regressor Example.
 import sys
 import os
 import argparse
+import math
+import random
 import numpy
 
 from pyspark.ml import Pipeline
@@ -77,8 +79,6 @@ def main(args, sc):
             if md is None or len(md) == 0: continue
             maxDepth = int(md)
 
-            print('patient', args.patient, 'numTrees', numTrees, 'maxDepth', maxDepth, 'impurity', args.impurity)
-
             # Creating the Gradient Boosted Trees model
             gbt = GBTRegressor(labelCol="label", featuresCol="features", maxIter=numTrees, maxDepth=maxDepth, impurity=args.impurity)
 
@@ -94,8 +94,7 @@ def main(args, sc):
 
             # Select (prediction, true label) and compute test error
             evaluator = RegressionEvaluator(labelCol="label", predictionCol="prediction", metricName="rmse")
-            rmse = evaluator.evaluate(predictions)
-            print("Root Mean Squared Error (RMSE) on training data = %g" % rmse)
+            rmse_train = evaluator.evaluate(predictions)
 
             def value_to_label(y):
                 y = y * regularization_factor
@@ -105,6 +104,11 @@ def main(args, sc):
                 else:                          return 3 # inter-ictal
 
             y_true_pred = predictions.select('label', 'prediction').collect()
+            for i in range(10):
+                j = random.randint(0, len(y_true_pred) - 1)
+                y = y_true_pred[j]
+                print(f'       {y[0]:.6f} {y[1]:.6f}')
+            rmse = math.sqrt(sum([(y[0] - y[1]) ** 2 for y in y_true_pred]) / len(y_true_pred))
             y_true = [value_to_label(y[0]) for y in y_true_pred]
             y_pred = [value_to_label(y[1]) for y in y_true_pred]
 
@@ -122,14 +126,21 @@ def main(args, sc):
 
             # Select (prediction, true label) and compute test error
             evaluator = RegressionEvaluator(labelCol="label", predictionCol="prediction", metricName="rmse")
-            rmse = evaluator.evaluate(predictions)
-            print("Root Mean Squared Error (RMSE) on test data = %g" % rmse)
+            rmse_test = evaluator.evaluate(predictions)
+
 
             y_true_pred = predictions.select('label', 'prediction').collect()
+            for i in range(10):
+                j = random.randint(0, len(y_true_pred) - 1)
+                y = y_true_pred[j]
+                print(f'       {y[0]:.6f} {y[1]:.6f}')
+            rmse = math.sqrt(sum([(y[0] - y[1]) ** 2 for y in y_true_pred]) / len(y_true_pred))
             y_true = [value_to_label(y[0]) for y in y_true_pred]
             y_pred = [value_to_label(y[1]) for y in y_true_pred]
 
             save_results(f'{results_dir}/{args.patient}/gbt/test', filename_prefix = filename_prefix, y_true = y_true, y_pred = y_pred, elapsed_time = None, labels = None)
+
+            print('patient', args.patient, 'numTrees', numTrees, 'maxDepth', maxDepth, 'impurity', args.impurity, f'RMSE train {rmse_train:.5f}', f'RMSE test {rmse_test:.5f}  {rmse:.5f}')
         # end for max depth
     # end for num trees
 
