@@ -14,7 +14,7 @@ Lab practice 2 is about two use cases:
 1. **Accessing to the cluster from a computer in the UPVNET domain or via Virtual Private Network (VPN) previously configured**
 
    ```bash
-   ssh -YC username@teaa-master-cluster.dsicv.upv.es
+   ssh -YC username@teaa-master-ubuntu22.dsicv.upv.es
    ```
 
    please, replace `username` with yours.
@@ -23,21 +23,21 @@ Lab practice 2 is about two use cases:
 1. **Interaction with the Hadoop Distributed File System (HDFS)**
 
    Once in the system, the first step is to see what we can find in the HDFS.
-   The datasets to be used are in the directory of the `ubuntu` user, so we have
-   to use the absolute path to see what it contains: `/user/ubuntu`.
+   The datasets to be used are in the directory of the `/data` user, so we have
+   to use the absolute path to see what it contains: `/data/uc13/21x14` for instance.
 
    ![Here](figures/hdfs-01.png)
 
    It is relevant to see the directory were data is stored:
 
    ```bash
-   hdfs dfs -ls /user/ubuntu/data
+   hdfs dfs -ls -h /data/
    ```
 
    and
 
    ```bash
-   hdfs dfs -ls /user/ubuntu/data/uc13
+   hdfs dfs -ls -h /data/uc13/21x14
    ```
 
 1. **Creation of local dirs in user home directory**
@@ -48,14 +48,9 @@ Lab practice 2 is about two use cases:
    ```bash
    cd ${HOME}
 
-   mkdir results.l2.mnist.train
-   mkdir results.l2.mnist.train/ert
-   mkdir results.l2.mnist.train/rf
-   mkdir results.l2.mnist.train/gbt
-
-   mkdir -p results.l2.mnist.test/ert
-   mkdir -p results.l2.mnist.test/rf
-   mkdir -p results.l2.mnist.test/gbt
+   mkdir -p results/digits/ensembles/ert
+   mkdir -p results/digits/ensembles/rf
+   mkdir -p results/digits/ensembles/gbt
    ```
 
    And how to see the contents of the tree structure.
@@ -63,7 +58,7 @@ Lab practice 2 is about two use cases:
    ```bash
    cd ${HOME}
 
-   tree results.l2.mnist.test
+   tree results/digits/ensembles
    ```
 
 1. **Inspect the code** [rf_mnist.py](../../portal.dsic/examples/python/rf_mnist.py)
@@ -103,9 +98,9 @@ Lab practice 2 is about two use cases:
    ```bash
    cd ${HOME}
 
-   ls -l results.l2.mnist.train/rf
+   ls -l results/digits/ensembles/rf/train
 
-   ls -l results.l2.mnist.test/rf
+   ls -l results/digits/ensembles/rf/test
    ```
 
 1. **The results can be seen from the text file complementary to the figures**
@@ -113,16 +108,16 @@ Lab practice 2 is about two use cases:
    ```bash
    cd ${HOME}
 
-   cat results.l2.mnist.train/rf/rf_00010_pca_0040_maxdepth_007.txt
+   cat results/digits/ensembles/rf/train/rf_00010_pca_0040_maxdepth_007.txt
 
-   cat results.l2.mnist.test/rf/rf_00010_pca_0040_maxdepth_007.txt
+   cat results/digits/ensembles/rf/test/rf_00010_pca_0040_maxdepth_007.txt
    ```
 
    The images can be downloaded to your computer and then visualized, anyway all the results are available
    in the repository exploring the following directories:
 
-   - [results.l2.mnist.train/rf](../../portal.dsic/examples/results.l2.mnist.train/rf)
-   - [results.l2.mnist.test/rf](../../portal.dsic/examples/results.l2.mnist.test/rf)
+   - [results/digits/ensembles/rf/train](../../portal.dsic/examples/results/digits/ensembles/rf/train)
+   - [results/digits/ensembles/rf/test](../../portal.dsic/examples/results/digits/ensembles/rf/test)
 
 1. **Do similar steps for the use case based on the**
    [CHB-MIT Scalp EEG Database](https://physionet.org/lightwave/?db=chbmit/1.0.0)

@@ -8,8 +8,8 @@ do
     #num_trees="100"
     max_depth="3:5:7:9"
     #max_depth="5"
-    #format="pca136"
-    format="21x14"
+    format="pca136"
+    #format="21x14"
 
     scripts/run-python.sh python/gbt_uc13_regression.py ${patient} \
                                                             --numTrees ${num_trees} \
