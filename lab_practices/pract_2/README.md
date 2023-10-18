@@ -194,6 +194,8 @@ Lab practice 2 is about two use cases:
 1. **Do similar steps for the use case based on the**
    [CHB-MIT Scalp EEG Database](https://physionet.org/lightwave/?db=chbmit/1.0.0)
 
+   **Inspect and run the code** [rf_uc13.py](../../portal.dsic/examples/python/rf_uc13.py)
+
    ***THIS ACADEMIC YEAR THE RESULTS FOR EEG DATA HAVE BEEN COMPUTED IN ANOTHER COMPUTER***
 
    ***DO NOT RUN THE EXAMPLE***
@@ -239,6 +241,7 @@ Lab practice 2 is about two use cases:
 
 1. **Do the same using `extra-trees` instead of `random-forest` for**
    [CHB-MIT Scalp EEG Database](https://physionet.org/lightwave/?db=chbmit/1.0.0)
+
    **Inspect and run the code** [ert_uc13.py](../../portal.dsic/examples/python/ert_uc13.py)
 
    ***THIS ACADEMIC YEAR THE RESULTS FOR EEG DATA HAVE BEEN COMPUTED IN ANOTHER COMPUTER***
