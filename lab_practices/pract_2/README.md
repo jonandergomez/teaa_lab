@@ -290,6 +290,8 @@ Lab practice 2 is about two use cases:
 
 
 
+    *** UPDATED SO FAR. REMAINING STEPS TO BE UPDATED ***
+
 1. **Do the same using `gradient-boosted-trees` instead of `random-forest` or `extra-trees` for**
     [MNIST Digits database](https://en.wikipedia.org/wiki/MNIST_database).
 
