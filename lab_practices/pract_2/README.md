@@ -222,6 +222,8 @@ Lab practice 2 is about two use cases:
    cat results/uc13/ensembles/chb03/rf/test/rf-chb03-pca136-multi-class-classification-1000-011.txt
    ```
 
+   **NOTICE** you have available results for binary classification and for multi-class classification.
+
    The images can be downloaded to your computer and then visualized, anyway all the results are available
    in the repository exploring the following directories:
 
@@ -269,6 +271,8 @@ Lab practice 2 is about two use cases:
     cat results/uc13/ensembles/chb03/ert/test/ert-chb03-pca136-binary-classification-1000-011.txt
     cat results/uc13/ensembles/chb03/ert/test/ert-chb03-pca136-multi-class-classification-1000-011.txt
     ```
+
+   **NOTICE** you have available results for binary classification and for multi-class classification.
 
     The images can be downloaded to your computer and then visualized, anyway all the results are available
     in the repository exploring the following directories:
