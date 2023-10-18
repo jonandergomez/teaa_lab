@@ -119,32 +119,31 @@ Lab practice 2 is about two use cases:
    - [results/digits/ensembles/rf/train](../../portal.dsic/examples/results/digits/ensembles/rf/train)
    - [results/digits/ensembles/rf/test](../../portal.dsic/examples/results/digits/ensembles/rf/test)
 
-1. **Do similar steps for the use case based on the**
-   [CHB-MIT Scalp EEG Database](https://physionet.org/lightwave/?db=chbmit/1.0.0)
+   And the script for running all the experiments by varying the different hyper-parameters can be found here
+   [scripts/run-mnist-rf-grid.sh](scripts/run-mnist-rf-grid.sh)
+
+
+   We can see a summary of the results with the following commands:
 
    ```bash
-   cd ${HOME}
+   cd ${HOME}/teaa/examples
 
-   teaa/examples/scripts/run-python.sh teaa/examples/python/rf_uc13.py chb03 \
-            --numTrees 50 --doBinaryClassification --usingPCA 
+   grep " macro avg " results/digits/ensembles/rf/test/*.txt
+   grep " macro avg " results/digits/ensembles/rf/train/*.txt
+
+   grep " macro avg " results/digits/ensembles/rf/train/*.txt | sort -nk 6
+   grep " macro avg " results/digits/ensembles/rf/test/*.txt | sort -nk 6
    ```
 
-
-1. **See where the models and the results have been stored:**
+   And you can extract the results for all the combinations of hyper-parameters to represent them in a command like the following one:
 
    ```bash
-   cd ${HOME}
+   cd ${HOME}/teaa/examples
 
-   cat results.l2.uc13.train/rf/chb03/rf_chb03_00050_pca_02_classes.txt
-
-   cat results.l2.uc13.test/rf/chb03/rf_chb03_00050_pca_02_classes.txt
+   grep " macro avg " results/digits/ensembles/rf/test/*.txt | sed -e 's/_/ /g' -e 's/\.txt/ /g' | awk '{ print $2, $4, $6, $10, $11, $12 }'
    ```
 
-   The images can be downloaded to your computer and then visualized, anyway all the results are available
-   in the repository exploring the following directories:
-
-   - [results.l2.uc13.train/rf](../../portal.dsic/examples/results.l2.uc13.train/rf/)
-   - [results.l2.uc13.test/rf](../../portal.dsic/examples/results.l2.uc13.test/rf/)
+   in order to graphically represent them using the appropriate software tool (of your preference).
 
 
 1. **Do the same using `extra-trees` instead of `random-forest` for**
@@ -166,9 +165,9 @@ Lab practice 2 is about two use cases:
     ```bash
     cd ${HOME}
 
-    ls -l results.l2.mnist.train/ert
+    ls -l results/digits/ensembles/ert/train
 
-    ls -l results.l2.mnist.test/ert
+    ls -l results/digits/ensembles/ert/test
     ```
 
     And visualizing the text results with the following commands:
@@ -176,21 +175,78 @@ Lab practice 2 is about two use cases:
     ```bash
     cd ${HOME}
 
-    cat results.l2.mnist.train/ert/ert_00010_pca_0040_maxdepth_007.txt
+    cat results/digits/ensembles/ert/train/ert_00010_pca_0040_maxdepth_007.txt
 
-    cat results.l2.mnist.test/ert/ert_00010_pca_0040_maxdepth_007.txt
+    cat results/digits/ensembles/ert/test/ert_00010_pca_0040_maxdepth_007.txt
     ```
 
-    The images can be downloaded to your computer and then visualized, anyway all the results are available
-    in the repository exploring the following directories:
+   The images can be downloaded to your computer and then visualized, anyway all the results are available
+   in the repository exploring the following directories:
 
-    - [results.l2.mnist.train/ert](../../portal.dsic/examples/results.l2.mnist.train/ert)
-    - [results.l2.mnist.test/ert](../../portal.dsic/examples/results.l2.mnist.test/ert)
+   - [results/digits/ensembles/ert/train](../../portal.dsic/examples/results/digits/ensembles/ert/train)
+   - [results/digits/ensembles/ert/test](../../portal.dsic/examples/results/digits/ensembles/ert/test)
+
+   And the script for running all the experiments by varying the different hyper-parameters can be found here
+   [scripts/run-mnist-ert-grid.sh](scripts/run-mnist-ert-grid.sh)
+
+
+
+1. **Do similar steps for the use case based on the**
+   [CHB-MIT Scalp EEG Database](https://physionet.org/lightwave/?db=chbmit/1.0.0)
+
+   ***THIS ACADEMIC YEAR THE RESULTS FOR EEG DATA HAVE BEEN COMPUTED IN ANOTHER COMPUTER***
+
+   ***DO NOT RUN THE EXAMPLE***
+
+   ***INSTEAD SEE THE CODE*** [ml_on_uc13_21x14.py](../../portal.dsic/examples/python/ml_on_uc13_21x14.py)
+
+   ```bash
+   cd ${HOME}
+
+   teaa/examples/scripts/run-python.sh teaa/examples/python/rf_uc13.py chb03 \
+            --numTrees 50 --doBinaryClassification --usingPCA 
+   ```
+
+
+1. **See where the results have been stored (if it were possible to run the code, now the pre-computed ones):**
+
+   ```bash
+   cd ${HOME}/teaa/examples
+
+   cat results/uc13/ensembles/chb03/rf/train/rf-chb03-pca136-binary-classification-1000-011.txt
+   cat results/uc13/ensembles/chb03/rf/train/rf-chb03-pca136-multi-class-classification-1000-011.txt
+
+   cat results/uc13/ensembles/chb03/rf/test/rf-chb03-pca136-binary-classification-1000-011.txt
+   cat results/uc13/ensembles/chb03/rf/test/rf-chb03-pca136-multi-class-classification-1000-011.txt
+   ```
+
+   The images can be downloaded to your computer and then visualized, anyway all the results are available
+   in the repository exploring the following directories:
+
+   - [results/uc13/ensembles/chb03/rf/train](../../portal.dsic/examples/results/uc13/ensembles/chb03/rf/train/)
+   - [results/uc13/ensembles/chb03/rf/test](../../portal.dsic/examples/results/uc13/ensembles/chb03/rf/test/)
+
+   As in previous steps, in order to extract results with all the combinations of hyper-parameters, you can use a command like the next one:
+
+    ```bash   
+        cd ${HOME}/teaa/examples
+
+        grep " macro avg " results/uc13/ensembles/chb*/rf/test/*.txt \
+            | sed -e 's/multi-class/multiclass/g' -e 's/-/ /g' -e 's/\.txt/ /g' \
+            | awk '{ print $2, $3, $4, $6, $7, $11, $12, $13 }'
+    ```
 
 
 1. **Do the same using `extra-trees` instead of `random-forest` for**
    [CHB-MIT Scalp EEG Database](https://physionet.org/lightwave/?db=chbmit/1.0.0)
    **Inspect and run the code** [ert_uc13.py](../../portal.dsic/examples/python/ert_uc13.py)
+
+   ***THIS ACADEMIC YEAR THE RESULTS FOR EEG DATA HAVE BEEN COMPUTED IN ANOTHER COMPUTER***
+
+   ***DO NOT RUN THE EXAMPLE***
+
+   ***INSTEAD SEE THE CODE*** [ml_on_uc13_21x14.py](../../portal.dsic/examples/python/ml_on_uc13_21x14.py)
+
 
     ```bash
     cd ${HOME}
@@ -199,31 +255,32 @@ Lab practice 2 is about two use cases:
             --numTrees 50 --maxDepth 7 --doBinaryClassification --usingPCA 
     ```
 
-    The results can be found with the following commands:
+    The results can be found and visualized with the following commands:
 
     ```bash
-    cd ${HOME}
+    cd ${HOME}/teaa/examples
 
-    ls -l results.l2.uc13.train/ert/chb03
+    cat results/uc13/ensembles/chb03/ert/train/ert-chb03-pca136-binary-classification-1000-011.txt
+    cat results/uc13/ensembles/chb03/ert/train/ert-chb03-pca136-multi-class-classification-1000-011.txt
 
-    ls -l results.l2.uc13.test/ert/chb03
-    ```
-
-    And visualizing the text results with the following commands:
-
-    ```bash
-    cd ${HOME}
-
-    cat results.l2.uc13.train/ert/chb03/ert_chb03_00050_maxdepth_007_pca_02_classes.txt
-
-    cat results.l2.uc13.test/ert/chb03/ert_chb03_00050_maxdepth_007_pca_02_classes.txt
+    cat results/uc13/ensembles/chb03/ert/test/ert-chb03-pca136-binary-classification-1000-011.txt
+    cat results/uc13/ensembles/chb03/ert/test/ert-chb03-pca136-multi-class-classification-1000-011.txt
     ```
 
     The images can be downloaded to your computer and then visualized, anyway all the results are available
     in the repository exploring the following directories:
 
-    - [results.l2.uc13.train/ert](../../portal.dsic/examples/results.l2.uc13.train/ert)
-    - [results.l2.uc13.test/ert](../../portal.dsic/examples/results.l2.uc13.test/ert)
+    - [results/uc13/ensembles/chb03/ert/train](../../portal.dsic/examples/results/uc13/ensembles/chb03/ert/train/)
+    - [results/uc13/ensembles/chb03/ert/test](../../portal.dsic/examples/results/uc13/ensembles/chb03/ert/test/)
+
+    ```bash   
+        cd ${HOME}/teaa/examples
+
+        grep " macro avg " results/uc13/ensembles/chb*/ert/test/*.txt \
+            | sed -e 's/multi-class/multiclass/g' -e 's/-/ /g' -e 's/\.txt/ /g' \
+            | awk '{ print $2, $3, $4, $6, $7, $11, $12, $13 }'
+    ```
+
 
 
 1. **Do the same using `gradient-boosted-trees` instead of `random-forest` or `extra-trees` for**
