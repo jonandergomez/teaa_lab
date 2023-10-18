@@ -120,7 +120,7 @@ Lab practice 2 is about two use cases:
    - [results/digits/ensembles/rf/test](../../portal.dsic/examples/results/digits/ensembles/rf/test)
 
    And the script for running all the experiments by varying the different hyper-parameters can be found here
-   [scripts/run-mnist-rf-grid.sh](scripts/run-mnist-rf-grid.sh)
+   [scripts/run-mnist-rf-grid.sh](../../portal.dsic/examples/scripts/run-mnist-rf-grid.sh)
 
 
    We can see a summary of the results with the following commands:
@@ -187,7 +187,7 @@ Lab practice 2 is about two use cases:
    - [results/digits/ensembles/ert/test](../../portal.dsic/examples/results/digits/ensembles/ert/test)
 
    And the script for running all the experiments by varying the different hyper-parameters can be found here
-   [scripts/run-mnist-ert-grid.sh](scripts/run-mnist-ert-grid.sh)
+   [scripts/run-mnist-ert-grid.sh](../../portal.dsic/examples/scripts/run-mnist-ert-grid.sh)
 
 
 
