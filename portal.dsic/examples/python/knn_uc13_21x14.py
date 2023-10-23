@@ -11,8 +11,8 @@
         Kernel Density Estimation
         K-Nearest Neighbours
 
-    This code is only for Kernel Density Estimation Classifiers, see the files
-        knn_uc13_21x20.py for K-Nearest Neighbours
+    This code is only for K-Nearest Neighbours Classifiers, see the file
+        kde_uc13_21x20.py for Kernel Density Estimation
 """
 
 import sys
@@ -28,7 +28,7 @@ from sklearn.decomposition import PCA
 #from pyspark.mllib.clustering import KMeans, KMeansModel
 from machine_learning import KMeans
 
-from KernelClassifier import KernelClassifier
+from KNN_Classifier import KNN_Classifier
 from utils_for_results import save_results
 
 from eeg_load_data import load_csv_from_uc13
@@ -125,50 +125,54 @@ def main(args, sc):
 
         print(_X_train_.shape, _y_train_.shape)
 
-        for bw in args.bandWidth.split(sep = ':'):
-            if bw is None or len(bw) == 0: continue
-            bandWidth = float(bw)
+        for _k_ in args.K.split(sep = ':'):
+            if _k_ is None or len(_k_) == 0: continue
+            K = int(_k_)
 
-            print(args.patient, 'KMeans codebook size', codebookSize, 'bandWidth', bandWidth)
+            print(args.patient, 'KMeans codebook size', codebookSize, 'K', K)
 
             train_elapsed_time = kmeans_time
             test_elapsed_time = 0
             reference_timestamp = time.time()
 
-            # Creating the Kernel Density Estimation classifier
-            kde = KernelClassifier(band_width = bandWidth)
+            # Creating the K-Nearest Neighbour classifier
+            knn = KNN_Classifier(K = K, num_classes = len(labels))
 
             # Training the model
-            kde.fit(_X_train_, _y_train_)
+            knn.fit(_X_train_, _y_train_, min_samples_to_split = 100 if codebookSize == 0 else 50)
 
             train_elapsed_time += time.time() - reference_timestamp
 
             if sc is not None:
                 # Classifies the samples from the training subset
                 reference_timestamp = time.time()
-                y_train_true, y_train_pred = kde.predict(rdd_train.map(lambda t: (t[2], t[3])))
+                y_train_true_pred = knn.predict(rdd_train.map(lambda t: (t[2], t[3])))
                 train_elapsed_time += time.time() - reference_timestamp
+                y_train_true = numpy.array([t[0] for t in y_train_true_pred])
+                y_train_pred = numpy.array([t[1] for t in y_train_true_pred])
                 # Classifies the samples from the testing subset
                 reference_timestamp = time.time()
-                y_test_true,  y_test_pred  = kde.predict(rdd_test.map(lambda t: (t[2], t[3])))
+                y_test_true_pred = knn.predict(rdd_test.map(lambda t: (t[2], t[3])))
                 test_elapsed_time += time.time() - reference_timestamp
+                y_test_true = numpy.array([t[0] for t in y_test_true_pred])
+                y_test_pred = numpy.array([t[1] for t in y_test_true_pred])
             else:
                 # Classifies the samples from the training subset
                 reference_timestamp = time.time()
                 y_train_true = y_train
-                y_train_pred = kde.predict(X_train)
+                y_train_pred = knn.predict(X_train)
                 train_elapsed_time += time.time() - reference_timestamp
                 # Classifies the samples from the testing subset
                 reference_timestamp = time.time()
                 y_test_true = y_test
-                y_test_pred = kde.predict(X_test)
+                y_test_pred = knn.predict(X_test)
                 test_elapsed_time += time.time() - reference_timestamp
 
-            filename_prefix = 'kde_kmeans_%04d_%s_bandwidth_%.3f_%s' % (codebookSize, args.format, bandWidth, task)
+            filename_prefix = 'knn_kmeans_%04d_$s_K_%03d_%s' % (codebookSize, args.format, K, task)
             save_results(f'{results_dir}/train', filename_prefix = filename_prefix, y_true = y_train_true, y_pred = y_train_pred, elapsed_time = train_elapsed_time, labels = labels)
             save_results(f'{results_dir}/test',  filename_prefix = filename_prefix, y_true = y_test_true,  y_pred = y_test_pred,  elapsed_time = test_elapsed_time,  labels = labels)
 
-        # end for bandwidth
+        # end for K
     # end for KMeans codebook size
 # end of the method main()
 
@@ -186,15 +190,15 @@ if __name__ == "__main__":
     parser.add_argument('--format',  default='21x14',  type=str, help='Data format (e.g., if PCA is applied use pca136 or pca141')
     #
     parser.add_argument('--verbose', default=0, type=int, help='Verbosity level')
-    parser.add_argument('--codebookSize', default="0:100:200", type=str, help='Colon separated list of the codebook sizes to apply kmeans before KDE')
-    parser.add_argument('--bandWidth', default="0.1:0.2:0.5:1.0:2.0", type=str, help='Colon separated list of the band width for the KDE classifier')
+    parser.add_argument('--codebookSize', default="0:100:200", type=str, help='Colon separated list of the codebook sizes to apply kmeans before KNN')
+    parser.add_argument('--K', default="3:5:7:9:11:13", type=str, help='Colon separated list of K, i.e.,  the number of thet nearest training samples to the one to be classified')
     parser.add_argument('--baseDir',    default='.',                type=str, help='Directory base from which create the directories for models, results and logs')
     parser.add_argument('--modelsDir',  default='models/uc13',  type=str, help='Directory to save models --if it is the case')
     parser.add_argument('--resultsDir', default='results/uc13', type=str, help='Directory where to store the results')
     parser.add_argument('--logDir',     default='logs/uc13',    type=str, help='Directory where to store the logs --if it is the case')
 
     args = parser.parse_args()
-    #sc = SparkSession.builder.appName(f"kde-EEG-{args.format}").getOrCreate()
-    sc = SparkContext(appName = f"kde-EEG-{args.format}")  # SparkContext
+    #sc = SparkSession.builder.appName(f"knn-EEG-{args.format}").getOrCreate()
+    sc = SparkContext(appName = f"knn-EEG-{args.format}")
     main(args, sc)
     if sc is not None: sc.stop()
