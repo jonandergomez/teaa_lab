@@ -36,7 +36,7 @@ from utils_for_results import save_results
 def main(args, sc):
 
     X, y = load_mnist()
-    X /= 255.0
+    X = X / 255.0
     print(X.shape, y.shape)
     X_train, X_test = X[:60000], X[60000:]
     y_train, y_test = y[:60000], y[60000:]
@@ -55,14 +55,15 @@ def main(args, sc):
     results_dir = f'{args.baseDir}/{args.resultsDir}'
     models_dir  = f'{args.baseDir}/{args.modelsDir}'
     log_dir     = f'{args.baseDir}/{args.logDir}'
-    #os.makedirs(log_dir,     exist_ok = True)
-    #os.makedirs(models_dir,  exist_ok = True)
-    #os.makedirs(results_dir, exist_ok = True)
+    os.makedirs(log_dir,     exist_ok = True)
+    os.makedirs(models_dir,  exist_ok = True)
+    os.makedirs(results_dir, exist_ok = True)
 
     for cb_size in args.codebookSize.split(sep = ':'):
         if cb_size is None or len(cb_size) == 0: continue
         codebookSize = int(cb_size)
 
+        kmeans_time = time.time()
         if codebookSize > 0:
             codebooks = list()
             for k in range(10):
@@ -84,6 +85,8 @@ def main(args, sc):
             _y_train_ = y_train
             _X_train_ = X_train
 
+        kmeans_time = time.time() - kmeans_time
+
         print(_X_train_.shape, _y_train_.shape)
 
         for bw in args.bandWidth.split(sep = ':'):
@@ -92,7 +95,7 @@ def main(args, sc):
 
             print('KMeans codebook size', codebookSize, 'bandWidth', bandWidth)
 
-            train_elapsed_time = 0
+            train_elapsed_time = kmeans_time
             test_elapsed_time = 0
             reference_timestamp = time.time()
 
@@ -107,7 +110,8 @@ def main(args, sc):
             if sc is not None:
                 rdd_train = sc.parallelize([(y, x.copy()) for x, y in zip(X_train, y_train)])
                 rdd_test  = sc.parallelize([(y, x.copy()) for x, y in zip(X_test,  y_test)])
-                num_samples = rdd_train.count()
+                print('|X_train| =', rdd_train.count(), 'num partitions =', rdd_train.getNumPartitions())
+                print('|X_test|  =', rdd_test.count(),  'num partitions =', rdd_test.getNumPartitions())
 
                 # Classifies the samples from the training subset
                 reference_timestamp = time.time()
@@ -130,8 +134,8 @@ def main(args, sc):
                 test_elapsed_time += time.time() - reference_timestamp
 
             filename_prefix = 'kde_kmeans_%04d_pca_%04d_bandwidth_%.3f' % (codebookSize, pcaComponents, bandWidth)
-            save_results(f'{results_dir}.train/kde', filename_prefix = filename_prefix, y_true = y_train_true, y_pred = y_train_pred, elapsed_time = train_elapsed_time, labels = labels)
-            save_results(f'{results_dir}.test/kde',  filename_prefix = filename_prefix, y_true = y_test_true,  y_pred = y_test_pred,  elapsed_time = test_elapsed_time,  labels = labels)
+            save_results(f'{results_dir}/kde/train', filename_prefix = filename_prefix, y_true = y_train_true, y_pred = y_train_pred, elapsed_time = train_elapsed_time, labels = labels)
+            save_results(f'{results_dir}/kde/test',  filename_prefix = filename_prefix, y_true = y_test_true,  y_pred = y_test_pred,  elapsed_time = test_elapsed_time,  labels = labels)
 
         # end for bandwidth
     # end for KMeans codebook size
@@ -145,12 +149,11 @@ if __name__ == "__main__":
     parser.add_argument('--codebookSize', default="0:100:200", type=str, help='Colon separated list of the codebook sizes to apply kmeans before KDE')
     parser.add_argument('--bandWidth', default="0.1:0.2:0.5:1.0:2.0", type=str, help='Colon separated list of the band width for the KDE classifier')
     parser.add_argument('--pcaComponents', default=37, type=float, help='Number of components of PCA an integer > 1 or a float in the range [0,1[')
-    parser.add_argument('--baseDir',    default='.',                type=str, help='Directory base from which create the directories for models, results and logs')
-    parser.add_argument('--modelsDir',  default='models.l3.mnist',  type=str, help='Directory to save models --if it is the case')
-    parser.add_argument('--resultsDir', default='results.l3.mnist', type=str, help='Directory where to store the results')
-    parser.add_argument('--logDir',     default='log.l3.mnist',     type=str, help='Directory where to store the logs --if it is the case')
+    parser.add_argument('--baseDir',    default='.',              type=str, help='Directory base from which create the directories for models, results and logs')
+    parser.add_argument('--modelsDir',  default='models/digits',  type=str, help='Directory to save models --if it is the case')
+    parser.add_argument('--resultsDir', default='results/digits', type=str, help='Directory where to store the results')
+    parser.add_argument('--logDir',     default='logs/digits',    type=str, help='Directory where to store the logs --if it is the case')
 
-    #sc = SparkSession.builder.appName(f"KernelDensityEstimationClassifierForMNIST").getOrCreate()
     sc = SparkContext(appName = "KernelDensityEstimationClassifierForMNIST")
     main(parser.parse_args(), sc)
     if sc is not None: sc.stop()

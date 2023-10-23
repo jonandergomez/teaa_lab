@@ -10,12 +10,13 @@ do
 
     for do_binary_classification in "--doBinaryClassification" "--no-doBinaryClassification"
     do
-        for using_pca in "--usingPCA" "--no-usingPCA"
+        for format in "pca136" "21x14"
         do
-            scripts/run-python-2.sh python/kde_uc13_21x20.py ${patient} \
+            scripts/run-python-2.sh python/kde_uc13_21x14.py ${patient} \
                                         --codebookSize ${kmeans_codebook_sizes} \
                                         --bandWidth ${band_width} \
-                                        ${using_pca} ${do_binary_classification} \
+                                        --format ${format} \
+                                        ${do_binary_classification} \
                                         --verbose 0
         done
     done

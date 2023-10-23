@@ -33,6 +33,7 @@ import tempfile
 
 import machine_learning
 from utils_for_results import save_results
+from eeg_load_data import load_csv_from_uc13
 
 use_spark = True
 try:
@@ -41,53 +42,6 @@ try:
 except:
     use_spark = False
 
-
-# --------------------------------------------------------------------------------
-def generate_y_true(time_to_seizure):
-    tts = time_to_seizure
-    y_true = numpy.zeros(len(tts), dtype = int)
-    y_true[tts >   2     ] = 1
-    y_true[tts >  10 * 60] = 2
-    y_true[tts >  20 * 60] = 3
-    y_true[tts <    -10  ] = 4
-    y_true[tts < -20 * 60] = 5
-    y_true[tts == 0      ] = 0 # redundant, but just in case
-    return y_true
-# --------------------------------------------------------------------------------
-def csv_line_to_patient_tts_label_and_sample(line):
-    parts = line.split(';')
-    patient = parts[0]
-    tts = float(parts[1])
-    if do_binary_classification:
-        label = 0 if tts == 0 else 1
-    else:
-        label = 0
-        ### BEGIN: Students can change this to check other approaches
-        if tts >   2     : label = 1
-        if tts >  10 * 60: label = 2
-        if tts >  20 * 60: label = 3
-        if tts < -10     : label = 4
-        if tts < -20 * 60: label = 5
-        ### END: Students can change this to check other approaches
-    x = numpy.array([float(x) for x in parts[2:]])
-    return (patient, tts, label, x)
-# --------------------------------------------------------------------------------
-
-# --------------------------------------------------------------------------------
-def load_csv_from_uc13(spark, filenames, num_partitions):
-    rdd = None
-    for filename in filenames:
-        print(f'loading {filename}')
-        csv_lines = spark.textFile(filename)
-        csv_lines = csv_lines.repartition(num_partitions)
-        csv_lines = csv_lines.map(csv_line_to_patient_tts_label_and_sample)
-        if rdd is not None:
-            rdd = rdd.union(csv_lines)
-        else:
-            rdd = csv_lines
-    print(f'loaded {rdd.count()} samples into {rdd.getNumPartitions()} partitions')
-    return rdd
-# --------------------------------------------------------------------------------
 
 # --------------------------------------------------------------------------------
 def estimate_gmm(data, spark_context, max_components, models_dir = None, log_dir = None, batch_size = 500):
@@ -202,8 +156,8 @@ if __name__ == "__main__":
         test_filenames  = [f'{hdfs_url}/data/uc13/21x14/uc13-{patient}-{data_format}-time-to-seizure-test.csv']
 
     # Loads and repartitions the data
-    rdd_train = load_csv_from_uc13(spark, train_filenames, num_partitions)
-    rdd_test  = load_csv_from_uc13(spark,  test_filenames, num_partitions)
+    rdd_train = load_csv_from_uc13(spark, train_filenames, num_partitions, do_binary_classification = do_binary_classification)
+    rdd_test  = load_csv_from_uc13(spark,  test_filenames, num_partitions, do_binary_classification = do_binary_classification)
 
     # BEGIN: Perform the standard scalation
     if do_z_transform:
