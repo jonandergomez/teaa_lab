@@ -12,7 +12,7 @@ do
     do
         for format in "21x14" "pca136"
         do
-            scripts/run-python-2.sh python/knn_uc13_21x20.py ${patient} \
+            scripts/run-python-2.sh python/knn_uc13_21x14.py ${patient} \
                                         --codebookSize ${kmeans_codebook_sizes} \
                                         --K ${K} \
                                         --format ${format} \

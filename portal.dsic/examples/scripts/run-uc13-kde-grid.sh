@@ -1,7 +1,6 @@
 #!/bin/bash
 
-#patient_list="03 07 08 10 12 13 15 16 22 24"
-patient_list="12 13 15 16 22 24"
+patient_list="03 07 08 10 12 13 15 16 22 24"
 kmeans_codebook_sizes="0:100:200:300"
 band_width="0.1:0.2:0.5:1.0:2.0"
 

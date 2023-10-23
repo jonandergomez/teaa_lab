@@ -42,9 +42,9 @@ def main(args, sc):
 
     do_z_transform = (args.format == '21x14')
 
-    log_dir     = f'{args.baseDir}/{args.logDir}/kde'
-    models_dir  = f'{args.baseDir}/{args.modelsDir}/kde'
-    results_dir = f'{args.baseDir}/{args.resultsDir}/kde/{args.patient}'
+    log_dir     = f'{args.baseDir}/{args.logDir}/knn'
+    models_dir  = f'{args.baseDir}/{args.modelsDir}/knn'
+    results_dir = f'{args.baseDir}/{args.resultsDir}/knn/{args.patient}'
 
     task = 'binary-classification' if args.doBinaryClassification else 'multi-class-classification'
 
@@ -168,7 +168,7 @@ def main(args, sc):
                 y_test_pred = knn.predict(X_test)
                 test_elapsed_time += time.time() - reference_timestamp
 
-            filename_prefix = 'knn_kmeans_%04d_$s_K_%03d_%s' % (codebookSize, args.format, K, task)
+            filename_prefix = 'knn_kmeans_%04d_%s_K_%03d_%s' % (codebookSize, args.format, K, task)
             save_results(f'{results_dir}/train', filename_prefix = filename_prefix, y_true = y_train_true, y_pred = y_train_pred, elapsed_time = train_elapsed_time, labels = labels)
             save_results(f'{results_dir}/test',  filename_prefix = filename_prefix, y_true = y_test_true,  y_pred = y_test_pred,  elapsed_time = test_elapsed_time,  labels = labels)
 
