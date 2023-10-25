@@ -528,4 +528,4 @@ Lab practice 2 is about two use cases:
         Change the patient identifier accordingly.
 
 
-[comment]: # **SUMMARIES for all use cases and techniques are available in** [results.summary](../../portal.dsic/examples/results/summary)
+<-- **SUMMARIES for all use cases and techniques are available in** [results.summary](../../portal.dsic/examples/results/summary) -->
