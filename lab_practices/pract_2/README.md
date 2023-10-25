@@ -290,8 +290,6 @@ Lab practice 2 is about two use cases:
 
 
 
-    ***UPDATED SO FAR. REMAINING STEPS TO BE UPDATED***
-
 1. **Do the same using `gradient-boosted-trees` instead of `random-forest` or `extra-trees` for**
     [MNIST Digits database](https://en.wikipedia.org/wiki/MNIST_database).
 
@@ -313,9 +311,9 @@ Lab practice 2 is about two use cases:
 		```bash
 		cd ${HOME}
 
-		ls -l results.l2.mnist.train/gbt
+		ls -l results/digits/ensembles/gbt.r/train
 
-		ls -l results.l2.mnist.test/gbt
+		ls -l results/digits/ensembles/gbt.r/test
 		```
 
         And visualizing the text results with the following commands:
@@ -323,19 +321,16 @@ Lab practice 2 is about two use cases:
         ```bash
         cd ${HOME}
 
-        cat results.l2.mnist.train/gbt/gbt_00010_pca_0040_maxdepth_007.txt
+        cat results/digits/ensembles/gbt.r/train/gbt_00010_pca_0040_maxdepth_007.txt
 
-        cat results.l2.mnist.test/gbt/gbt_00010_pca_0040_maxdepth_007.txt
+        cat results/digits/ensembles/gbt.r/test//gbt_00010_pca_0040_maxdepth_007.txt
         ```
 
-        The images can be downloaded to your computer and then visualized, anyway all the results are available
-        in the repository exploring the following directories:
-
-        - [results.l2.mnist.train/gbt](../../portal.dsic/examples/results.l2.mnist.train/gbt)
-        - [results.l2.mnist.test/gbt](../../portal.dsic/examples/results.l2.mnist.test/gbt)
+        No results are precomputed using this approach for this academic year.  
+        You can test other combinations of hyper-parameters, but you will notice this approach is not effective.
 
   
-	1. Using a cascade of binary classifiers.
+	1. Using a cascade of binary classifiers. **From digit 0 to digit 9 in a blind way**.
 		Inspect and run the code [gbt_mnist_binary_trees.py](../../portal.dsic/examples/python/gbt_mnist_binary_trees.py)
 
         The command line options are the same used in previous examples. See it above.
@@ -352,9 +347,9 @@ Lab practice 2 is about two use cases:
         ```bash
         cd ${HOME}
 
-        ls -l results.l2b.mnist.train/gbt
+		ls -l results/digits/ensembles/gbt/train
 
-        ls -l results.l2b.mnist.test/gbt
+		ls -l results/digits/ensembles/gbt/test
         ```
 
         And visualizing the text results with the following commands:
@@ -362,16 +357,56 @@ Lab practice 2 is about two use cases:
         ```bash
         cd ${HOME}
 
-        cat results.l2b.mnist.train/gbt/gbt_00010_pca_0040_maxdepth_007.txt
+        cat results/digits/ensembles/gbt/train/gbt_00010_pca_0040_maxdepth_007.txt
 
-        cat results.l2b.mnist.test/gbt/gbt_00010_pca_0040_maxdepth_007.txt
+        cat results/digits/ensembles/gbt/test//gbt_00010_pca_0040_maxdepth_007.txt
         ```
 
         The images can be downloaded to your computer and then visualized, anyway all the results are available
         in the repository exploring the following directories:
 
-        - [results.l2b.mnist.train/gbt](../../portal.dsic/examples/results.l2b.mnist.train/gbt)
-        - [results.l2b.mnist.test/gbt](../../portal.dsic/examples/results.l2b.mnist.test/gbt)
+        - [results/digits/ensembles/gbt/train](../../portal.dsic/examples/results/digits/ensembles/gbt/train)
+        - [results/digits/ensembles/gbt/test](../../portal.dsic/examples/results/digits/ensembles/gbt/test)
+
+	1. Using a cascade of binary classifiers. **By following a prefixed strategy**.
+		Inspect and run the code [gbt_mnist_binary_trees_2023.py](../../portal.dsic/examples/python/gbt_mnist_binary_trees_2023.py)
+
+        The command line options are the same used in previous examples. See it above.
+
+        ```bash
+        cd ${HOME}
+
+        teaa/examples/scripts/run-python.sh teaa/examples/python/gbt_mnist_binary_trees_2023.py \
+            --numTrees 10 --maxDepth 7 --pcaComponents 40
+        ```
+
+        The results can be found with the following commands:
+
+        ```bash
+        cd ${HOME}
+
+		ls -l results/digits/ensembles/gbt.b/train
+
+		ls -l results/digits/ensembles/gbt.b/test
+        ```
+
+        And visualizing the text results with the following commands:
+
+        ```bash
+        cd ${HOME}
+
+        cat results/digits/ensembles/gbt.b/train/gbt_00010_pca_0040_maxdepth_007.txt
+
+        cat results/digits/ensembles/gbt.b/test//gbt_00010_pca_0040_maxdepth_007.txt
+        ```
+
+        The images can be downloaded to your computer and then visualized, anyway all the results are available
+        in the repository exploring the following directories:
+
+        - [results/digits/ensembles/gbt.b/train](../../portal.dsic/examples/results/digits/ensembles/gbt.b/train)
+        - [results/digits/ensembles/gbt.b/test](../../portal.dsic/examples/results/digits/ensembles/gbt.b/test)
+
+        ***THESE RESULTS ARE BEING COMPUTED JUST NOW. THEY WILL AVAILABLE NEXT WEEK***
 
 
 1. **Do the same using `gradient-boosted-trees` instead of `random-forest` or `extra-trees` for**
@@ -379,6 +414,13 @@ Lab practice 2 is about two use cases:
 
     1. For the binary case, inspect and use the code
 	   [gbt_uc13.py](../../portal.dsic/examples/python/gbt_uc13.py)
+
+       ***THIS ACADEMIC YEAR THE RESULTS FOR EEG DATA HAVE BEEN COMPUTED IN ANOTHER COMPUTER***
+
+       ***DO NOT RUN THE EXAMPLE***
+
+       ***INSTEAD SEE THE CODE*** [ml_on_uc13_21x14.py](../../portal.dsic/examples/python/ml_on_uc13_21x14.py)
+
 
         As in previous examples, you can run some experiments by varying the configuration hyper-parameters:
 
@@ -394,9 +436,9 @@ Lab practice 2 is about two use cases:
         ```bash
         cd ${HOME}
 
-        ls -l results.l2.uc13.train/gbt/chb03
+        ls -l results/uc13/ensembles/chb03/gbt/train
 
-        ls -l results.l2.uc13.test/gbt/chb03
+        ls -l results/uc13/ensembles/chb03/gbt/test
         ```
 
         And visualizing the text results with the following commands:
@@ -404,34 +446,49 @@ Lab practice 2 is about two use cases:
         ```bash
         cd ${HOME}
 
-        cat results.l2.uc13.train/gbt/chb03/gbt_chb03_00020_005_pca_02_classes.txt
+        cat results/uc13/ensembles/chb03/gbt/train/gbt-chb03-pca136-binary-classification-0020-005.txt
 
-        cat results.l2.uc13.test/gbt/chb03/gbt_chb03_00020_005_pca_02_classes.txt
+        cat results/uc13/ensembles/chb03/gbt/test/gbt-chb03-pca136-binary-classification-0020-005.txt
         ```
 
         The images can be downloaded to your computer and then visualized, anyway all the results are available
-        in the repository exploring the following directories:
+        in the repository exploring the following directories taking into account the different patient
+        identifiers:
 
-        - [results.l2.uc13.train/gbt](../../portal.dsic/examples/results.l2.uc13.train/gbt)
-        - [results.l2.uc13.test/gbt](../../portal.dsic/examples/results.l2.uc13.test/gbt)
+        - [results/uc13/ensembles/chb03/gbt/train](../../portal.dsic/examples/results/uc13/ensembles/chb03/gbt/train)
+        - [results/uc13/ensembles/chb03/gbt/test](../../portal.dsic/examples/results/uc13/ensembles/chb03/gbt/test)
+
+        Change the patient identifier accordingly.
 
 
-    1. For the multi-class case, the first tested approach has been using a `GBTRegressor` as in the case of the
+    1. For the multi-class case, also the same code has been used.
+
+       ***THIS ACADEMIC YEAR THE RESULTS FOR EEG DATA HAVE BEEN COMPUTED IN ANOTHER COMPUTER***
+
+       ***DO NOT RUN THE EXAMPLE***
+
+       ***INSTEAD SEE THE CODE*** [ml_on_uc13_21x14.py](../../portal.dsic/examples/python/ml_on_uc13_21x14.py)
+
+       The results can be seen in the same folders, you will see that the name of the files with the results contain
+       **binary-classification** or **multi-class-classification**.
+
+
+    1. The first tested approach was done using a `GBTRegressor` as in one of the cases of the
        [MNIST Digits database](https://en.wikipedia.org/wiki/MNIST_database).
-       But the results are really wrong. Despite this approach has not been used for generating results,
-       you can inspect the code
+       The results are comparable with the ones obtained in the previous step for multi-class classification, but
+       take into accout that in this case only four classes are considered.
+       You can inspect the code
 	   [gbt_uc13_regression.py](../../portal.dsic/examples/python/gbt_uc13_regression.py)
 
-    1. Another approach with also bad results consists in using a cascade of binary classifiers,
-       you can see it by inspecting the code
-	   [gbt_uc13_binary_trees.py](../../portal.dsic/examples/python/gbt_uc13_binary_trees.py)
+       The results can be seen in the same folders, you will see that the name of the files with the results contain
+       **regression** despite after the regression the same criteria has been used to assign labels to each sample
+       according to the predicted _time-to-seizure_.
 
-
-        You will see in the code that only four classes have been used, you have to discover,
-        by analysing the code, how the new target classes are assigned to samples, and what
-        each one of the new target classes means.
-        In the case of the using a `GBTRegressor` the target classes are also different from
-        the all the previous examples.
+       You will see in the code that only four classes have been used, you have to discover,
+       by analysing the code, how the new target classes are assigned to samples, and what
+       each one of the new target classes means.
+       In the case of the using a `GBTRegressor` the target classes are also different from
+       the all the previous examples.
 
 
         As in previous examples, you can run some experiments by varying the configuration hyper-parameters:
@@ -439,8 +496,8 @@ Lab practice 2 is about two use cases:
         ```bash
         cd ${HOME}
 
-        teaa/examples/scripts/run-python.sh teaa/examples/python/python/gbt_uc13_binary_trees.py chb03 \
-                --numTrees 20 --maxDepth 5 --doBinaryClassification --usingPCA --verbose 0
+        teaa/examples/scripts/run-python.sh teaa/examples/python/python/gbt_uc13_regression.py chb03 \
+                --numTrees 20 --maxDepth 5 --dataFormat pca136 --verbose 0
         ```
 
         The results of this example can be found:
@@ -448,9 +505,9 @@ Lab practice 2 is about two use cases:
         ```bash
         cd ${HOME}
 
-        ls -l results.l2c.uc13.train/gbt/chb03
+        ls -l results/uc13/ensembles/chb03/gbt/train 
 
-        ls -l results.l2c.uc13.test/gbt/chb03
+        ls -l results/uc13/ensembles/chb03/gbt/test 
         ```
 
         And visualizing the text results with the following commands:
@@ -458,9 +515,9 @@ Lab practice 2 is about two use cases:
         ```bash
         cd ${HOME}
 
-        cat results.l2c.uc13.train/gbt/chb03/gbt_chb03_00020_005_pca_02_classes.txt
+        cat results/uc13/ensembles/chb03/gbt/train/gbt-chb03-pca136-regression-00020-005.txt
 
-        cat results.l2c.uc13.test/gbt/chb03/gbt_chb03_00020_005_pca_02_classes.txt
+        cat results/uc13/ensembles/chb03/gbt/test/gbt-chb03-pca136-regression-00020-005.txt
         ```
 
         The images can be downloaded to your computer and then visualized, anyway all the results are available
