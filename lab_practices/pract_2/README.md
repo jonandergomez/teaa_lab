@@ -412,7 +412,7 @@ Lab practice 2 is about two use cases:
 1. **Do the same using `gradient-boosted-trees` instead of `random-forest` or `extra-trees` for**
    [CHB-MIT Scalp EEG Database](https://physionet.org/lightwave/?db=chbmit/1.0.0)
 
-    1. For the binary case, inspect and use the code
+    1. For the **binary case**, inspect and use the code
 	   [gbt_uc13.py](../../portal.dsic/examples/python/gbt_uc13.py)
 
        ***THIS ACADEMIC YEAR THE RESULTS FOR EEG DATA HAVE BEEN COMPUTED IN ANOTHER COMPUTER***
@@ -461,7 +461,7 @@ Lab practice 2 is about two use cases:
         Change the patient identifier accordingly.
 
 
-    1. For the multi-class case, also the same code has been used.
+    1. For the **multi-class case**, also the same code has been used.
 
        ***THIS ACADEMIC YEAR THE RESULTS FOR EEG DATA HAVE BEEN COMPUTED IN ANOTHER COMPUTER***
 
@@ -480,16 +480,14 @@ Lab practice 2 is about two use cases:
        You can inspect the code
 	   [gbt_uc13_regression.py](../../portal.dsic/examples/python/gbt_uc13_regression.py)
 
-       The results can be seen in the same folders, you will see that the name of the files with the results contain
-       **regression** despite after the regression the same criteria has been used to assign labels to each sample
-       according to the predicted _time-to-seizure_.
+       The results can be seen in the same folders mentioned above, you will see that the name of the files with the results contain
+       **regression** despite after the regression the same criteria used to assign the label to each sample from the ground-truth
+       _time-to-seizure_ the has been used to assign labels to each sample according to the predicted _time-to-seizure_.
 
+       In the case of the using a `GBTRegressor` the target classes are also different from the all the previous examples.
        You will see in the code that only four classes have been used, you have to discover,
        by analysing the code, how the new target classes are assigned to samples, and what
        each one of the new target classes means.
-       In the case of the using a `GBTRegressor` the target classes are also different from
-       the all the previous examples.
-
 
         As in previous examples, you can run some experiments by varying the configuration hyper-parameters:
 
@@ -521,10 +519,13 @@ Lab practice 2 is about two use cases:
         ```
 
         The images can be downloaded to your computer and then visualized, anyway all the results are available
-        in the repository exploring the following directories:
+        in the repository exploring the following directories (the same mentioned above where the results for EEG
+        using Gradient Boosting are stored):
 
-        - [results.l2c.uc13.train/gbt](../../portal.dsic/examples/results.l2c.uc13.train/gbt)
-        - [results.l2c.uc13.test/gbt](../../portal.dsic/examples/results.l2c.uc13.test/gbt)
+        - [results/uc13/ensembles/chb03/gbt/train](../../portal.dsic/examples/results/uc13/ensembles/chb03/gbt/train)
+        - [results/uc13/ensembles/chb03/gbt/test](../../portal.dsic/examples/results/uc13/ensembles/chb03/gbt/test)
 
-        
-        **SUMMARIES for all use cases and techniques are available in** [results.summary](../../portal.dsic/examples/results.summary)
+        Change the patient identifier accordingly.
+
+
+[comment]: **SUMMARIES for all use cases and techniques are available in** [results.summary](../../portal.dsic/examples/results/summary)
