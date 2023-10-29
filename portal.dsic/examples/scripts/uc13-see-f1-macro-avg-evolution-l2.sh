@@ -1,124 +1,40 @@
 #!/bin/bash 
 
 dataset="uc13"
+results_dir="results/${dataset}/ensembles"
+target_dir="results/summaries"
 
+for task in "binary-classification" "multi-class-classification" "regression"
+do
 for subset in "train" "test"
 do
-    for technique in "rf" "ert" "gbt"
-    do
-        for p in {01..24}
-        do
-            patient="chb${p}"
-            results_dir="results.l2.${dataset}.${subset}/${technique}/${patient}"
+for technique in "rf" "ert" "gbt"
+do
+for p in {01..24}
+do
+    patient="chb${p}"
+    origin_dir="${results_dir}/${patient}/${technique}/${subset}"
 
-            if [ -d ${results_dir} ]
-            then
-                for num_classes in 02 10
-                do
-                    csv_file="/tmp/${dataset}-${patient}-f1-macro-avg-evolution-${technique}-${num_classes}-classes-${subset}.csv"
-                    case ${technique} in
-                        rf)
-                            grep -H "^   macro avg" ${results_dir}/${technique}_*_${num_classes}_classes.txt \
-                                | sed 's/no_pca/nopca/g' \
-                                | sed 's/-/ /g' \
-                                | sed 's/_/ /g' \
-                                | sed 's/nopca/no_pca/g' \
-                                | sed 's/\.txt/ /g' \
-                                | awk '{ print $3, $4, $(NF-1) }' \
-                                | awk '{ for(i=1; i <= NF; i++) printf("%s;", $i); printf("\n"); }' >/tmp/temp.${technique}.$$
+    if [ -d ${origin_dir} ]
+    then
+        csv_file="/tmp/${dataset}-${patient}-f1-macro-avg-evolution-${technique}-${task}-${subset}.csv"
+        count=$(ls ${origin_dir}/${technique}-*-${task}-*.txt | wc -l)
+        if [ ${count} -gt 3 ]
+        then
+            grep -H "^   macro avg" ${origin_dir}/${technique}-*-${task}-*.txt \
+                | sed 's/multi-class/multiclass/g' \
+                | sed 's/-/ /g' \
+                | sed 's/\.txt/ /g' \
+                | awk '{ patient=$2; format=$3; nt=$6; md=$7;
+                           printf("%s;%s;%s;%s;%s\n", patient, format, nt, md, $(NF-1)); }' >/tmp/temp.${technique}.$$
 
-                            (echo "num trees;pca;f1 macro avg" ; cat /tmp/temp.${technique}.$$) >${csv_file}
-                            rm -f /tmp/temp.${technique}.$$
-                            ;;
-                        
-                        ert)
-                            grep -H "^   macro avg" ${results_dir}/${technique}_*_${num_classes}_classes.txt \
-                                | sed 's/no_pca/nopca/g' \
-                                | sed 's/-/ /g' \
-                                | sed 's/_/ /g' \
-                                | sed 's/nopca/no_pca/g' \
-                                | sed 's/\.txt/ /g' \
-                                | awk '{ print $3, $6, $5, $(NF-1) }' \
-                                | awk '{ for(i=1; i <= NF; i++) printf("%s;", $i); printf("\n"); }' >/tmp/temp.${technique}.$$
-
-                            (echo "num trees;pca;max depth;f1 macro avg" ; cat /tmp/temp.${technique}.$$) >${csv_file}
-                            rm -f /tmp/temp.${technique}.$$
-                            ;;
-                        
-                        gbt)
-                            if [ ${num_classes} = "02" ]
-                            then
-                                grep -H "^   macro avg" ${results_dir}/${technique}_*_${num_classes}_classes.txt \
-                                    | sed 's/no_pca/nopca/g' \
-                                    | sed 's/-/ /g' \
-                                    | sed 's/_/ /g' \
-                                    | sed 's/nopca/no_pca/g' \
-                                    | sed 's/\.txt/ /g' \
-                                    | awk '{ print $3, $5, $4, $(NF-1) }' \
-                                    | awk '{ for(i=1; i <= NF; i++) printf("%s;", $i); printf("\n"); }' >/tmp/temp.${technique}.$$
-
-                                (echo "num trees;pca;max depth;f1 macro avg" ; cat /tmp/temp.${technique}.$$) >${csv_file}
-                                rm -f /tmp/temp.${technique}.$$
-                            fi
-                            ;;
-                    esac 
-
-                    dest_dir="results.summary/l2/${dataset}/${technique}/${patient}"
-                    if [ -f ${csv_file} ]
-                    then
-                        mkdir -p  ${dest_dir}
-                        mv ${csv_file} ${dest_dir}
-                    fi
-                done
-            fi
-        done
-    done
+                (echo "patient;data_format;num_trees;max_depth;f1 macro avg" ; cat /tmp/temp.${technique}.$$) >${csv_file}
+                rm -f /tmp/temp.${technique}.$$
+            mkdir -p  ${target_dir}
+            mv ${csv_file} ${target_dir}
+        fi
+    fi
 done
-
-#results.l2.uc13.test/rf/chb24/rf_chb24_00700_no_pca_10_classes.txt
-#results.l2.uc13.test/rf/chb24/rf_chb24_00700_pca_02_classes.txt
-
-#results.l2.uc13.test/ert/chb24/ert_chb24_01000_maxdepth_009_pca_10_classes.txt
-#results.l2.uc13.test/ert/chb24/ert_chb24_01000_maxdepth_013_no_pca_02_classes.txt
-
-#results.l2.uc13.test/gbt/chb24/gbt_chb24_00050_005_no_pca_02_classes.txt
-#results.l2.uc13.test/gbt/chb24/gbt_chb24_00050_005_pca_02_classes.txt
-
-#results.l2c.uc13.test/gbt/chb24/gbt_chb24_00020_009_pca.txt
-#results.l2c.uc13.test/gbt/chb24/gbt_chb24_00020_011_no_pca.txt
-
-for subset in "train" "test"
-do
-    technique="gbt"
-    for p in {01..24}
-    do
-        patient="chb${p}"
-        results_dir="results.l2c.${dataset}.${subset}/${technique}/${patient}"
-
-        csv_file="/tmp/${dataset}-${patient}-f1-macro-avg-evolution-${technique}-${num_classes}-classes-${subset}.csv"
-
-        if [ -d ${results_dir} ]
-        then
-            num_classes="04"
-            grep -H "^   macro avg" ${results_dir}/${technique}_*.txt \
-                    | sed 's/no_pca/nopca/g' \
-                    | sed 's/-/ /g' \
-                    | sed 's/_/ /g' \
-                    | sed 's/nopca/no_pca/g' \
-                    | sed 's/\.txt/ /g' \
-                    | awk '{ print $3, $5, $4, $(NF-1) }' \
-                    | awk '{ for(i=1; i <= NF; i++) printf("%s;", $i); printf("\n"); }' >/tmp/temp.${technique}.$$
-
-            (echo "num trees;pca;max_depth;f1 macro avg" ; cat /tmp/temp.${technique}.$$) >${csv_file}
-            rm -f /tmp/temp.${technique}.$$
-        fi
-
-
-        dest_dir="results.summary/l2c/${dataset}/${technique}/${patient}"
-        if [ -f ${csv_file} ]
-        then
-            mkdir -p  ${dest_dir}
-            mv ${csv_file} ${dest_dir}
-        fi
-    done
+done
+done
 done

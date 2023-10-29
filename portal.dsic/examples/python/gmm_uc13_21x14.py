@@ -116,7 +116,7 @@ if __name__ == "__main__":
     data_format = 'pca136'
     list_of_gmm_components = [10] # [10, 12, 15, 20, 25, 30]
     covar_type = 'diagonal'
-    num_partitions = 60
+    num_partitions = (60 * 80) // 20
     do_train = False
     do_classify = False
     do_binary_classification = False

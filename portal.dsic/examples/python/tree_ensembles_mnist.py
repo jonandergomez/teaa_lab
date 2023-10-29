@@ -50,7 +50,7 @@ if __name__ == "__main__":
     verbose = 0
 
     spark_context = None
-    num_partitions = 60
+    num_partitions = (60 * 80) // 20
     log_dir = 'logs/digits/ensembles'
     models_dir = 'models/digits/ensembles'
     results_dir = 'results/digits/ensembles'

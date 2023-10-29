@@ -83,8 +83,8 @@ def main(args, sc):
                                 _l_vs_the_rest(int(y_test[i]), 9) ] for i in range(len(X_test))]
 
     # Converting it to a DataFrame
-    trainData = sc.createDataFrame(trainData, ['label', 'features', 'l0', 'l1', 'l2', 'l3', 'l4', 'l5', 'l6', 'l7', 'l8', 'l9']).repartition(600)
-    testData  = sc.createDataFrame(testData,  ['label', 'features', 'l0', 'l1', 'l2', 'l3', 'l4', 'l5', 'l6', 'l7', 'l8', 'l9']).repartition(600)
+    trainData = sc.createDataFrame(trainData, ['label', 'features', 'l0', 'l1', 'l2', 'l3', 'l4', 'l5', 'l6', 'l7', 'l8', 'l9']).repartition((60 * 80) // 10)
+    testData  = sc.createDataFrame(testData,  ['label', 'features', 'l0', 'l1', 'l2', 'l3', 'l4', 'l5', 'l6', 'l7', 'l8', 'l9']).repartition((60 * 80) // 10)
 
     _0_vs_the_rest = SQLTransformer(statement="SELECT * FROM __THIS__")
     _1_vs_the_rest = SQLTransformer(statement="SELECT * FROM __THIS__ WHERE label > 0")

@@ -33,7 +33,7 @@ if __name__ == "__main__":
     base_dir = '.'
     standalone = False
     spark_context = None
-    num_partitions = 80
+    num_partitions = (60 * 80) // 20
     gmm_filename = None
     batch_size = 500
     do_compute_confusion_matrix = False

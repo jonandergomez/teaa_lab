@@ -36,9 +36,8 @@ from eeg_load_data import load_csv_from_uc13
 def main(args, sc):
 
     #hdfs_url = 'hdfs://teaa-master-ubuntu22:8020'
-    #num_partitions = 60
     hdfs_url = 'hdfs://eibds01.mbda:8020'
-    num_partitions = 80
+    num_partitions = (60 * 80) // 10
 
     do_z_transform = (args.format == '21x14')
 

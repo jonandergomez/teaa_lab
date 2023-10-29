@@ -61,8 +61,8 @@ def main(args, sc):
     testData  = [[int(y_test[i]),  Vectors.dense(X_test[i])]  for i in range(len(X_test))]
 
     # Converting it to a DataFrame
-    trainData = sc.createDataFrame(trainData, ['label', 'features']).repartition(60)
-    testData  = sc.createDataFrame(testData,  ['label', 'features']).repartition(60)
+    trainData = sc.createDataFrame(trainData, ['label', 'features']).repartition((60 * 80) // 10)
+    testData  = sc.createDataFrame(testData,  ['label', 'features']).repartition((60 * 80) // 10)
 
     preprocessLabels = SQLTransformer(statement="SELECT features, (label * 100) as label FROM __THIS__")
     postprocessLabelsAndPredictions = SQLTransformer(statement="SELECT features, int(label / 100 + 0.5) as label, round(prediction / 100) as prediction FROM __THIS__")
@@ -113,7 +113,7 @@ def main(args, sc):
             y_pred = [min(9, max(0, int(y[1]))) for y in y_true_pred]
 
             filename_prefix = 'gbt_%05d_pca_%04d_maxdepth_%03d' % (numTrees, pcaComponents, maxDepth)
-            save_results(f'{results_dir}/gbt/train', filename_prefix = filename_prefix, y_true = y_true, y_pred = y_pred, elapsed_time = None, labels = labels)
+            save_results(f'{results_dir}/gbt.r/train', filename_prefix = filename_prefix, y_true = y_true, y_pred = y_pred, elapsed_time = None, labels = labels)
 
 
             # TESTING SUBSET
@@ -134,7 +134,7 @@ def main(args, sc):
             y_pred = [min(9, max(0, int(y[1]))) for y in y_true_pred]
 
             filename_prefix = 'gbt_%05d_pca_%04d_maxdepth_%03d' % (numTrees, pcaComponents, maxDepth)
-            save_results(f'{results_dir}/gbt/test', filename_prefix = filename_prefix, y_true = y_true, y_pred = y_pred, elapsed_time = None, labels = labels)
+            save_results(f'{results_dir}/gbt.r/test', filename_prefix = filename_prefix, y_true = y_true, y_pred = y_pred, elapsed_time = None, labels = labels)
         # end for max depth
     # end for num trees
 

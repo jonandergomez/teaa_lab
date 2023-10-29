@@ -76,7 +76,7 @@ if __name__ == "__main__":
     min_num_clusters = 300
     max_num_clusters = 300 # 1000
     delta_num_clusters = 100
-    num_partitions = 60
+    num_partitions = (60 * 80) // 20
     do_train = False
     do_classify = False
     do_binary_classification = False

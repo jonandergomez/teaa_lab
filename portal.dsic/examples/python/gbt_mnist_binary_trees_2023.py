@@ -71,9 +71,9 @@ def main(args, sc):
                                 _l_vs_the_rest_(int(y_train[i]), 7),
                                 _l_vs_the_rest_(int(y_train[i]), 8),
                                 _l_vs_the_rest_(int(y_train[i]), 9),
-                                _s1_vs_s2_(int(y_train[i]), (3, 5, 8),
-                                _s1_vs_s2_(int(y_train[i]), (3, 8),
-                                _s1_vs_s2_(int(y_train[i]), (4, 9)] for i in range(len(X_train))]
+                                _s1_vs_s2_(int(y_train[i]), (3, 5, 8)),
+                                _s1_vs_s2_(int(y_train[i]), (3, 8)),
+                                _s1_vs_s2_(int(y_train[i]), (4, 9))] for i in range(len(X_train))]
     testData  = [[int(y_test[i]),  Vectors.dense(X_test[i]),
                                 _l_vs_the_rest_(int(y_test[i]), 0),
                                 _l_vs_the_rest_(int(y_test[i]), 1),
@@ -85,34 +85,25 @@ def main(args, sc):
                                 _l_vs_the_rest_(int(y_test[i]), 7),
                                 _l_vs_the_rest_(int(y_test[i]), 8),
                                 _l_vs_the_rest_(int(y_test[i]), 9),
-                                _s1_vs_s2_(int(y_test[i], (3, 5, 8),
-                                _s1_vs_s2_(int(y_test[i]), (3, 8),
-                                _s1_vs_s2_(int(y_test[i]), (4, 9)] for i in range(len(X_test))]
+                                _s1_vs_s2_(int(y_test[i]), (3, 5, 8)),
+                                _s1_vs_s2_(int(y_test[i]), (3, 8)),
+                                _s1_vs_s2_(int(y_test[i]), (4, 9))] for i in range(len(X_test))]
 
     # Converting it to a DataFrame
-    trainData = sc.createDataFrame(trainData, ['label', 'features', 'l0', 'l1', 'l2', 'l3', 'l4', 'l5', 'l6', 'l7', 'l8', 'l9', 'l358', 'l38', 'l49']).repartition(600)
-    testData  = sc.createDataFrame(testData,  ['label', 'features', 'l0', 'l1', 'l2', 'l3', 'l4', 'l5', 'l6', 'l7', 'l8', 'l9', 'l358', 'l38', 'l49']).repartition(600)
+    trainData = sc.createDataFrame(trainData, ['label', 'features', 'l0', 'l1', 'l2', 'l3', 'l4', 'l5', 'l6', 'l7', 'l8', 'l9', 'l358', 'l38', 'l49']).repartition((60 * 80) // 10)
+    testData  = sc.createDataFrame(testData,  ['label', 'features', 'l0', 'l1', 'l2', 'l3', 'l4', 'l5', 'l6', 'l7', 'l8', 'l9', 'l358', 'l38', 'l49']).repartition((60 * 80) // 10)
 
     _0_vs_the_rest = SQLTransformer(statement="SELECT * FROM __THIS__")
     _1_vs_the_rest = SQLTransformer(statement="SELECT * FROM __THIS__ WHERE label > 0")
     _2_vs_the_rest = SQLTransformer(statement="SELECT * FROM __THIS__ WHERE label > 1")
     _6_vs_the_rest = SQLTransformer(statement="SELECT * FROM __THIS__ WHERE label > 2")
-    _358_vs_479_   = SQLTransformer(statement="SELECT * FROM __THIS__ WHERE label in [3, 5, 8, 4, 7, 9]")
-    _38_vs_5_      = SQLTransformer(statement="SELECT * FROM __THIS__ WHERE label in [3, 5, 8]")
-    _3_vs_8_       = SQLTransformer(statement="SELECT * FROM __THIS__ WHERE label in [3, 8]")
-    _49_vs_7_      = SQLTransformer(statement="SELECT * FROM __THIS__ WHERE label in [4, 7, 9]")
-    _4_vs_9_       = SQLTransformer(statement="SELECT * FROM __THIS__ WHERE label in [4, 9]")
+    _358_vs_479_   = SQLTransformer(statement="SELECT * FROM __THIS__ WHERE label = 3 OR label = 5 OR label = 8 OR label = 4 OR label = 7 OR label = 9")
+    _38_vs_5_      = SQLTransformer(statement="SELECT * FROM __THIS__ WHERE label = 3 OR label = 5 OR label = 8")
+    _3_vs_8_       = SQLTransformer(statement="SELECT * FROM __THIS__ WHERE label = 3 OR label = 8")
+    _49_vs_7_      = SQLTransformer(statement="SELECT * FROM __THIS__ WHERE label = 4 OR label = 7 OR label = 9")
+    _4_vs_9_       = SQLTransformer(statement="SELECT * FROM __THIS__ WHERE label = 4 OR label = 9")
 
     postprocessLabelsAndPredictions = SQLTransformer(statement="SELECT features, label, l0, l1, l2, l3, l4, l5, l6, l7, l8, l9, l358, l38, l49, prediction FROM __THIS__")
-    #postprocessLabelsAndPredictions_0   = SQLTransformer(statement="SELECT features, label, l0, l1, l2, l3, l4, l5, l6, l7, l8, l9, l358, l38, l49, prediction FROM __THIS__")
-    #postprocessLabelsAndPredictions_1   = SQLTransformer(statement="SELECT features, label, l0, l1, l2, l3, l4, l5, l6, l7, l8, l9, l358, l38, l49, prediction FROM __THIS__")
-    #postprocessLabelsAndPredictions_2   = SQLTransformer(statement="SELECT features, label, l0, l1, l2, l3, l4, l5, l6, l7, l8, l9, l358, l38, l49, prediction FROM __THIS__")
-    #postprocessLabelsAndPredictions_6   = SQLTransformer(statement="SELECT features, label, l0, l1, l2, l3, l4, l5, l6, l7, l8, l9, l358, l38, l49, prediction FROM __THIS__")
-    #postprocessLabelsAndPredictions_358 = SQLTransformer(statement="SELECT features, label, l0, l1, l2, l3, l4, l5, l6, l7, l8, l9, l358, l38, l49, prediction FROM __THIS__")
-    #postprocessLabelsAndPredictions_38  = SQLTransformer(statement="SELECT features, label, l0, l1, l2, l3, l4, l5, l6, l7, l8, l9, l358, l38, l49, prediction FROM __THIS__")
-    #postprocessLabelsAndPredictions_3   = SQLTransformer(statement="SELECT features, label, l0, l1, l2, l3, l4, l5, l6, l7, l8, l9, l358, l38, l49, prediction FROM __THIS__")
-    #postprocessLabelsAndPredictions_49  = SQLTransformer(statement="SELECT features, label, l0, l1, l2, l3, l4, l5, l6, l7, l8, l9, l358, l38, l49, prediction FROM __THIS__")
-    #postprocessLabelsAndPredictions_4   = SQLTransformer(statement="SELECT features, label, l0, l1, l2, l3, l4, l5, l6, l7, l8, l9, l358, l38, l49, prediction FROM __THIS__")
 
     results_dir = f'{args.baseDir}/{args.resultsDir}'
     models_dir  = f'{args.baseDir}/{args.modelsDir}'
@@ -164,15 +155,16 @@ def main(args, sc):
             model_8 = pipeline_8.fit(trainData)
             model_9 = pipeline_9.fit(trainData)
 
-            model_for_inference_1 = PipelineModel(stages=model_1.stages[1:])
-            model_for_inference_2 = PipelineModel(stages=model_2.stages[1:])
-            model_for_inference_3 = PipelineModel(stages=model_3.stages[1:])
-            model_for_inference_4 = PipelineModel(stages=model_4.stages[1:])
-            model_for_inference_5 = PipelineModel(stages=model_5.stages[1:])
-            model_for_inference_6 = PipelineModel(stages=model_6.stages[1:])
-            model_for_inference_7 = PipelineModel(stages=model_7.stages[1:])
-            model_for_inference_8 = PipelineModel(stages=model_8.stages[1:])
-            model_for_inference_9 = PipelineModel(stages=model_9.stages[1:])
+            # Creating the pipelines for predicting
+            model_for_inference_1 = PipelineModel(stages=model_1.stages[1:]) # [1:] because the filter at stage[0] is not required at inference time
+            model_for_inference_2 = PipelineModel(stages=model_2.stages[1:]) # [1:] because the filter at stage[0] is not required at inference time
+            model_for_inference_3 = PipelineModel(stages=model_3.stages[1:]) # [1:] because the filter at stage[0] is not required at inference time
+            model_for_inference_4 = PipelineModel(stages=model_4.stages[1:]) # [1:] because the filter at stage[0] is not required at inference time
+            model_for_inference_5 = PipelineModel(stages=model_5.stages[1:]) # [1:] because the filter at stage[0] is not required at inference time
+            model_for_inference_6 = PipelineModel(stages=model_6.stages[1:]) # [1:] because the filter at stage[0] is not required at inference time
+            model_for_inference_7 = PipelineModel(stages=model_7.stages[1:]) # [1:] because the filter at stage[0] is not required at inference time
+            model_for_inference_8 = PipelineModel(stages=model_8.stages[1:]) # [1:] because the filter at stage[0] is not required at inference time
+            model_for_inference_9 = PipelineModel(stages=model_9.stages[1:]) # [1:] because the filter at stage[0] is not required at inference time
 
 
             # TRAINING SUBSET
@@ -182,10 +174,9 @@ def main(args, sc):
             predictions_from_3 = model_for_inference_3.transform(predictions_from_2.filter('prediction = 1').drop('prediction')) #=> {2}     labelled as 0, {3,4,5,6,7,8,9} as 1
             predictions_from_4 = model_for_inference_4.transform(predictions_from_3.filter('prediction = 1').drop('prediction')) #=> {6}     labelled as 0, {3,4,5,7,8,9} as 1
             predictions_from_5 = model_for_inference_5.transform(predictions_from_4.filter('prediction = 1').drop('prediction')) #=> {3,5,8} labelled as 0, {4,7,9} as 1
-
             predictions_from_6 = model_for_inference_6.transform(predictions_from_5.filter('prediction = 0').drop('prediction')) #=> {3,8}   labelled as 0, {5} as 1
             predictions_from_7 = model_for_inference_7.transform(predictions_from_6.filter('prediction = 0').drop('prediction')) #=> {3}     labelled as 0, {8} as 1
-            predictions_from_8 = model_for_inference_8.transform(predictions_from_4.filter('prediction = 1').drop('prediction')) #=> {4,9}   labelled as 0, {7} as 1
+            predictions_from_8 = model_for_inference_8.transform(predictions_from_5.filter('prediction = 1').drop('prediction')) #=> {4,9}   labelled as 0, {7} as 1
             predictions_from_9 = model_for_inference_9.transform(predictions_from_8.filter('prediction = 0').drop('prediction')) #=> {4}     labelled as 0, {9} as 1
 
             predictions = predictions_from_1.filter('prediction = 0')                       # adds predictions for label 0
@@ -195,14 +186,18 @@ def main(args, sc):
             predictions = predictions.union(df.withColumn('prediction', df.prediction + 2)) # adds predictions for label 2
             df = predictions_from_4.filter('prediction = 0')
             predictions = predictions.union(df.withColumn('prediction', df.prediction + 6)) # adds predictions for label 6
+            #
             df = predictions_from_6.filter('prediction = 1')
             predictions = predictions.union(df.withColumn('prediction', df.prediction + 4)) # adds predictions for label 5
+            #
             df = predictions_from_7.filter('prediction = 0')
             predictions = predictions.union(df.withColumn('prediction', df.prediction + 3)) # adds predictions for label 3
             df = predictions_from_7.filter('prediction = 1')
             predictions = predictions.union(df.withColumn('prediction', df.prediction + 7)) # adds predictions for label 8
+            #
             df = predictions_from_8.filter('prediction = 1')
             predictions = predictions.union(df.withColumn('prediction', df.prediction + 6)) # adds predictions for label 7
+            #
             df = predictions_from_9.filter('prediction = 0')
             predictions = predictions.union(df.withColumn('prediction', df.prediction + 4)) # adds predictions for label 4
             df = predictions_from_9.filter('prediction = 1')
@@ -229,10 +224,9 @@ def main(args, sc):
             predictions_from_3 = model_for_inference_3.transform(predictions_from_2.filter('prediction = 1').drop('prediction')) #=> {2}     labelled as 0, {3,4,5,6,7,8,9} as 1
             predictions_from_4 = model_for_inference_4.transform(predictions_from_3.filter('prediction = 1').drop('prediction')) #=> {6}     labelled as 0, {3,4,5,7,8,9} as 1
             predictions_from_5 = model_for_inference_5.transform(predictions_from_4.filter('prediction = 1').drop('prediction')) #=> {3,5,8} labelled as 0, {4,7,9} as 1
-
             predictions_from_6 = model_for_inference_6.transform(predictions_from_5.filter('prediction = 0').drop('prediction')) #=> {3,8}   labelled as 0, {5} as 1
             predictions_from_7 = model_for_inference_7.transform(predictions_from_6.filter('prediction = 0').drop('prediction')) #=> {3}     labelled as 0, {8} as 1
-            predictions_from_8 = model_for_inference_8.transform(predictions_from_4.filter('prediction = 1').drop('prediction')) #=> {4,9}   labelled as 0, {7} as 1
+            predictions_from_8 = model_for_inference_8.transform(predictions_from_5.filter('prediction = 1').drop('prediction')) #=> {4,9}   labelled as 0, {7} as 1
             predictions_from_9 = model_for_inference_9.transform(predictions_from_8.filter('prediction = 0').drop('prediction')) #=> {4}     labelled as 0, {9} as 1
 
             predictions = predictions_from_1.filter('prediction = 0')                       # adds predictions for label 0
@@ -242,14 +236,18 @@ def main(args, sc):
             predictions = predictions.union(df.withColumn('prediction', df.prediction + 2)) # adds predictions for label 2
             df = predictions_from_4.filter('prediction = 0')
             predictions = predictions.union(df.withColumn('prediction', df.prediction + 6)) # adds predictions for label 6
+            #
             df = predictions_from_6.filter('prediction = 1')
             predictions = predictions.union(df.withColumn('prediction', df.prediction + 4)) # adds predictions for label 5
+            #
             df = predictions_from_7.filter('prediction = 0')
             predictions = predictions.union(df.withColumn('prediction', df.prediction + 3)) # adds predictions for label 3
             df = predictions_from_7.filter('prediction = 1')
             predictions = predictions.union(df.withColumn('prediction', df.prediction + 7)) # adds predictions for label 8
+            #
             df = predictions_from_8.filter('prediction = 1')
             predictions = predictions.union(df.withColumn('prediction', df.prediction + 6)) # adds predictions for label 7
+            #
             df = predictions_from_9.filter('prediction = 0')
             predictions = predictions.union(df.withColumn('prediction', df.prediction + 4)) # adds predictions for label 4
             df = predictions_from_9.filter('prediction = 1')

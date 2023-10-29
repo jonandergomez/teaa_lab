@@ -2,8 +2,9 @@
 
 dataset="digits"
 results_dir="results/${dataset}/gmm"
+target_dir="results/summaries"
 
-for subset in  "test"  # "train"
+for subset in  "test" # "train"
 do
     grep -H "^   macro avg" ${results_dir}/${subset}/gmm-classification-results*.txt \
         | sed 's/-/ /g' \
@@ -12,8 +13,7 @@ do
         | awk '{ for(i=1; i <= NF; i++) printf("%s;", $i); printf("\n"); }' >/tmp/temp.${subset}.$$
 
 
-    csv_file="/tmp/${dataset}-gmm-f1-macro-avg-evolution-${subset}.csv"
-    target_dir="${results_dir}/"
+    csv_file="/tmp/${dataset}-f1-macro-avg-evolution-gmm-${subset}.csv"
 
     (echo "J;pca;min var;covar type;f1 macro avg" ; cat /tmp/temp.${subset}.$$) >${csv_file}
 

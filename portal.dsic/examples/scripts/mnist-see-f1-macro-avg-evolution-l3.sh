@@ -1,12 +1,14 @@
 #!/bin/bash 
 
-dataset="mnist"
+dataset="digits"
+results_dir="results/${dataset}"
+summaries_dir="results/summaries"
 
 for subset in "train" "test"
 do
     for technique in "kde" "knn"
     do
-        for filename in results.l3.${dataset}.${subset}/${technique}/${technique}_*.txt
+        for filename in ${results_dir}/${technique}/${subset}/*.txt
         do
             set $(echo ${filename} | sed 's/-/ /g' | sed 's/_/ /g' | sed 's/\.txt/ /g' | awk '{ print $3, $5, $7 }')
 
@@ -32,7 +34,7 @@ do
 
         rm -f /tmp/temp.${technique}.$$
 
-        mkdir -p results.summary/l3/${dataset}
-        mv ${csv_file} results.summary/l3/${dataset}/
+        mkdir -p ${summaries_dir}
+        mv ${csv_file} ${summaries_dir}
     done
 done

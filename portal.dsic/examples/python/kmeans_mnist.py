@@ -53,7 +53,7 @@ if __name__ == "__main__":
     for k in range( 500, 1000, 100): list_of_num_clusters.append(k) # comment this line to skip these clustering sizes
     list_of_num_clusters.append(1000) # comment this line to skip these clustering specific size
 
-    num_partitions = 60
+    num_partitions = (60 * 80) // 20
 
     for i in range(1, len(sys.argv)):
         if sys.argv[i] == '--models-dir':
