@@ -2,9 +2,8 @@
 
 Lab practice 4 is about one use case:
 
-1. Use Case 13 of the [DeepHealth EU project](https://deephealth-project.eu)
-   based on the [CHB-MIT Scalp EEG Database](https://physionet.org/lightwave/?db=chbmit/1.0.0),
-   and already presented in [Lab practice 1](../pract_1)
+   [CHB-MIT Scalp EEG Database](https://physionet.org/lightwave/?db=chbmit/1.0.0),
+   already presented in [Lab practice 1](../pract_1)
 
 
 ## Work to do in this lab practice

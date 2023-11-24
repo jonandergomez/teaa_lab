@@ -50,7 +50,7 @@ class KernelClassifier:
         self.dim = X.shape[1]
         # Establish the value of 'band_width' if not set previously
         if self.band_width is None:
-            self.band_width = math.sqrt(sum(numpy.ones(self.dim) ** 2))
+            self.band_width = math.sqrt(self.dim)
 
         # Separate the training samples of each class in order to do the estimation
         self.samples = list()
